@@ -3,113 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pixel Bonsai Nursery</title>
+    <title>Pixel Bonsai</title>
     <style>
-        :root { --bg: #fdfaf6; --frame: #2c3e50; }
+        :root { --frame: #2c3e50; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Courier New', Courier, monospace; }
-        body { background: var(--bg); color: var(--frame); padding: 30px; display: flex; flex-direction: column; align-items: center; }
-        
-        .nav-row { width: 100%; max-width: 440px; margin-bottom: 15px; }
-        .back-btn { background: var(--frame); color: white; border: none; padding: 8px 14px; border-radius: 4px; cursor: pointer; font-weight: bold; }
-        
-        .bonsai-card { background: white; border: 4px solid var(--frame); border-radius: 12px; padding: 25px; width: 100%; max-width: 440px; box-shadow: 0 6px 0 rgba(0,0,0,0.05); text-align: center; }
-        
-        /* Pixel Frame matching your screenshot */
-        .art-viewport { background: #fafafa; border: 4px solid var(--frame); border-radius: 16px; width: 220px; height: 220px; margin: 15px auto; display: flex; align-items: center; justify-content: center; position: relative; }
-        .art-viewport svg { width: 85%; height: 85%; image-rendering: pixelated; }
-
-        .meter-container { margin: 12px 0; text-align: left; font-weight: bold; font-size: 0.85rem; }
-        .meter-bg { background: #ecf0f1; border: 3px solid var(--frame); height: 22px; border-radius: 4px; margin-top: 4px; overflow: hidden; }
+        body { background: #fdfaf6; color: var(--frame); padding: 30px; display: flex; flex-direction: column; align-items: center; }
+        .bonsai-card { background: white; border: 4px solid var(--frame); border-radius: 12px; padding: 20px; width: 100%; max-width: 420px; text-align: center; }
+        .art-viewport { background: #fafafa; border: 4px solid var(--frame); border-radius: 12px; width: 220px; height: 220px; margin: 15px auto; display: flex; align-items: center; justify-content: center; }
+        .art-viewport svg { width: 90%; height: 90%; image-rendering: pixelated; }
+        .meter-bg { background: #ecf0f1; border: 3px solid var(--frame); height: 22px; border-radius: 4px; margin: 4px 0 12px 0; overflow: hidden; }
         .meter-fill { height: 100%; width: 20%; transition: width 0.3s; }
-        
-        .action-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
-        .action-btn { background: white; border: 3px solid var(--frame); padding: 10px; font-weight: bold; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
-        .action-btn:hover { background: #f5f6fa; transform: translateY(-2px); }
+        .action-btn { background: white; border: 3px solid var(--frame); padding: 10px; font-weight: bold; border-radius: 6px; cursor: pointer; width: 48%; margin: 1%; }
     </style>
 </head>
 <body>
-
-    <div class="nav-row">
-        <button class="back-btn" onclick="location.href='../../index.html'">◀ MAP HUB</button>
-    </div>
-
+    <div style="width:100%; max-width:420px; margin-bottom:10px;"><button onclick="location.href='../../index.html'" style="background:var(--frame); color:white; border:none; padding:6px 12px; border-radius:4px; font-weight:bold; cursor:pointer;">◀ BACK</button></div>
     <div class="bonsai-card">
-        <h2 style="text-transform:uppercase; font-size:1.3rem;">Bonsai Nursery Core</h2>
-        
-        <select id="specimen-select" onchange="resetSpecimen()" style="margin-top:10px; padding:6px; border:3px solid var(--frame); font-weight:bold; border-radius:4px;">
-            <option value="classic">🌲 Classic Pine Genom</option>
-            <option value="sakura">🌸 Sakura Bloom Genom</option>
+        <h2>BONSAI CORE</h2>
+        <select id="specimen-select" onchange="resetSpecimen()" style="margin:10px 0; padding:6px; border:3px solid var(--frame); font-weight:bold;">
+            <option value="classic">🌲 Classic Pine</option>
+            <option value="sakura">🌸 Sakura Bloom</option>
         </select>
-
-        <div class="art-viewport">
-            <svg id="bonsai-svg" viewBox="0 0 16 16"></svg>
-        </div>
-        <h4 id="stage-tag" style="text-transform:uppercase; color:#7f8c8d;">Sprout Node</h4>
-
-        <div class="meter-container">
-            <div>💧 HYDRATION LEVELS</div>
-            <div class="meter-bg"><div id="w-fill" class="meter-fill" style="background:#3498db;"></div></div>
-        </div>
-
-        <div class="meter-container">
-            <div>🪱 SOIL NUTRIENT DENSITY</div>
-            <div class="meter-bg"><div id="f-fill" class="meter-fill" style="background:#2ecc71;"></div></div>
-        </div>
-
-        <div class="action-row">
-            <button class="action-btn" onclick="tendPlant('w')">💧 WATER</button>
-            <button class="action-btn" onclick="tendPlant('f')">🪱 FERTILIZE</button>
-        </div>
+        <div class="art-viewport"><svg id="bonsai-svg" viewBox="0 0 16 16"></svg></div>
+        <h4 id="stage-tag" style="color:#7f8c8d; margin-bottom:10px;">SPROUT</h4>
+        <div style="text-align:left; font-size:0.8rem; font-weight:bold;">💧 HYDRATION</div>
+        <div class="meter-bg"><div id="w-fill" class="meter-fill" style="background:#3498db;"></div></div>
+        <div style="text-align:left; font-size:0.8rem; font-weight:bold;">🪱 NUTRIENTS</div>
+        <div class="meter-bg"><div id="f-fill" class="meter-fill" style="background:#2ecc71;"></div></div>
+        <button class="action-btn" onclick="tend('w')">💧 WATER</button>
+        <button class="action-btn" onclick="tend('f')">🪱 FERTILIZE</button>
     </div>
-
     <script>
-        // High fidelity procedural pixel drawings mapped matching your request images exactly
         const treeStages = {
             classic: [
-                `<path d="M7,11 H9 V13 H7 Z" fill="#8a6d53"/><path d="M7,10 H9 V11 H7 Z" fill="#2ecc71"/>`, // Sprout
-                `<path d="M7,9 H9 V13 H7 Z M6,10 H7 V11 H6 Z" fill="#8a6d53"/><path d="M5,8 H10 V10 H5 Z" fill="#27ae60"/>`, // Medium
-                `<path d="M5,12 H11 V14 H5 Z" fill="#bf9b7a"/><path d="M7,8 H9 V12 H7 Z M6,9 H7 V10 H6 Z" fill="#78583e"/><path d="M6,5 H11 V8 H6 Z M4,6 H6 V7 H4 Z M9,4 H12 V5 H9 Z" fill="#527849"/>` // Full Masterpiece
+                `<path d="M7,10 H9 V13 H7 Z" fill="#5c4033" stroke="#1a110b" stroke-width="0.5"/><path d="M6,8 H10 V10 H6 Z" fill="#27ae60" stroke="#1e272e" stroke-width="0.5"/>`,
+                `<path d="M7,8 H9 V13 H7 Z M6,10 H7 V11 H6 Z" fill="#5c4033" stroke="#1a110b" stroke-width="0.5"/><path d="M4,6 H12 V9 H4 Z" fill="#27ae60" stroke="#1e272e" stroke-width="0.5"/><path d="M5,7 H11 V8 H5 Z" fill="#2ecc71"/>`,
+                `<path d="M7,6 H9 V13 H7 Z M5,9 H8 V10 H5 Z" fill="#4a3319" stroke="#1a110b" stroke-width="0.5"/><path d="M3,4 H13 V7 H3 Z M5,2 H11 V4 H5 Z" fill="#1e4620" stroke="#112412" stroke-width="0.5"/><path d="M4,5 H12 V6 H4 Z M6,3 H10 V4 H6 Z" fill="#27ae60"/>`
             ],
             sakura: [
-                `<path d="M7,11 H9 V13 H7 Z" fill="#6d5440"/><path d="M7,10 H9 V11 H7 Z" fill="#ff7675"/>`, 
-                `<path d="M7,9 H9 V13 H7 Z" fill="#6d5440"/><path d="M5,7 H11 V9 H5 Z" fill="#fd79a8"/>`,
-                `<path d="M5,12 H11 V14 H5 Z" fill="#a3785e"/><path d="M7,7 H9 V12 H7 Z M6,9 H7 V11 H6 Z" fill="#573f2e"/><path d="M5,4 H12 V7 H5 Z M4,5 H6 V6 H4 Z M9,3 H13 V5 H9 Z" fill="#e84393"/>`
+                `<path d="M7,10 H9 V13 H7 Z" fill="#5c4033" stroke="#1a110b" stroke-width="0.5"/><path d="M6,8 H10 V10 H6 Z" fill="#d81b60" stroke="#1e272e" stroke-width="0.5"/>`,
+                `<path d="M7,8 H9 V13 H7 Z" fill="#5c4033" stroke="#1a110b" stroke-width="0.5"/><path d="M4,6 H12 V9 H4 Z" fill="#d81b60" stroke="#1e272e" stroke-width="0.5"/><path d="M5,7 H11 V8 H5 Z" fill="#f48fb1"/>`,
+                `<path d="M7,6 H9 V13 H7 Z M6,9 H8 V10 H6 Z" fill="#4a3319" stroke="#1a110b" stroke-width="0.5"/><path d="M3,4 H13 V7 H3 Z M5,2 H11 V4 H5 Z" fill="#ad1457" stroke="#4a001f" stroke-width="0.5"/><path d="M4,5 H12 V6 H4 Z M6,3 H10 V4 H6 Z" fill="#f06292"/>`
             ]
         };
-
-        let type = 'classic', waterVal = 20, fertVal = 20;
-
-        function refreshCanvas() {
-            document.getElementById('w-fill').style.width = `${waterVal}%`;
-            document.getElementById('f-fill').style.width = `${fertVal}%`;
-            
-            // Calculate growth stage matrix
-            let score = waterVal + fertVal;
-            let stage = 0;
-            let label = "SPROUT NODE";
-            
-            if(score >= 50 && score < 110) { stage = 1; label = "CUTTING BRANCH"; }
-            else if(score >= 110) { stage = 2; label = "ZEN MASTERPIECE"; }
-            
-            document.getElementById('stage-tag').innerText = label;
-            
-            // Generate visual canvas output combined with constant pixelated pot base
-            const basePot = `<path d="M3,13 H13 V16 H3 Z" fill="#b08665" stroke="#2c3e50" stroke-width="1"/>`;
-            document.getElementById('bonsai-svg').innerHTML = basePot + treeStages[type][stage];
+        let type = 'classic', wVal = 20, fVal = 20;
+        function refresh() {
+            document.getElementById('w-fill').style.width = `${wVal}%`; document.getElementById('f-fill').style.width = `${fVal}%`;
+            let stage = Math.min(2, Math.floor((wVal + fVal) / 55));
+            document.getElementById('stage-tag').innerText = ["SPROUT NODE", "CUTTING NODE", "ZEN MASTERPIECE"][stage];
+            const pot = `<path d="M2,12 H14 V15 H2 Z" fill="#a0522d" stroke="#2c3e50" stroke-width="0.75"/><rect x="4" y="13" width="8" height="1" fill="#d2691e"/>`;
+            document.getElementById('bonsai-svg').innerHTML = pot + treeStages[type][stage];
         }
-
-        function tendPlant(stat) {
-            if(stat === 'w') waterVal = Math.min(100, waterVal + 15);
-            if(stat === 'f') fertVal = Math.min(100, fertVal + 15);
-            refreshCanvas();
-        }
-
-        function resetSpecimen() {
-            type = document.getElementById('specimen-select').value;
-            waterVal = 20; fertVal = 20;
-            refreshCanvas();
-        }
-
+        function tend(s) { if(s==='w') wVal=Math.min(100,wVal+15); else fVal=Math.min(100,fVal+15); refresh(); }
+        function resetSpecimen() { type = document.getElementById('specimen-select').value; wVal=20; fVal=20; refresh(); }
         resetSpecimen();
     </script>
 </body>
