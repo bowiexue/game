@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scrapbook Studio Canvas</title>
+    <style>
+        :root {
+            --primary: #6c5ce7;
+            --dark: #2f3640;
+        }
+        * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; }
+        body { background: #f5f6fa; color: var(--dark); padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        
+        .studio-box { background: white; padding: 20px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); max-width: 900px; width: 100%; }
+        .back-btn { background: #718093; color: white; border: none; padding: 10px 15px; border-radius: 6px; font-weight: bold; cursor: pointer; float: left; margin-bottom: 15px; }
+        
+        .toolbar { display: flex; flex-wrap: wrap; gap: 10px; background: #f1f2f6; padding: 12px; border-radius: 8px; margin-bottom: 15px; align-items: center; justify-content: space-between; }
+        .tool-group { display: flex; gap: 8px; align-items: center; }
+        
+        label { font-size: 0.85rem; font-weight: bold; color: #57606f; }
+        select, input[type="color"] { padding: 6px; border-radius: 4px; border: 1px solid #ced6e0; cursor: pointer; }
+        
+        .btn { background: white; border: 1px solid #ced6e0; padding: 6px 12px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.9rem; }
+        .btn:hover { background: #f8f9fa; }
+        .btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+        .btn.danger { color: #ff6b6b; }
+        
+        .workspace { position: relative; width: 100%; height: 500px; border: 2px dashed #ced6e0; border-radius: 8px; overflow: hidden; background: #ffffff; }
+        .workspace.grid-bg { background-image: radial-gradient(#ced6e0 1px, transparent 1px); background-size: 20px 20px; }
+        .workspace.ruled-bg { background-image: linear-gradient(#e4e7eb 1px, transparent 1px); background-size: 100% 24px; }
+        
+        canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; cursor: crosshair; }
+        
+        .sticker-tray { display: flex; gap: 12px; font-size: 1.8rem; background: #f1f2f6; padding: 10px; border-radius: 8px; margin-top: 15px; overflow-x: auto; }
+        .tray-item { cursor: grab; user-select: none; transition: transform 0.1s; }
+        .tray-item:hover { transform: scale(1.2); }
+        
+        .placed-sticker { position: absolute; font-size: 2.2rem; cursor: move; user-select: none; z-index: 2; white-space: nowrap; line-height: 1; }
+    </style>
+</head>
+<body>
+
+    <div class="studio-box">
+        <button class="back-btn" onclick="location.href='../../index.html'">⬅ Hub Menu</button>
+        <h2 style="clear:both; color: var(--primary); margin-bottom: 5px;">🎨 Scrapbook Studio</h2>
+        <p style="margin-bottom: 15px; color: #718093;">Create digital layout pages using custom brushes, highlighters, and drag-and-drop stickers!</p>
+
+        <div class="toolbar">
+            <div class="tool-group">
+                <button id="tool-pen" class="btn active">✏️ Pen</button>
+                <button id="tool-highlighter" class="btn">🖍️ Highlighter</button>
+                <input type="color" id="brush-color" value="#6c5ce7">
+                
+                <label for="brush-size">Size:</label>
+                <select id="brush-size">
+                    <option value="3">Thin</option>
+                    <option value="8" selected>Medium</option>
+                    <option value="16">Thick</option>
+                </select>
+            </div>
+
+            <div class="tool-group">
+                <label for="template-select">Template:</label>
+                <select id="template-select">
+                    <option value="blank">Plain White</option>
+                    <option value="grid-bg">Dot Grid</option>
+                    <option value="ruled-bg">Ruled Notebook</option>
+                </select>
+                <button id="clear-btn" class="btn danger">🗑️ Clear Page</button>
+            </div>
+        </div>
+
+        <div class="workspace" id="workspace">
+            <canvas id="paintCanvas"></canvas>
+        </div>
+
+        <div class="sticker-tray">
+            <span class="tray-item" draggable="true">🌸</span>
+            <span class="tray-item" draggable="true">⭐</span>
+            <span class="tray-item" draggable="true">🎀</span>
+            <span class="tray-item" draggable="true">🧸</span>
+            <span class="tray-item" draggable="true">🐱</span>
+            <span class="tray-item" draggable="true">🍿</span>
+            <span class="tray-item" draggable="true">🥑</span>
+            <span class="tray-item" draggable="true" >💖</span>
+            <span class="tray-item" draggable="true">☁️</span>
+        </div>
+    </div>
+
+    <!-- LINKING LOGIC ENGINE SECTION -->
+    <script src="script.js"></script>
+</body>
+</html>
