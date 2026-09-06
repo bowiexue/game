@@ -8,7 +8,6 @@
     --floor-bg: #b58f6d;
 }
 
-/* Global Setup */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -25,7 +24,6 @@ body {
     align-items: center;
 }
 
-/* Header & Map Row Elements */
 .nav-row {
     width: 100%;
     max-width: 1150px;
@@ -45,22 +43,22 @@ body {
     border-radius: 4px;
 }
 
-/* Side-By-Side Main Layout Grid Splitter */
+/* Main Split Grid Layout */
 .main-workspace-grid {
     display: grid;
-    grid-template-columns: 340px 1fr;
+    grid-template-columns: 360px 1fr;
     gap: 20px;
     max-width: 1150px;
     width: 100%;
 }
 
-/* LEFT SIDEBAR SECTION: FURNITURE INVENTORY PLATFORM */
+/* Sidebar Section Container */
 .section-sidebar {
     background: var(--sidebar-bg);
     border: 4px solid var(--frame);
     border-radius: 8px;
     padding: 15px;
-    height: 620px;
+    height: 640px;
     overflow-y: auto;
 }
 
@@ -90,14 +88,13 @@ body {
     margin: 10px 0;
 }
 
-/* Furniture Thumbnails inside Sidebar */
 .thumb {
     background: var(--thumb-bg);
     border: 3px solid var(--frame);
     border-radius: 4px;
     padding: 4px;
     cursor: pointer;
-    height: 65px;
+    height: 70px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -113,12 +110,12 @@ body {
     image-rendering: pixelated;
 }
 
-/* RIGHT SECTION: THE LIVING ROOM CANVAS ENVIRONMENT */
+/* Interactive Canvas Board Section */
 .section-canvas {
     background: var(--canvas-bg);
     border: 5px solid var(--frame);
     border-radius: 8px;
-    height: 620px;
+    height: 640px;
     position: relative;
     overflow: hidden;
     box-shadow: 0 8px 0 rgba(0,0,0,0.05);
@@ -133,7 +130,7 @@ body {
     border-top: 4px solid var(--frame);
 }
 
-/* Draggable Canvas Item Wrappers */
+/* Draggable Canvas Item Elements */
 .wrapper {
     position: absolute;
     transform: translate(-50%, -50%);
@@ -142,17 +139,18 @@ body {
     z-index: 10;
 }
 
+/* Core scaling framework matching custom logic bounds */
 .wrapper svg {
     display: block;
     image-rendering: pixelated;
-    width: var(--w, 75px);
-    height: var(--h, 75px);
+    width: var(--w);
+    height: var(--h);
 }
 
-/* Scale Control Float Overlay Box */
+/* Miniature Resizing Floating Bar */
 .scale-box {
     position: absolute;
-    top: -24px;
+    top: -26px;
     left: 50%;
     transform: translateX(-50%);
     display: none;
@@ -177,7 +175,6 @@ body {
     border-radius: 2px;
 }
 
-/* Lower Instructions Panel Bar */
 .tips-bar {
     text-align: center;
     font-size: 0.75rem;
