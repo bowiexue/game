@@ -1,1 +1,163 @@
+:root {
+    --bg-color: #f7f1e3;
+    --primary-color: #d1ccc0;
+    --accent-color: #ffb142;
+    --pool-water: #74b9ff;
+    --dark-text: #2c3e50;
+}
 
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--dark-text);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+header h1 {
+    font-size: 2.2rem;
+    color: #cc8e35;
+    margin-bottom: 5px;
+}
+
+/* Home Button */
+.back-btn {
+    background: #aaa;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+/* Main Container Grid */
+.game-container {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 20px;
+    max-width: 1000px;
+    width: 100%;
+}
+
+/* Customizer Panel */
+.panel {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.avatar-preview {
+    width: 120px;
+    height: 120px;
+    background: #ffeaa7;
+    border-radius: 50%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 4rem;
+    border: 4px solid var(--accent-color);
+}
+
+.customizer-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.customizer-group label {
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+select {
+    padding: 8px;
+    border-radius: 8px;
+    border: 2px solid #ccc;
+    font-size: 1rem;
+    outline: none;
+}
+
+/* Onsen Map / Bath Area */
+.onsen-area {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.pool-wrapper {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    background: #ffeaa7; /* Wooden bath border deck */
+    border-radius: 20px;
+    padding: 20px;
+    overflow: hidden;
+    box-shadow: inset 0 0 15px rgba(0,0,0,0.1);
+}
+
+.water-pool {
+    width: 100%;
+    height: 100%;
+    background-color: var(--pool-water);
+    border-radius: 15px;
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+/* Steam/Mist Overlay Effect */
+.steam-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(rgba(255,255,255,0.15), rgba(255,255,255,0.3));
+    pointer-events: none;
+    animation: mistFloat 4s ease-in-out infinite alternate;
+}
+
+/* Animal Elements spawned by code */
+.spa-guest {
+    position: absolute;
+    font-size: 3rem;
+    user-select: none;
+    transform: translate(-50%, -50%);
+    animation: bobbing 2s ease-in-out infinite alternate;
+    cursor: grab;
+}
+
+/* Keyframe Animations */
+@keyframes mistFloat {
+    0% { opacity: 0.4; transform: scale(1); }
+    100% { opacity: 0.7; transform: scale(1.05); }
+}
+
+@keyframes bobbing {
+    0% { transform: translate(-50%, -50%) translateY(0px) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) translateY(-6px) rotate(3deg); }
+}
