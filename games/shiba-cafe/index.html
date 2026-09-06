@@ -3,127 +3,164 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Toca Shiba World Cafe</title>
+    <title>Toca Shiba Universe Cafe</title>
     <style>
-        :root {
-            --toca-bg: #ffefdb;
-            --toca-panel: #ffffff;
-            --toca-accent: #ff6b81;
-            --toca-text: #4a4a4a;
-        }
-        * { box-sizing: border-box; font-family: 'Fredoka One', 'Comic Sans MS', sans-serif; margin: 0; padding: 0; }
-        body { background: #a29bfe; color: var(--toca-text); padding: 25px; display: flex; flex-direction: column; align-items: center; }
+        * { box-sizing: border-box; font-family: 'Comic Sans MS', sans-serif; margin: 0; padding: 0; }
+        body { background: #ffeaa7; color: #2d3436; padding: 20px; display: flex; flex-direction: column; align-items: center; }
         
-        .toca-box { background: var(--toca-bg); padding: 30px; border-radius: 32px; box-shadow: 0 12px 0px rgba(0,0,0,0.1); max-width: 900px; width: 100%; border: 6px solid #4a4a4a; }
-        .back-btn { background: #ff7675; color: white; border: 4px solid #4a4a4a; padding: 8px 16px; border-radius: 16px; font-weight: bold; cursor: pointer; float: left; box-shadow: 0 4px 0 #4a4a4a; }
-        .back-btn:active { transform: translateY(4px); box-shadow: none; }
+        .game-window { background: #ffffff; border: 6px solid #2d3436; border-radius: 32px; width: 100%; max-width: 850px; padding: 25px; overflow: hidden; box-shadow: 0 12px 0 #2d3436; }
+        .nav-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .btn-ui { background: #ff7675; color: white; border: 3px solid #2d3436; padding: 8px 16px; border-radius: 16px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 0 #2d3436; }
+        .btn-ui:active { transform: translateY(2px); box-shadow: 0 2px 0 #2d3436; }
 
-        .studio-layout { display: grid; grid-template-columns: 1.2fr 1fr; gap: 25px; margin-top: 20px; clear: both; }
-        .pane { background: var(--toca-panel); border: 5px solid #4a4a4a; border-radius: 24px; padding: 20px; box-shadow: inset 0 -6px 0 #dfe6e9; }
-        
-        /* Fixed Vector Coordinate Layer Mapping */
-        .avatar-stage { background: #ffeaa7; height: 260px; border-radius: 20px; border: 4px solid #4a4a4a; position: relative; display: flex; align-items: center; justify-content: center; }
-        .shiba-body { font-size: 8rem; position: relative; z-index: 1; user-select: none; }
-        
-        /* Pixels lock hats and shirts flush with face geometry coordinates */
-        .hat-layer { position: absolute; top: 40px; left: 50%; transform: translateX(-50%); font-size: 3.5rem; z-index: 3; pointer-events: none; }
-        .cloth-layer { position: absolute; bottom: 45px; left: 50%; transform: translateX(-40%); font-size: 4rem; z-index: 2; pointer-events: none; }
-        .face-layer { position: absolute; top: 105px; left: 52%; transform: translateX(-50%); font-size: 1.8rem; z-index: 4; pointer-events: none; }
+        .screen-view { display: none; width: 100%; animation: fadeIn 0.3s ease; }
+        .screen-view.active { display: block; }
 
-        .toca-title { font-size: 1.3rem; margin: 15px 0 8px 0; text-align: left; background: #55efc4; display: inline-block; padding: 4px 12px; border-radius: 12px; border: 3px solid #4a4a4a; }
-        .opt-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-        .opt-node { background: #f1f2f6; border: 3px solid #4a4a4a; border-radius: 16px; padding: 10px; cursor: pointer; font-size: 2rem; box-shadow: 0 4px 0 #4a4a4a; text-align: center; }
-        .opt-node:active { transform: translateY(4px); box-shadow: none; }
+        /* CHARACTER CREATION ROOM */
+        .creator-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .avatar-pod { background: #74b9ff; border: 4px solid #2d3436; border-radius: 24px; height: 300px; position: relative; display: flex; align-items: center; justify-content: center; }
+        .dog-base { font-size: 8rem; position: relative; }
+        .dog-hat { position: absolute; top: 50px; font-size: 3.5rem; z-index: 10; }
+        .dog-cloth { position: absolute; bottom: 50px; font-size: 4rem; z-index: 5; }
         
-        /* Kitchen Playground Scene Layout */
-        .cafe-floor { background: #74b9ff; height: 260px; border-radius: 20px; position: relative; border: 5px solid #4a4a4a; background-image: radial-gradient(rgba(255,255,255,0.3) 15%, transparent 16%); background-size: 16px 16px; }
-        .guest-shiba { position: absolute; bottom: 80px; left: 35px; font-size: 6rem; }
-        .serving-plate { position: absolute; bottom: 85px; right: 55px; font-size: 3.5rem; border: 4px dashed #fff; border-radius: 50%; width: 90px; height: 90px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.2); }
-        
-        .counter-table { position: absolute; bottom: 0; width: 100%; height: 75px; background: #fab1a0; border-top: 5px solid #4a4a4a; display: flex; justify-content: center; align-items: center; gap: 15px; }
-        .food-asset { cursor: grab; font-size: 2.5rem; transition: transform 0.1s; }
-        .food-asset:hover { transform: scale(1.2); }
+        .closet-panel { background: #f1f2f6; border: 4px solid #2d3436; border-radius: 24px; padding: 15px; }
+        .closet-title { font-size: 1rem; font-weight: bold; margin: 8px 0; background: #55efc4; display: inline-block; padding: 2px 10px; border-radius: 10px; border: 2px solid #2d3436; }
+        .item-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+        .item-node { background: white; border: 2px solid #2d3436; border-radius: 12px; padding: 8px; text-align: center; font-size: 1.8rem; cursor: pointer; box-shadow: 0 3px 0 #2d3436; }
+        .item-node:active { transform: translateY(2px); box-shadow: none; }
+
+        /* DINING ROOM */
+        .dining-canvas { background: #fab1a0; border: 4px solid #2d3436; border-radius: 24px; height: 320px; position: relative; }
+        .my-avatar-token { position: absolute; bottom: 30px; left: 40px; display: flex; align-items: center; justify-content: center; font-size: 5rem; width: 100px; height: 100px; }
+        .customer-token { position: absolute; bottom: 30px; right: 180px; font-size: 5.5rem; }
+        .table-prop { position: absolute; bottom: 0; right: 40px; width: 150px; height: 90px; background: #d4a373; border: 4px solid #2d3436; border-top-left-radius: 16px; border-top-right-radius: 16px; display: flex; align-items: center; justify-content: center; }
+        #plate-slot { font-size: 3rem; cursor: pointer; min-width: 60px; text-align: center; }
+
+        /* KITCHEN TELEPORT ROOM */
+        .kitchen-canvas { background: #dfe6e9; border: 4px solid #2d3436; border-radius: 24px; height: 320px; padding: 20px; text-align: center; }
+        .oven-station { background: #74b9ff; border: 4px solid #2d3436; border-radius: 24px; max-width: 300px; margin: 20px auto; padding: 20px; }
+        #oven-display { font-size: 4rem; margin: 15px 0; height: 80px; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
-    <div class="toca-box">
-        <button class="back-btn" onclick="location.href='../../index.html'">⬅ Map</button>
-        <h2 style="font-size: 2.2rem; text-shadow: 2px 2px 0px #fff; margin-bottom: 5px;">🏡 Toca Shiba Cafe Studio</h2>
-        
-        <div class="studio-layout">
-            <!-- PANE 1: CHARACTER CREATOR CLOSET -->
-            <div class="pane">
-                <div class="avatar-stage">
-                    <div class="shiba-body">🐕</div>
-                    <div class="hat-layer" id="layer-hat"></div>
-                    <div class="face-layer" id="layer-face">🕶️</div>
-                    <div class="cloth-layer" id="layer-cloth"></div>
-                </div>
+    <div class="game-window">
+        <div class="nav-header">
+            <button class="btn-ui" style="background:#b2bec3" onclick="location.href='../../index.html'">⬅ Map</button>
+            <h2 id="room-title">🏡 Avatar Designer</h2>
+            <button class="btn-ui" id="kitchen-teleport-btn" style="background:#fdcb6e; display:none;" onclick="teleport('kitchen-room')">Go to Kitchen 🍳</button>
+            <button class="btn-ui" id="dining-teleport-btn" style="background:#55efc4; display:none;" onclick="teleport('dining-room')">Return to Diner 🍽️</button>
+        </div>
 
-                <div class="toca-title">👑 Head Accessories</div>
-                <div class="opt-grid" onclick="cosmetic('hat', event)">
-                    <div class="opt-node">👑</div><div class="opt-node">🎀</div><div class="opt-node">🎩</div><div class="opt-node">❌</div>
+        <!-- 1. CREATOR ROOM VIEW -->
+        <div id="creator-room" class="screen-view active">
+            <div class="creator-container">
+                <div class="avatar-pod">
+                    <div class="dog-base">🐕</div>
+                    <div class="dog-hat" id="c-hat"></div>
+                    <div class="dog-cloth" id="c-cloth"></div>
                 </div>
-
-                <div class="toca-title">🕶️ Expressions</div>
-                <div class="opt-grid" onclick="cosmetic('face', event)">
-                    <div class="opt-node">🕶️</div><div class="opt-node">🤓</div><div class="opt-node">😭</div><div class="opt-node">❌</div>
-                </div>
-
-                <div class="toca-title">👔 Outfits & Capes</div>
-                <div class="opt-grid" onclick="cosmetic('cloth', event)">
-                    <div class="opt-node">👔</div><div class="opt-node">👗</div><div class="opt-node">🎒</div><div class="opt-node">❌</div>
-                </div>
-            </div>
-
-            <!-- PANE 2: THE PLAYGROUND SERVICE KITCHEN -->
-            <div class="pane" style="display: flex; flex-direction: column; justify-content: space-between;">
-                <div>
-                    <h3 style="font-size:1.6rem; margin-bottom: 5px;">🍳 Dining Sandbox</h3>
-                    <p style="font-size:0.9rem; color:#636e72;">Drag treats directly off the food deck onto the plate to serve your guest!</p>
-                </div>
-
-                <div class="cafe-floor">
-                    <div class="guest-shiba">🦊</div>
-                    <div class="serving-plate" id="drop-plate">🍽️</div>
-                    
-                    <div class="counter-table">
-                        <span class="food-asset" draggable="true" ondragstart="drag(event)">🥞</span>
-                        <span class="food-asset" draggable="true" ondragstart="drag(event)">🍰</span>
-                        <span class="food-asset" draggable="true" ondragstart="drag(event)">🍦</span>
-                        <span class="food-asset" draggable="true" ondragstart="drag(event)">🍔</span>
+                <div class="closet-panel">
+                    <div class="closet-title">🎩 Headwear</div>
+                    <div class="item-grid" onclick="preview('hat', event)">
+                        <div class="item-node">👑</div><div class="item-node">🎀</div><div class="item-node">🎩</div><div class="item-node">❌</div>
                     </div>
+                    <div class="closet-title">👗 Clothing Items</div>
+                    <div class="item-grid" onclick="preview('cloth', event)">
+                        <div class="item-node">👔</div><div class="item-node">👗</div><div class="item-node">🎒</div><div class="item-node">❌</div>
+                    </div>
+                    <button class="btn-ui" style="background:#2ecc71; width:100%; margin-top:20px; font-size:1.1rem; padding:12px;" onclick="saveAvatarAndStart()">Done! Enter Cafe ✨</button>
                 </div>
-
-                <button onclick="shuffleGuest()" style="width:100%; padding:12px; background:#55efc4; border:4px solid #4a4a4a; border-radius:16px; font-weight:bold; font-size:1.1rem; cursor:pointer; box-shadow: 0 4px 0 #4a4a4a;">Invite Next Customer</button>
             </div>
         </div>
+
+        <!-- 2. DINING ROOM VIEW -->
+        <div id="dining-room" class="screen-view">
+            <div class="dining-canvas">
+                <div class="my-avatar-token">
+                    <span>🐕</span>
+                    <span id="d-hat" style="position:absolute; top:-10px; font-size:2.2rem;"></span>
+                    <span id="d-cloth" style="position:absolute; bottom:5px; font-size:2.5rem;"></span>
+                </div>
+                <div class="customer-token">🦊</div>
+                <div class="table-prop">
+                    <div id="plate-slot">🍽️</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. KITCHEN ROOM VIEW -->
+        <div id="kitchen-room" class="screen-view">
+            <div class="kitchen-canvas">
+                <h3>Select a Recipe to Cook:</h3>
+                <div class="item-grid" style="max-width:400px; margin:15px auto;">
+                    <button class="btn-ui" style="background:white; color:black; font-size:1.5rem;" onclick="startBake('🥞')">🥞</button>
+                    <button class="btn-ui" style="background:white; color:black; font-size:1.5rem;" onclick="startBake('🍰')">🍰</button>
+                    <button class="btn-ui" style="background:white; color:black; font-size:1.5rem;" onclick="startBake('🍦')">🍦</button>
+                    <button class="btn-ui" style="background:white; color:black; font-size:1.5rem;" onclick="startBake('🍔')">🍔</button>
+                </div>
+                <div class="oven-station">
+                    <div id="oven-status">Oven Idle</div>
+                    <div id="oven-display">💨</div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <script>
-        function cosmetic(layer, e) {
-            if(!e.target.classList.contains('opt-node')) return;
-            const selection = e.target.innerText;
-            document.getElementById(`layer-${layer}`).innerText = (selection === '❌') ? '' : selection;
+        let character = { hat: '', cloth: '' };
+        let currentHeldFood = '';
+
+        function preview(type, e) {
+            if(!e.target.classList.contains('item-node')) return;
+            let choice = e.target.innerText;
+            character[type] = (choice === '❌') ? '' : choice;
+            document.getElementById(`c-${type}`).innerText = character[type];
         }
 
-        function drag(ev) { ev.dataTransfer.setData("foodItem", ev.target.innerText); }
-        
-        const plate = document.getElementById('drop-plate');
-        plate.addEventListener('dragover', (e) => e.preventDefault());
-        plate.addEventListener('drop', (e) => {
-            e.preventDefault();
-            plate.innerText = e.dataTransfer.getData("foodItem");
-            plate.style.borderStyle = "solid";
-        });
-
-        const characters = ['🦊', '🐱', '🦁', '🐻', '🐶', '🐮', '🐼', '🐰', '🐷', '🐹', '🐯'];
-        function shuffleGuest() {
-            document.querySelector('.guest-shiba').innerText = characters[Math.floor(Math.random() * characters.length)];
-            plate.innerText = '🍽️';
-            plate.style.borderStyle = "dashed";
+        function saveAvatarAndStart() {
+            document.getElementById('d-hat').innerText = character.hat;
+            document.getElementById('d-cloth').innerText = character.cloth;
+            teleport('dining-room');
         }
-    </script>
-</body>
-</html>
+
+        function teleport(roomID) {
+            document.querySelectorAll('.screen-view').forEach(view => view.classList.remove('active'));
+            document.getElementById(roomID).classList.add('active');
+            
+            if(roomID === 'creator-room') {
+                document.getElementById('room-title').innerText = "🏡 Avatar Designer";
+                document.getElementById('kitchen-teleport-btn').style.display = 'none';
+                document.getElementById('dining-teleport-btn').style.display = 'none';
+            } else if(roomID === 'dining-room') {
+                document.getElementById('room-title').innerText = "🍽️ Diner Floor";
+                document.getElementById('kitchen-teleport-btn').style.display = 'block';
+                document.getElementById('dining-teleport-btn').style.display = 'none';
+                
+                if(currentHeldFood) {
+                    document.getElementById('plate-slot').innerText = currentHeldFood;
+                    setTimeout(() => {
+                        alert("The guest ate the delicious food you brought from the kitchen! 🦊✨");
+                        document.getElementById('plate-slot').innerText = '🍽️';
+                        currentHeldFood = '';
+                    }, 1200);
+                }
+            } else if(roomID === 'kitchen-room') {
+                document.getElementById('room-title').innerText = "🍳 Preparation Kitchen";
+                document.getElementById('kitchen-teleport-btn').style.display = 'none';
+                document.getElementById('dining-teleport-btn').style.display = 'block';
+            }
+        }
+
+        function startBake(foodItem) {
+            document.getElementById('oven-status').innerText = "Baking treats... ⏱️";
+            document.getElementById('oven-display').innerText = '🔥';
+            setTimeout(() => {
+                currentHeldFood = foodItem;
+                document.getElementById('oven-status').innerText = "Finished! Click 'Return to Diner' to serve!";
+                document.getElementById('oven-display').innerText = foodItem;
+            }, 1500);
+        }
