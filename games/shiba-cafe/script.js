@@ -1,12 +1,16 @@
+// GLOBAL STATE BALANCES
 let character = { hat: '', face: '', cloth: '' };
 let currentHeldFood = '';
+let currentIngredients = [];
 
+// DYNAMIC ACCESSORY ATTACHMENT ROUTINES
 function equipItem(type, emoji) {
     character[type] = emoji;
     const el = document.getElementById(`c-${type}`);
     if (el) el.innerText = emoji;
 }
 
+// LOCKS CHARACTER IN PROFILE ENGINE
 function saveAvatarAndStart() {
     document.getElementById('d-hat').innerText = character.hat;
     document.getElementById('d-face').innerText = character.face;
@@ -14,45 +18,79 @@ function saveAvatarAndStart() {
     teleport('dining-room');
 }
 
+// ROOM TELEPORTATION NAVIGATION SWITCHES
 function teleport(roomID) {
+    // Hide all viewports completely
     document.querySelectorAll('.screen-view').forEach(view => view.classList.remove('active'));
-    document.getElementById(roomID).classList.add('active');
+    
+    // Show chosen room map layer
+    const activeRoom = document.getElementById(roomID);
+    if (activeRoom) activeRoom.classList.add('active');
     
     const title = document.getElementById('room-title');
     const kBtn = document.getElementById('kitchen-teleport-btn');
     const dBtn = document.getElementById('dining-teleport-btn');
 
     if (roomID === 'creator-room') {
-        title.innerText = "🏡 Avatar Designer"; kBtn.style.display = 'none'; dBtn.style.display = 'none';
+        if (title) title.innerText = "🏡 Avatar Designer"; 
+        if (kBtn) kBtn.style.display = 'none'; 
+        if (dBtn) dBtn.style.display = 'none';
     } else if (roomID === 'dining-room') {
-        title.innerText = "🍽️ Diner Floor"; kBtn.style.display = 'block'; dBtn.style.display = 'none';
+        if (title) title.innerText = "🍽️ Diner Floor"; 
+        if (kBtn) kBtn.style.display = 'block'; 
+        if (dBtn) dBtn.style.display = 'none';
+        
+        // Serve food instantly upon teleport arrival
         if (currentHeldFood) {
             const plate = document.getElementById('plate-slot');
             if (plate) plate.innerText = currentHeldFood;
             setTimeout(() => {
-                alert(`The client happily munched down your handmade ${currentHeldFood}! 🦊✨`);
+                alert(`The client happily ate your newly invented ${currentHeldFood}! 🦊✨`);
                 if (plate) plate.innerText = '🍽️';
                 currentHeldFood = '';
             }, 1200);
         }
     } else if (roomID === 'kitchen-room') {
-        title.innerText = "🍳 Preparation Kitchen"; kBtn.style.display = 'none'; dBtn.style.display = 'block';
+        if (title) title.innerText = "🍳 Preparation Kitchen"; 
+        if (kBtn) kBtn.style.display = 'none'; 
+        if (dBtn) dBtn.style.display = 'block';
     }
 }
 
-function prepareFood(foodItem, machine) {
-    const status = document.getElementById('kitchen-status');
-    const display = document.getElementById('kitchen-display');
-    
-    if (machine === 'oven') {
-        status.innerText = "Baking item inside heating elements... 🔥"; display.innerText = '⏳';
-    } else {
-        status.innerText = "Churning sub-zero ice crystals... ❄️"; display.innerText = '🌀';
+// FOOD INGREDIENT SYSTEM
+function addIngredient(emoji) {
+    if (currentIngredients.length >= 3) {
+        alert("Your mixing bowl is completely full!");
+        return;
+    }
+    currentIngredients.push(emoji);
+    document.getElementById('bowl-display').innerText = currentIngredients.join(" + ");
+}
+
+function clearMixingBin() {
+    currentIngredients = [];
+    document.getElementById('bowl-display').innerText = "Empty Pot";
+}
+
+// COOKING COMBINATION CRAFTER
+function craftCombinationItems() {
+    if (currentIngredients.length === 0) {
+        alert("Add items into the pot before crafting!");
+        return;
     }
     
-    setTimeout(() => {
-        currentHeldFood = foodItem;
-        status.innerText = "Order finished! Click 'Return to Diner' to deliver it!";
-        display.innerText = foodItem;
-    }, 1400);
+    // Sort items so order of selection doesn't break recipes
+    let signature = currentIngredients.sort().join("");
+    let resultDish = "🤢 Uncooked Slop";
+
+    // Recipe Matching Logic
+    if (signature === "🍞🥛") resultDish = "🥞 Fresh Hotcakes";
+    else if (signature === "🍓🥛") resultDish = "🍨 Berry Soft Serve Cup";
+    else if (signature === "🍞🥛🍓") resultDish = "🍰 Strawberry Shortcake";
+    else if (signature === "🥩🍞") resultDish = "🍔 Gourmet Burger Combo";
+    else if (signature === "🥩🍓") resultDish = "🍖 Glazed Sweet Ribs";
+
+    currentHeldFood = resultDish;
+    alert(`Combination Crafted Successfully: You created ${resultDish}! Return to the diner room to deliver it.`);
+    clearMixingBin();
 }
