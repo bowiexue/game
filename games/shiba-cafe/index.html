@@ -14,36 +14,49 @@
         .screen-view { display: none; width: 100%; }
         .screen-view.active { display: block; }
 
-        /* Pixel-Locked Fitting Room */
+        /* CSS Grid Anchor Stack System to lock clothes onto the dog body permanently */
         .creator-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .avatar-pod { background: #74b9ff; border: 4px solid #2d3436; border-radius: 24px; height: 320px; position: relative; display: flex; align-items: center; justify-content: center; }
-        .dog-anchor { position: relative; width: 150px; height: 150px; font-size: 8rem; line-height: 1; display: flex; align-items: center; justify-content: center; }
+        .avatar-pod { background: #74b9ff; border: 4px solid #2d3436; border-radius: 24px; height: 320px; display: flex; align-items: center; justify-content: center; }
         
-        /* Fixed Coordinates to stop item floating */
-        .dog-hat { position: absolute; top: -45px; left: 45px; font-size: 3.5rem; z-index: 10; }
-        .dog-face { position: absolute; top: 15px; left: -10px; font-size: 2.2rem; z-index: 8; }
-        .dog-cloth { position: absolute; bottom: -30px; left: 25px; font-size: 4.5rem; z-index: 5; }
+        .dog-anchor-stack { 
+            display: grid; 
+            grid-template-columns: 1fr; 
+            grid-template-rows: 1fr; 
+            align-items: center; 
+            justify-items: center; 
+            width: 200px; 
+            height: 200px; 
+        }
+        .dog-anchor-stack * { grid-column: 1; grid-row: 1; line-height: 1; }
+
+        /* Layer mapping offsets */
+        .dog-base { font-size: 8rem; margin-top: 10px; user-select: none; }
+        .dog-hat { font-size: 3.5rem; margin-top: -125px; margin-left: 55px; z-index: 10; }
+        .dog-face { font-size: 2.2rem; margin-top: -30px; margin-left: -50px; z-index: 8; }
+        .dog-cloth { font-size: 4.5rem; margin-top: 90px; margin-left: 25px; z-index: 5; }
         
         .closet-panel { background: #f1f2f6; border: 4px solid #2d3436; border-radius: 24px; padding: 15px; height: 320px; overflow-y: auto; }
         .closet-title { font-size: 1rem; font-weight: bold; margin: 8px 0; background: #55efc4; display: inline-block; padding: 2px 10px; border-radius: 10px; border: 2px solid #2d3436; }
         .item-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
         .item-node { background: white; border: 2px solid #2d3436; border-radius: 12px; padding: 8px; text-align: center; font-size: 1.8rem; cursor: pointer; box-shadow: 0 3px 0 #2d3436; }
 
-        /* Detailed Dining Room Sandbox */
+        /* Dining Area Sandbox Layout */
         .dining-canvas { background: #fab1a0; border: 4px solid #2d3436; border-radius: 24px; height: 350px; position: relative; background-image: linear-gradient(90deg, transparent 50%, rgba(255,255,255,0.07) 50%); background-size: 40px 40px; }
         .window-decor { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); width: 200px; height: 100px; background: #81ecec; border: 4px solid #2d3436; border-radius: 12px; overflow: hidden; }
         .window-sun { width: 40px; height: 40px; background: #f1c40f; border-radius: 50%; position: absolute; right: 10px; top: 10px; }
-        .my-avatar-token { position: absolute; bottom: 70px; left: 60px; width: 150px; height: 150px; font-size: 7rem; }
+        .my-avatar-token { position: absolute; bottom: 45px; left: 40px; }
         .customer-token { position: absolute; bottom: 70px; right: 240px; font-size: 7.5rem; }
         .table-prop { position: absolute; bottom: 0; right: 40px; width: 180px; height: 120px; background: #d4a373; border: 4px solid #2d3436; border-top-left-radius: 24px; border-top-right-radius: 24px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .chair-prop { position: absolute; bottom: 0; right: 230px; width: 80px; height: 80px; background: #e17055; border: 4px solid #2d3436; border-top-left-radius: 12px; border-top-right-radius: 12px; }
         #plate-slot { font-size: 3.5rem; }
 
-        /* Pro Kitchen Layout Split */
+        /* Kitchen Multi-Ingredient Counter */
         .kitchen-canvas { background: #dfe6e9; border: 4px solid #2d3436; border-radius: 24px; height: 350px; padding: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .appliances { background: white; border: 4px solid #2d3436; border-radius: 16px; padding: 15px; display: flex; flex-direction: column; justify-content: space-around; }
-        .cooking-hub { background: #b2bec3; border: 4px solid #2d3436; border-radius: 16px; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .device-btn { background: #74b9ff; color: white; border: 2px solid #2d3436; padding: 8px; font-weight: bold; border-radius: 8px; cursor: pointer; margin-bottom: 5px; }
+        .pantry-box { background: white; border: 4px solid #2d3436; border-radius: 16px; padding: 12px; display: flex; flex-direction: column; justify-content: space-between; }
+        .kitchen-bench { background: #b2bec3; border: 4px solid #2d3436; border-radius: 16px; padding: 15px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; }
+        .ingredient-btn { background: #ffeaa7; border: 2px solid #2d3436; padding: 8px; font-weight: bold; border-radius: 8px; cursor: pointer; font-size: 1.1rem; box-shadow: 0 3px 0 #2d3436; }
+        .ingredient-btn:active { transform: translateY(2px); box-shadow: none; }
+        .mix-bin { background: white; border: 3px dashed #2d3436; border-radius: 12px; width: 100%; height: 70px; display: flex; align-items: center; justify-content: center; font-size: 2rem; gap: 5px; }
     </style>
 </head>
 <body>
@@ -59,8 +72,8 @@
         <div id="creator-room" class="screen-view active">
             <div class="creator-container">
                 <div class="avatar-pod">
-                    <div class="dog-anchor">
-                        🐕
+                    <div class="dog-anchor-stack">
+                        <div class="dog-base">🐕</div>
                         <div class="dog-hat" id="c-hat"></div>
                         <div class="dog-face" id="c-face"></div>
                         <div class="dog-cloth" id="c-cloth"></div>
@@ -69,7 +82,7 @@
                 <div class="closet-panel">
                     <div class="closet-title">🎩 Headwear</div>
                     <div class="item-grid"><div class="item-node" onclick="equipItem('hat', '👑')">👑</div><div class="item-node" onclick="equipItem('hat', '🎀')">🎀</div><div class="item-node" onclick="equipItem('hat', '🎩')">🎩</div><div class="item-node" onclick="equipItem('hat', '')">❌</div></div>
-                    <div class="closet-title">眼镜 Eyes</div>
+                    <div class="closet-title">🕶️ Glasses</div>
                     <div class="item-grid"><div class="item-node" onclick="equipItem('face', '🕶️')">🕶️</div><div class="item-node" onclick="equipItem('face', '🤓')">🤓</div><div class="item-node" onclick="equipItem('face', '😭')">😭</div><div class="item-node" onclick="equipItem('face', '')">❌</div></div>
                     <div class="closet-title">👗 Clothing</div>
                     <div class="item-grid"><div class="item-node" onclick="equipItem('cloth', '👔')">👔</div><div class="item-node" onclick="equipItem('cloth', '👗')">👗</div><div class="item-node" onclick="equipItem('cloth', '🎒')">🎒</div><div class="item-node" onclick="equipItem('cloth', '')">❌</div></div>
@@ -83,11 +96,11 @@
             <div class="dining-canvas">
                 <div class="window-decor"><div class="window-sun"></div></div>
                 <div class="my-avatar-token">
-                    <div class="dog-anchor" style="font-size:7rem;">
-                        🐕
-                        <div class="dog-hat" id="d-hat" style="top:-35px; left:40px; font-size:3rem;"></div>
-                        <div class="dog-face" id="d-face" style="top:15px; left:-10px; font-size:2rem;"></div>
-                        <div class="dog-cloth" id="d-cloth" style="bottom:-20px; left:20px; font-size:4rem;"></div>
+                    <div class="dog-anchor-stack">
+                        <div class="dog-base">🐕</div>
+                        <div class="dog-hat" id="d-hat"></div>
+                        <div class="dog-face" id="d-face"></div>
+                        <div class="dog-cloth" id="d-cloth"></div>
                     </div>
                 </div>
                 <div class="chair-prop"></div>
@@ -96,26 +109,22 @@
             </div>
         </div>
 
-        <!-- 3. SPLIT APPLIANCE KITCHEN -->
+        <!-- 3. MULTI-INGREDIENT KITCHEN BENCH -->
         <div id="kitchen-room" class="screen-view">
             <div class="kitchen-canvas">
-                <div class="appliances">
+                <div class="pantry-box">
                     <div>
-                        <div class="closet-title" style="background:#ff7675">Bake Oven Station</div>
-                        <div style="display:flex; gap:5px;"><button class="device-btn" onclick="prepareFood('🥞','oven')">🥞 Hotcake</button><button class="device-btn" onclick="prepareFood('🍰','oven')">🍰 Cake</button><button class="device-btn" onclick="prepareFood('🍔','oven')">🍔 Burger</button></div>
+                        <div class="closet-title" style="background:#ff7675; margin-bottom:10px;">Select Ingredients</div>
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+                            <button class="ingredient-btn" onclick="addIngredient('🍞')">🍞 Dough</button>
+                            <button class="ingredient-btn" onclick="addIngredient('🥛')">🥛 Cream</button>
+                            <button class="ingredient-btn" onclick="addIngredient('🍓')">🍓 Strawberries</button>
+                            <button class="ingredient-btn" onclick="addIngredient('🥩')">🥩 Meat Patty</button>
+                        </div>
                     </div>
-                    <div>
-                        <div class="closet-title" style="background:#74b9ff">Ice Soft-Serve Machine</div>
-                        <div style="display:flex; gap:5px;"><button class="device-btn" style="background:#a29bfe" onclick="prepareFood('🍦','ice')">🍦 Vanilla</button><button class="device-btn" style="background:#fd79a8" onclick="prepareFood('🍧','ice')">🍧 Berry Sundae</button></div>
-                    </div>
+                    <button class="btn-ui" style="background:#e74c3c; width:100%;" onclick="clearMixingBin()">Clear Mixing Pot 🗑️</button>
                 </div>
-                <div class="cooking-hub">
-                    <h3 id="kitchen-status">Kitchen Equipment Idle</h3>
-                    <div id="kitchen-display" style="font-size:5rem; margin-top:10px;">💨</div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <script src="script.js"></script>
-</body>
-</html>
+                <div class="kitchen-bench">
+                    <h3 style="color:white; text-align:center;">Mixing Bowl Counter</h3>
+                    <div class="mix-bin" id="bowl-display">Empty Pot</div>
+Combine & Craft Dish🍳
