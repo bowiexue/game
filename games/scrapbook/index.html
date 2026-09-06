@@ -3,106 +3,157 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cosy Diorama Creator Pro</title>
+    <title>Pixel Diorama Studio</title>
     <style>
-        body { background: #ebf3f5; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; padding: 20px; }
-        .nav-row { width: 100%; max-width: 1100px; margin-bottom: 15px; }
-        .back-btn { background: #7f8c8d; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: bold; }
-        .container { display: grid; grid-template-columns: 320px 1fr; gap: 20px; max-width: 1100px; width: 100%; }
+        :root { --bg: #f4ece1; --panel: #ffffff; --border: #4a3728; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Courier New', Courier, monospace; }
+        body { background: var(--bg); color: var(--border); padding: 20px; display: flex; flex-direction: column; align-items: center; }
         
-        .sidebar { background: white; border: 2px solid #b2bec3; border-radius: 16px; padding: 20px; height: 580px; overflow-y: auto; }
-        .category-title { font-weight: bold; margin-top: 15px; color: #2d3436; border-bottom: 2px solid #f1f2f6; padding-bottom: 4px; }
-        .item-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 8px; }
-        .item-btn { font-size: 1.8rem; background: #f1f2f6; border: none; border-radius: 8px; padding: 8px; cursor: pointer; transition: transform 0.1s; }
-        .item-btn:hover { transform: scale(1.1); background: #dfe4ea; }
+        .nav-row { width: 100%; max-width: 1050px; margin-bottom: 15px; }
+        .back-btn { background: var(--border); color: white; border: none; padding: 10px 16px; border-radius: 4px; cursor: pointer; font-weight: bold; image-rendering: pixelated; }
+        
+        .container { display: grid; grid-template-columns: 300px 1fr; gap: 20px; max-width: 1050px; width: 100%; }
+        
+        /* Catalog Sidebar */
+        .sidebar { background: var(--panel); border: 4px solid var(--border); border-radius: 8px; padding: 15px; height: 600px; overflow-y: auto; }
+        .sidebar h3 { text-align: center; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
+        .cat-title { font-weight: bold; margin-top: 15px; background: #e6d8c4; padding: 4px; font-size: 0.85rem; border-left: 4px solid var(--border); }
+        .item-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px; }
+        
+        /* Catalog Item Thumbnails */
+        .item-thumb { background: #faf5ef; border: 3px solid var(--border); border-radius: 4px; padding: 5px; cursor: pointer; display: flex; align-items: center; justify-content: center; height: 65px; }
+        .item-thumb:hover { background: #eedfcb; }
+        .item-thumb svg { width: 100%; height: 100%; image-rendering: pixelated; }
 
-        .canvas-board { background: #ffeaa7; border: 8px solid #6c5ce7; border-radius: 20px; height: 580px; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.05); overflow: hidden; }
-        .canvas-floor { position: absolute; bottom: 0; width: 100%; height: 30%; background: #fab1a0; border-top: 4px solid #ff7675; }
+        /* The Room Canvas Box */
+        .room-canvas { background: #dfcbb5; border: 6px solid var(--border); border-radius: 12px; height: 600px; position: relative; overflow: hidden; box-shadow: 0 8px 0 rgba(0,0,0,0.1); }
+        .room-floor { position: absolute; bottom: 0; width: 100%; height: 25%; background: #cda885; border-top: 4px solid var(--border); }
+
+        /* Placed Furniture Wrapper */
+        .furniture-wrapper { position: absolute; transform: translate(-50%, -50%); cursor: move; user-select: none; z-index: 10; display: inline-block; padding: 5px; }
+        .furniture-wrapper svg { display: block; image-rendering: pixelated; width: var(--w, 64px); height: var(--h, 64px); }
         
-        .placed-element { position: absolute; font-size: 3.5rem; cursor: move; user-select: none; transform: translate(-50%, -50%); z-index: 10; font-size: var(--sz, 3.5rem); }
-        .controls-hint { background: #2d3436; color: white; padding: 10px; border-radius: 8px; margin-top: 15px; width: 100%; text-align: center; font-size: 0.85rem; }
+        /* Mini Scale Controls on Hover */
+        .scale-overlay { position: absolute; top: -25px; left: 50%; transform: translateX(-50%); display: none; gap: 4px; background: var(--border); padding: 2px; border-radius: 4px; z-index: 2000; }
+        .furniture-wrapper:hover .scale-overlay { display: flex; }
+        .scale-btn { background: white; border: none; font-weight: bold; padding: 2px 6px; font-size: 0.75rem; cursor: pointer; border-radius: 2px; }
+        .scale-btn:hover { background: #eedfcb; }
+        
+        .footer-tips { text-align: center; font-size: 0.8rem; margin-top: 15px; font-weight: bold; }
     </style>
 </head>
 <body>
 
     <div class="nav-row">
-        <button class="back-btn" onclick="location.href='../../index.html'">⬅ Return to Map</button>
+        <button class="back-btn" onclick="location.href='../../index.html'">◀ RETURN TO MAP</button>
     </div>
 
     <div class="container">
         <aside class="sidebar">
-            <h3 style="color:#6c5ce7;">🎨 Decorator Catalog</h3>
+            <h3>🎨 ROOM STUDIO</h3>
             
-            <div class="category-title">🖼️ Themes & Backgrounds</div>
-            <div class="item-row">
-                <button class="item-btn" style="font-size:1rem;" onclick="setTheme('#ffeaa7', '#fab1a0')">🪵 Cozy</button>
-                <button class="item-btn" style="font-size:1rem;" onclick="setTheme('#81ecec', '#00cec9')">🌊 Aqua</button>
-                <button class="item-btn" style="font-size:1rem;" onclick="setTheme('#a29bfe', '#6c5ce7')">🌌 Cyber</button>
-                <button class="item-btn" style="font-size:1rem;" onclick="setTheme('#ff7675', '#d63031')">🎈 Retro</button>
+            <div class="cat-title">FURNITURE</div>
+            <div class="item-grid">
+                <!-- Pixel Couch -->
+                <div class="item-thumb" onclick="spawnFurniture('couch')">
+                    <svg viewBox="0 0 16 16"><path d="M1,6 H15 V11 H1 V6 M1,11 H3 V13 H1 V11 M13,11 H15 V13 H13 V11 M3,8 H13 V11 H3 V8" fill="#c0392b"/><path d="M0,5 H16 V6 H0 V5 M1,6 H3 V11 H1 V6 M13,6 H15 V11 H13 V6" fill="#7f8c8d"/></svg>
+                </div>
+                <!-- Pixel Table -->
+                <div class="item-thumb" onclick="spawnFurniture('table')">
+                    <svg viewBox="0 0 16 16"><path d="M1,6 H15 V8 H1 V6 M2,8 H4 V13 H2 V8 M12,8 H14 V13 H12 V8" fill="#d35400"/><path d="M1,5 H15 V6 H1 V5" fill="#f39c12"/></svg>
+                </div>
+                <!-- Pixel Bed -->
+                <div class="item-thumb" onclick="spawnFurniture('bed')">
+                    <svg viewBox="0 0 16 16"><path d="M1,7 H15 V11 H1 V7 M1,11 H2 V13 H1 V11 M14,11 H15 V13 H14 V11" fill="#2980b9"/><path d="M1,6 H5 V8 H1 V6" fill="#ecf0f1"/></svg>
+                </div>
             </div>
 
-            <div class="category-title">🪑 Framework Furniture</div>
-            <div class="item-row">
-                <button class="item-btn" onclick="spawn('🛌')">还原🛌</button><button class="item-btn" onclick="spawn('🛋️')">🛋️</button>
-                <button class="item-btn" onclick="spawn('🪑')">🪑</button><button class="item-btn" onclick="spawn('🧱')">🧱</button>
-                <button class="item-btn" onclick="spawn('🪟')">🪟</button><button class="item-btn" onclick="spawn('🚪')">🚪</button>
-                <button class="item-btn" onclick="spawn('🪜')">🪜</button><button class="item-btn" onclick="spawn('🗄️')">🗄️</button>
-            </div>
-
-            <div class="category-title">🪴 Cozy Electronics & Foliage</div>
-            <div class="item-row">
-                <button class="item-btn" onclick="spawn('🪴')">🪴</button><button class="item-btn" onclick="spawn('🌵')">🌵</button>
-                <button class="item-btn" onclick="spawn('🌸')">🌸</button><button class="item-btn" onclick="spawn('🖥️')">🖥️</button>
-                <button class="item-btn" onclick="spawn('📺')">📺</button><button class="item-btn" onclick="spawn('📻')">📻</button>
-                <button class="item-btn" onclick="spawn('💡')">💡</button><button class="item-btn" onclick="spawn('📚')">📚</button>
-            </div>
-
-            <div class="category-title">🐱 Companions & Collectibles</div>
-            <div class="item-row">
-                <button class="item-btn" onclick="spawn('🐱')">🐱</button><button class="item-btn" onclick="spawn('🐶')">🐶</button>
-                <button class="item-btn" onclick="spawn('🐹')">🐹</button><button class="item-btn" onclick="spawn('🧸')">🧸</button>
-                <button class="item-btn" onclick="spawn('🎨')">🎨</button><button class="item-btn" onclick="spawn('🎮')">🎮</button>
-                <button class="item-btn" onclick="spawn('🍕')">🍕</button><button class="item-btn" onclick="spawn('☕')">☕</button>
+            <div class="cat-title">DECOR & PLANTS</div>
+            <div class="item-grid">
+                <!-- Pixel Plant Pot -->
+                <div class="item-thumb" onclick="spawnFurniture('plant')">
+                    <svg viewBox="0 0 16 16"><path d="M5,4 Q8,1 7,0 Q9,2 7,4 M9,4 Q6,1 8,0 Q7,2 8,4" fill="#27ae60"/><path d="M4,5 H12 V6 H4 V5 M5,6 H11 V11 H5 V6" fill="#e67e22"/></svg>
+                </div>
+                <!-- Pixel Window -->
+                <div class="item-thumb" onclick="spawnFurniture('window')">
+                    <svg viewBox="0 0 16 16"><path d="M2,2 H14 V14 H2 V2" fill="#3498db" stroke="#7f8c8d" stroke-width="2"/><path d="M2,8 H14 M8,2 V14" stroke="#ffffff" stroke-width="1"/></svg>
+                </div>
+                <!-- Pixel Floor Rug -->
+                <div class="item-thumb" onclick="spawnFurniture('rug')">
+                    <svg viewBox="0 0 16 16"><path d="M1,4 H15 V12 H1 V4" fill="#9b59b6"/><path d="M3,6 H13 V10 H3 V6" fill="#f1c40f"/></svg>
+                </div>
             </div>
         </aside>
 
-        <main class="canvas-board" id="canvas-room">
-            <div class="canvas-floor" id="canvas-floor"></div>
+        <main class="room-canvas" id="room-canvas">
+            <div class="room-floor"></div>
         </main>
     </div>
 
-    <div class="controls-hint">💡 <b>Drag</b> to shift coordinates • <b>Click + scroll mouse wheel</b> to alter item size bounds • <b>Double click</b> to discard</div>
+    <div class="footer-tips">
+        [DRAG TO MOVE • HOVER AND USE + / - CONTROLS TO RESIZE SCALE • DOUBLE CLICK TO DELETE]
+    </div>
 
     <script>
-        function setTheme(wall, floor) {
-            document.getElementById('canvas-room').style.backgroundColor = wall;
-            document.getElementById('canvas-floor').style.backgroundColor = floor;
-        }
+        // Preset vector lookup strings matching our item selections
+        const designs = {
+            couch: `<svg viewBox="0 0 16 16"><path d="M1,6 H15 V11 H1 V6 M1,11 H3 V13 H1 V11 M13,11 H15 V13 H13 V11 M3,8 H13 V11 H3 V8" fill="#c0392b"/><path d="M0,5 H16 V6 H0 V5 M1,6 H3 V11 H1 V6 M13,6 H15 V11 H13 V6" fill="#7f8c8d"/></svg>`,
+            table: `<svg viewBox="0 0 16 16"><path d="M1,6 H15 V8 H1 V6 M2,8 H4 V13 H2 V8 M12,8 H14 V13 H12 V8" fill="#d35400"/><path d="M1,5 H15 V6 H1 V5" fill="#f39c12"/></svg>`,
+            bed: `<svg viewBox="0 0 16 16"><path d="M1,7 H15 V11 H1 V7 M1,11 H2 V13 H1 V11 M14,11 H15 V13 H14 V11" fill="#2980b9"/><path d="M1,6 H5 V8 H1 V6" fill="#ecf0f1"/></svg>`,
+            plant: `<svg viewBox="0 0 16 16"><path d="M5,4 Q8,1 7,0 Q9,2 7,4 M9,4 Q6,1 8,0 Q7,2 8,4" fill="#27ae60"/><path d="M4,5 H12 V6 H4 V5 M5,6 H11 V11 H5 V6" fill="#e67e22"/></svg>`,
+            window: `<svg viewBox="0 0 16 16"><path d="M2,2 H14 V14 H2 V2" fill="#3498db" stroke="#7f8c8d" stroke-width="2"/><path d="M2,8 H14 M8,2 V14" stroke="#ffffff" stroke-width="1"/></svg>`,
+            rug: `<svg viewBox="0 0 16 16"><path d="M1,4 H15 V12 H1 V4" fill="#9b59b6"/><path d="M3,6 H13 V10 H3 V6" fill="#f1c40f"/></svg>`
+        };
 
-        function spawn(emoji) {
-            const canvas = document.getElementById('canvas-room');
-            const item = document.createElement('div');
-            item.classList.add('placed-element');
-            item.innerText = emoji;
-            item.style.left = "50%"; item.style.top = "45%";
-            let sz = 3.5;
-            item.style.setProperty('--sz', `${sz}rem`);
-
-            let isDragging = false;
-            item.addEventListener('mousedown', () => { isDragging = true; item.style.zIndex = 1000; });
+        function spawnFurniture(type) {
+            const canvas = document.getElementById('room-canvas');
+            const wrap = document.createElement('div');
+            wrap.classList.add('furniture-wrapper');
             
+            // Set base dimensions
+            let currentSize = 70; 
+            wrap.style.setProperty('--w', `${currentSize}px`);
+            wrap.style.setProperty('--h', `${currentSize}px`);
+            wrap.style.left = "50%"; wrap.style.top = "45%";
+
+            // Append scaling overlay panel and graphic markup
+            wrap.innerHTML = `
+                <div class="scale-overlay">
+                    <button class="scale-btn" onclick="event.stopPropagation(); resizeItem(this, 15)">+</button>
+                    <button class="scale-btn" onclick="event.stopPropagation(); resizeItem(this, -15)">-</button>
+                </div>
+                ${designs[type]}
+            `;
+
+            // Simple drag implementation
+            let isDragging = false;
+            wrap.addEventListener('mousedown', (e) => {
+                if(e.target.classList.contains('scale-btn')) return;
+                isDragging = true;
+                wrap.style.zIndex = 1000;
+            });
+
             document.addEventListener('mousemove', (e) => {
                 if (!isDragging) return;
                 const b = canvas.getBoundingClientRect();
-                let x = e.clientX - b.left, y = e.clientY - b.top;
-                if (x >= 0 && x <= b.width) item.style.left = `${x}px`;
-                if (y >= 0 && y <= b.height) item.style.top = `${y}px`;
+                let x = e.clientX - b.left;
+                let y = e.clientY - b.top;
+                if(x >= 0 && x <= b.width) wrap.style.left = `${x}px`;
+                if(y >= 0 && y <= b.height) wrap.style.top = `${y}px`;
             });
 
-            document.addEventListener('mouseup', () => { isDragging = false; item.style.zIndex = 10; });
-            item.addEventListener('wheel', (e) => { e.preventDefault(); sz += e.deltaY < 0 ? 0.3 : -0.3; sz = Math.max(1.5, Math.min(7, sz)); item.style.setProperty('--sz', `${sz}rem`); });
-            item.addEventListener('dblclick', () => item.remove());
-            canvas.appendChild(item);
+            document.addEventListener('mouseup', () => { isDragging = false; wrap.style.zIndex = 10; });
+            wrap.addEventListener('dblclick', () => wrap.remove());
+
+            canvas.appendChild(wrap);
+        }
+
+        function resizeItem(btn, amount) {
+            const wrap = btn.closest('.furniture-wrapper');
+            let w = parseInt(wrap.style.getPropertyValue('--w')) || 70;
+            let newSize = Math.max(40, Math.min(180, w + amount));
+            wrap.style.setProperty('--w', `${newSize}px`);
+            wrap.style.setProperty('--h', `${newSize}px`);
         }
     </script>
 </body>
