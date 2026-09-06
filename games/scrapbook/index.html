@@ -3,92 +3,130 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scrapbook Studio Canvas</title>
+    <title>Notability Creative Suite</title>
     <style>
-        :root {
-            --primary: #6c5ce7;
-            --dark: #2f3640;
-        }
+        :root { --primary: #6c5ce7; --dark: #2f3640; }
         * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; }
         body { background: #f5f6fa; color: var(--dark); padding: 20px; display: flex; flex-direction: column; align-items: center; }
-        
-        .studio-box { background: white; padding: 20px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); max-width: 900px; width: 100%; }
+        .studio-box { background: white; padding: 20px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); max-width: 950px; width: 100%; }
         .back-btn { background: #718093; color: white; border: none; padding: 10px 15px; border-radius: 6px; font-weight: bold; cursor: pointer; float: left; margin-bottom: 15px; }
         
+        /* Advanced Ribbon Controls Toolbar */
         .toolbar { display: flex; flex-wrap: wrap; gap: 10px; background: #f1f2f6; padding: 12px; border-radius: 8px; margin-bottom: 15px; align-items: center; justify-content: space-between; }
-        .tool-group { display: flex; gap: 8px; align-items: center; }
+        .tool-group { display: flex; gap: 6px; align-items: center; }
+        .btn { background: white; border: 1px solid #ced6e0; padding: 6px 12px; border-radius: 4px; font-weight: bold; cursor: pointer; }
+        .btn.active { background: var(--primary); color: white; }
         
-        label { font-size: 0.85rem; font-weight: bold; color: #57606f; }
-        select, input[type="color"] { padding: 6px; border-radius: 4px; border: 1px solid #ced6e0; cursor: pointer; }
-        
-        .btn { background: white; border: 1px solid #ced6e0; padding: 6px 12px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.9rem; }
-        .btn:hover { background: #f8f9fa; }
-        .btn.active { background: var(--primary); color: white; border-color: var(--primary); }
-        .btn.danger { color: #ff6b6b; }
-        
-        .workspace { position: relative; width: 100%; height: 500px; border: 2px dashed #ced6e0; border-radius: 8px; overflow: hidden; background: #ffffff; }
+        .workspace { position: relative; width: 100%; height: 500px; border: 2px dashed #ced6e0; border-radius: 8px; overflow: hidden; background: #fff; }
         .workspace.grid-bg { background-image: radial-gradient(#ced6e0 1px, transparent 1px); background-size: 20px 20px; }
         .workspace.ruled-bg { background-image: linear-gradient(#e4e7eb 1px, transparent 1px); background-size: 100% 24px; }
-        
         canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; cursor: crosshair; }
         
-        .sticker-tray { display: flex; gap: 12px; font-size: 1.8rem; background: #f1f2f6; padding: 10px; border-radius: 8px; margin-top: 15px; overflow-x: auto; }
-        .tray-item { cursor: grab; user-select: none; transition: transform 0.1s; }
-        .tray-item:hover { transform: scale(1.2); }
-        
-        .placed-sticker { position: absolute; font-size: 2.2rem; cursor: move; user-select: none; z-index: 2; white-space: nowrap; line-height: 1; }
+        .placed-sticker, .text-overlay { position: absolute; z-index: 5; cursor: move; user-select: none; line-height: 1; }
+        .text-overlay input { border: 1px dashed #6c5ce7; background: transparent; font-weight: bold; font-size: 1.1rem; padding: 2px; outline: none; }
+        .sticker-tray { display: flex; gap: 10px; background: #f1f2f6; padding: 10px; border-radius: 8px; margin-top: 15px; }
     </style>
 </head>
 <body>
-
     <div class="studio-box">
         <button class="back-btn" onclick="location.href='../../index.html'">⬅ Hub Menu</button>
-        <h2 style="clear:both; color: var(--primary); margin-bottom: 5px;">🎨 Scrapbook Studio</h2>
-        <p style="margin-bottom: 15px; color: #718093;">Create digital layout pages using custom brushes, highlighters, and drag-and-drop stickers!</p>
+        <h2 style="clear:both; color: var(--primary);">🎨 Notability Scrapbook Pro Suite</h2>
+        <p style="margin-bottom:15px; font-size:0.9rem; color:#718093;">Double click inside canvas area while using "Text Tool" to deploy structural text box overlays!</p>
 
         <div class="toolbar">
             <div class="tool-group">
-                <button id="tool-pen" class="btn active">✏️ Pen</button>
+                <button id="tool-pen" class="btn active">✏️ Brush Pen</button>
                 <button id="tool-highlighter" class="btn">🖍️ Highlighter</button>
+                <button id="tool-text" class="btn">🔤 Text Tool</button>
                 <input type="color" id="brush-color" value="#6c5ce7">
-                
-                <label for="brush-size">Size:</label>
-                <select id="brush-size">
-                    <option value="3">Thin</option>
-                    <option value="8" selected>Medium</option>
-                    <option value="16">Thick</option>
-                </select>
+                <select id="brush-size"><option value="4">Thin</option><option value="10" selected>Medium</option><option value="20">Thick</option></select>
             </div>
-
             <div class="tool-group">
-                <label for="template-select">Template:</label>
-                <select id="template-select">
-                    <option value="blank">Plain White</option>
-                    <option value="grid-bg">Dot Grid</option>
-                    <option value="ruled-bg">Ruled Notebook</option>
-                </select>
-                <button id="clear-btn" class="btn danger">🗑️ Clear Page</button>
+                <select id="template-select"><option value="blank">Plain Sheet</option><option value="grid-bg">Dot Grid Canvas</option><option value="ruled-bg">Ruled Notebook Pages</option></select>
+                <button class="btn" style="background:#ffeaa7" onclick="spawnGraphic('🖼️')">🖼️ Add Graphic Frame</button>
+                <button class="btn" style="background:#ff7675; color:white;" onclick="clearPage()">🗑️ Wipe Page</button>
             </div>
         </div>
 
-        <div class="workspace" id="workspace">
-            <canvas id="paintCanvas"></canvas>
-        </div>
+        <div class="workspace" id="workspace"><canvas id="paintCanvas"></canvas></div>
 
         <div class="sticker-tray">
-            <span class="tray-item" draggable="true">🌸</span>
-            <span class="tray-item" draggable="true">⭐</span>
-            <span class="tray-item" draggable="true">🎀</span>
-            <span class="tray-item" draggable="true">🧸</span>
-            <span class="tray-item" draggable="true">🐱</span>
-            <span class="tray-item" draggable="true">🍿</span>
-            <span class="tray-item" draggable="true">🥑</span>
-            <span class="tray-item" draggable="true" >💖</span>
-            <span class="tray-item" draggable="true">☁️</span>
+            <strong>Stickers:</strong>
+            <span style="cursor:grab; font-size:1.5rem;" draggable="true" ondragstart="e => e.dataTransfer.setData('txt', e.target.innerText)">🌸</span>
+            <span style="cursor:grab; font-size:1.5rem;" draggable="true" ondragstart="e => e.dataTransfer.setData('txt', e.target.innerText)">⭐</span>
+            <span style="cursor:grab; font-size:1.5rem;" draggable="true" ondragstart="e => e.dataTransfer.setData('txt', e.target.innerText)">🧸</span>
+            <span style="cursor:grab; font-size:1.5rem;" draggable="true" ondragstart="e => e.dataTransfer.setData('txt', e.target.innerText)">💖</span>
         </div>
     </div>
+    <script>
+        const ws = document.getElementById('workspace'), cv = document.getElementById('paintCanvas'), ctx = cv.getContext('2d');
+        let painting = false, activeTool = 'pen', brushColor = '#6c5ce7', brushSize = 10, lastX = 0, lastY = 0;
 
-    <!-- LINKING LOGIC ENGINE SECTION -->
-    <script src="script.js"></script>
+        function resize() {
+            cv.width = ws.clientWidth; cv.height = ws.clientHeight;
+            ctx.lineCap = 'round'; ctx.lineJoin = 'round'; updateBrush();
+        }
+        window.addEventListener('load', resize);
+
+        cv.addEventListener('mousedown', e => {
+            if(activeTool === 'text') return;
+            painting = true; const r = cv.getBoundingClientRect(); lastX = e.clientX - r.left; lastY = e.clientY - r.top;
+        });
+        cv.addEventListener('mousemove', e => {
+            if(!painting) return; const r = cv.getBoundingClientRect(); let cx = e.clientX - r.left, cy = e.clientY - r.top;
+            ctx.beginPath(); ctx.moveTo(lastX, lastY); ctx.lineTo(cx, cy); ctx.stroke(); lastX = cx; lastY = cy;
+        });
+        window.addEventListener('mouseup', () => { painting = false; ctx.beginPath(); });
+
+        ws.addEventListener('dblclick', e => {
+            if(activeTool !== 'text') return;
+            const r = ws.getBoundingClientRect(); createTextNode(e.clientX - r.left, e.clientY - r.top);
+        });
+
+        function updateBrush() {
+            brushColor = document.getElementById('brush-color').value; brushSize = parseInt(document.getElementById('brush-size').value);
+            ctx.lineWidth = brushSize;
+            if(activeTool === 'highlighter') { ctx.globalCompositeOperation = 'multiply'; ctx.strokeStyle = brushColor + '55'; }
+            else { ctx.globalCompositeOperation = 'source-over'; ctx.strokeStyle = brushColor; }
+        }
+
+        document.getElementById('tool-pen').addEventListener('click', () => { activeTool = 'pen'; resetBtns(); document.getElementById('tool-pen').classList.add('active'); updateBrush(); });
+        document.getElementById('tool-highlighter').addEventListener('click', () => { activeTool = 'highlighter'; resetBtns(); document.getElementById('tool-highlighter').classList.add('active'); updateBrush(); });
+        document.getElementById('tool-text').addEventListener('click', () => { activeTool = 'text'; resetBtns(); document.getElementById('tool-text').classList.add('active'); });
+        document.getElementById('brush-color').addEventListener('change', updateBrush);
+        document.getElementById('brush-size').addEventListener('change', updateBrush);
+        document.getElementById('template-select').addEventListener('change', e => ws.className = 'workspace ' + e.target.value);
+
+        function resetBtns() { ['tool-pen','tool-highlighter','tool-text'].forEach(id => document.getElementById(id).classList.remove('active')); }
+        function clearPage() { ctx.clearRect(0,0,cv.width,cv.height); document.querySelectorAll('.placed-sticker, .text-overlay').forEach(el => el.remove()); }
+
+        function createTextNode(x, y) {
+            const div = document.createElement('div'); div.className = 'text-overlay'; div.style.left = x+'px'; div.style.top = y+'px';
+            const input = document.createElement('input'); input.placeholder = 'Type text here...';
+            div.appendChild(input); makeMovable(div); ws.appendChild(div); input.focus();
+        }
+        function spawnGraphic(emoji) { createStickerNode(emoji, 50, 50); }
+
+        ws.addEventListener('dragover', e => e.preventDefault());
+        ws.addEventListener('drop', e => {
+            e.preventDefault(); const r = ws.getBoundingClientRect();
+            createStickerNode(e.dataTransfer.getData('txt'), e.clientX - r.left - 15, e.clientY - r.top - 15);
+        });
+
+        function createStickerNode(txt, l, t) {
+            if(!txt) return; const div = document.createElement('div'); div.className = 'placed-sticker';
+            div.style.left = l+'px'; div.style.top = t+'px'; div.style.fontSize = '2.5rem'; div.innerText = txt;
+            makeMovable(div); div.addEventListener('dblclick', () => div.remove()); ws.appendChild(div);
+        }
+
+        function makeMovable(el) {
+            let drag = false; el.addEventListener('mousedown', e => { drag = true; e.stopPropagation(); });
+            window.addEventListener('mousemove', e => {
+                if(!drag) return; const r = ws.getBoundingClientRect();
+                el.style.left = (e.clientX - r.left - 15)+'px'; el.style.top = (e.clientY - r.top - 15)+'px';
+            });
+            window.addEventListener('mouseup', () => drag = false);
+        }
+    </script>
 </body>
 </html>
