@@ -3,172 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cozy Lo-Fi Room Decorator</title>
+    <title>Lofi Diorama Room Decorator</title>
     <style>
-        :root {
-            --cozy-blue: #dfe6e9;
-            --cozy-dark: #2d3436;
-            --shelf-color: #fab1a0;
-        }
-        * { box-sizing: border-box; font-family: 'Century Gothic', sans-serif; margin: 0; padding: 0; }
-        body { background: #f5f6fa; color: var(--cozy-dark); padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        body { background: #ebf3f5; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; padding: 25px; }
+        .container { display: grid; grid-template-columns: 260px 1fr; gap: 25px; max-width: 950px; width: 100%; }
         
-        .diorama-frame { background: white; border: 4px solid var(--cozy-dark); border-radius: 24px; padding: 20px; max-width: 950px; width: 100%; box-shadow: 0 10px 0 var(--cozy-dark); }
-        .back-btn { background: #718093; color: white; border: none; padding: 10px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; float: left; margin-bottom: 15px; }
-        
-        /* Audio Radio Player interface */
-        .radio-deck { background: #ffeaa7; border: 3px solid var(--cozy-dark); border-radius: 12px; padding: 10px 20px; display: flex; align-items: center; gap: 15px; width: fit-content; float: right; margin-bottom: 15px; }
-        .radio-btn { background: white; border: 2px solid var(--cozy-dark); border-radius: 50%; width: 35px; height: 35px; cursor: pointer; font-size: 0.9rem; font-weight: bold; display: flex; align-items: center; justify-content: center; }
+        /* Left Inventory Sidebar */
+        .picker-panel { background: white; border: 2px solid #b2bec3; border-radius: 16px; padding: 20px; }
+        .item-category-title { font-weight: bold; margin: 15px 0 8px 0; color: #636e72; font-size: 0.9rem; }
+        .sticker-tray { display: flex; gap: 10px; flex-wrap: wrap; }
+        .sticker-node { font-size: 2.2rem; background: #f1f2f6; border: none; border-radius: 8px; width: 55px; height: 55px; cursor: grab; display: flex; align-items: center; justify-content: center; transition: transform 0.1s; }
+        .sticker-node:hover { transform: scale(1.1); background: #dfe4ea; }
 
-        .workspace-split { display: grid; grid-template-columns: 1fr 280px; gap: 20px; clear: both; }
+        /* Right Room Canvas Board Workspace */
+        .canvas-board { background: #ffeaa7; border: 8px solid #d63031; border-radius: 20px; height: 480px; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.06); overflow: hidden; }
+        .room-floor { position: absolute; bottom: 0; width: 100%; height: 35%; background: #fab1a0; border-top: 4px solid #ff7675; }
         
-        /* Cozy Studio Bedroom Diorama Space Layout */
-        .room-canvas { background: #ffeaa7; border: 4px solid var(--cozy-dark); border-radius: 16px; height: 480px; position: relative; overflow: hidden; background-image: linear-gradient(rgba(0,0,0,0.03) 2px, transparent 2px), linear-gradient(90deg, rgba(0,0,0,0.03) 2px, transparent 2px); background-size: 20px 20px; }
+        .placed-furniture { position: absolute; font-size: 3.5rem; cursor: move; user-select: none; transform: translate(-50%, -50%); z-index: 10; }
         
-        /* Isometric Furniture Placement Backdrops */
-        .bed-base { position: absolute; bottom: 20px; left: 30px; width: 220px; height: 90px; background: #a29bfe; border: 4px solid var(--cozy-dark); border-radius: 12px 12px 4px 4px; box-shadow: inset 0 15px 0 #74b9ff; }
-        .pillow { position: absolute; top: 10px; left: 10px; width: 50px; height: 35px; background: white; border: 3px solid var(--cozy-dark); border-radius: 6px; }
-        .desk-base { position: absolute; bottom: 20px; right: 40px; width: 180px; height: 80px; background: #ffeaa7; border: 4px solid var(--cozy-dark); border-radius: 8px; border-bottom: none; box-shadow: inset 0 12px 0 #fab1a0; }
-        .shelf-base { position: absolute; top: 100px; left: 80px; width: 260px; height: 20px; background: var(--shelf-color); border: 3px solid var(--cozy-dark); border-radius: 4px; }
-
-        /* Item Sidebar Inventory Sheet */
-        .sidebar { background: #f1f2f6; border: 4px solid var(--cozy-dark); border-radius: 16px; padding: 15px; height: 480px; overflow-y: auto; }
-        .sidebar h3 { font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; background: #55efc4; display: inline-block; padding: 2px 8px; border-radius: 6px; border: 2px solid var(--cozy-dark); }
-        
-        .item-picker-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-        .picker-node { background: white; border: 2px solid var(--cozy-dark); border-radius: 12px; padding: 10px; text-align: center; font-size: 2rem; cursor: grab; user-select: none; box-shadow: 0 4px 0 var(--cozy-dark); }
-        .picker-node:active { cursor: grabbing; }
-        
-        .placed-furniture { position: absolute; font-size: 2.8rem; cursor: move; user-select: none; z-index: 10; line-height: 1; white-space: nowrap; }
+        .radio-station { background: #2d3436; color: #00cec9; padding: 12px; border-radius: 12px; margin-top: 15px; display: flex; align-items: center; justify-content: space-between; font-family: monospace; }
     </style>
 </head>
 <body>
 
-    <div class="diorama-frame">
-        <button class="back-btn" onclick="location.href='../../index.html'">⬅ Hub</button>
-        
-        <!-- LO-FI RADIO INTERACTIVE CONTROLS -->
-        <div class="radio-deck">
-            <span>📻 <strong>Lo-Fi Audio Player:</strong> <span id="radio-track-title">Chill Station</span></span>
-            <button class="radio-btn" id="audio-toggle-btn" onclick="toggleRadio()">▶</button>
-        </div>
+    <h1 style="color: #d63031; margin-bottom: 20px;">🧺 Custom Lofi Room Decorator</h1>
 
-        <h2 style="clear:both; padding-top:10px; font-size:1.8rem; margin-bottom:5px;">🧺 Lo-Fi Diorama Decorator</h2>
-        <p style="font-size:0.85rem; color:#718093; margin-bottom:20px;">Open the catalog deck, click and drag items onto shelves or desks, or double-click an item to remove it!</p>
-
-        <div class="workspace-split">
-            <!-- THE ROOM BACKDROP WORKSPACE -->
-            <div class="room-canvas" id="room-canvas">
-                <!-- Wall Shelves & Bed anchors -->
-                <div class="shelf-base"></div>
-                <div class="bed-base"><div class="pillow"></div></div>
-                <div class="desk-base"></div>
+    <div class="container">
+        <!-- Sidebar item tray asset container -->
+        <aside class="picker-panel">
+            <h3>🗄️ Item Inventory</h3>
+            
+            <div class="item-category-title">🛋️ Comfort Items</div>
+            <div class="sticker-tray">
+                <button class="sticker-node" onclick="spawnSticker('🪟')">🪟</button>
+                <button class="sticker-node" onclick="spawnSticker('🛋️')">🛋️</button>
+                <button class="sticker-node" onclick="spawnSticker('🪑')">🪑</button>
+                <button class="sticker-node" onclick="spawnSticker('🛏️')">🛏️</button>
             </div>
 
-            <!-- SIDEBAR ITEM INVENTORY CATALOG -->
-            <div class="sidebar">
-                <h3>🛋️ Sprites Deck</h3>
-                <div class="item-picker-grid">
-                    <div class="picker-node" draggable="true" ondragstart="drag(event)">📚</div>
-                    <div class="picker-node" draggable="true" ondragstart="drag(event)">🧸</div>
-                    <div class="picker-node" draggable="true" ondragstart="drag(event)">🪴</div>
-                    <div class="picker-node" draggable="true" ondragstart="drag(event)">🐱</div>
-                    <div class="picker-node" draggable="true" ondragstart="drag(event)">🕯️</div>
-                    <div class="picker-node" draggable="true" ondragstart="drag(event)">💡</div>
-                    <div class="picker-node" draggable="true" ondragstart="drag(event)">📻</div>
-                    <div class="picker-node" draggable="true" ondragstart="drag(event)">🍵</div>
-                    <div class="picker-node" draggable="true" ondragstart="drag(event)">🎨</div>
-                </div>
+            <div class="item-category-title">🪴 Aesthetic Accents</div>
+            <div class="sticker-tray">
+                <button class="sticker-node" onclick="spawnSticker('🪴')">🪴</button>
+                <button class="sticker-node" onclick="spawnSticker('📚')">📚</button>
+                <button class="sticker-node" onclick="spawnSticker('🐱')">🐱</button>
+                <button class="sticker-node" onclick="spawnSticker('📺')">📺</button>
             </div>
-        </div>
+
+            <!-- Integrated Radio Interface Block -->
+            <div class="item-category-title">📻 Room Radio Station</div>
+            <div class="radio-station">
+                <span>🎵 Lofi Chill Beats</span>
+                <button style="background:#00cec9; border:none; padding:4px 8px; border-radius:4px; font-weight:bold; cursor:pointer;" onclick="toggleRadio(this)">PLAY</button>
+            </div>
+            <audio id="lofi-stream" loop src="https://streamguys1.com"></audio>
+        </aside>
+
+        <!-- Room workspace playground area panel -->
+        <main class="canvas-board" id="canvas-room">
+            <div class="room-floor"></div>
+            <!-- Dynamic elements spawn freely here without row limits -->
+        </main>
     </div>
 
-    <!-- WEB AUDIO SYNTH BACKGROUND BEATS PLAYER -->
     <script>
-        const canvas = document.getElementById('room-canvas');
-
-        // Drag and Drop Placement Loops
-        function drag(ev) {
-            ev.dataTransfer.setData("sprite", ev.target.innerText);
-        }
-
-        canvas.addEventListener('dragover', (e) => e.preventDefault());
-        canvas.addEventListener('drop', (e) => {
-            e.preventDefault();
-            const emoji = e.dataTransfer.getData("sprite");
-            const rect = canvas.getBoundingClientRect();
-            
-            // Compute inner coordinate positions safely
-            const leftX = e.clientX - rect.left - 20;
-            const topY = e.clientY - rect.top - 20;
-            
-            spawnItemNode(emoji, leftX, topY);
-        });
-
-        function spawnItemNode(emoji, left, top) {
-            if(!emoji) return;
-            const item = document.createElement('div');
-            item.className = 'placed-furniture';
-            item.innerText = emoji;
-            item.style.left = left + 'px';
-            item.style.top = top + 'px';
-
-            let moveActive = false;
-            item.addEventListener('mousedown', (e) => {
-                moveActive = true;
-                e.stopPropagation();
-            });
-
-            window.addEventListener('mousemove', (e) => {
-                if(!moveActive) return;
-                const rect = canvas.getBoundingClientRect();
-                item.style.left = (e.clientX - rect.left - 20) + 'px';
-                item.style.top = (e.clientY - rect.top - 20) + 'px';
-            });
-
-            window.addEventListener('mouseup', () => moveActive = false);
-            
-            // Double click trigger elements wipes item completely
-            item.addEventListener('dblclick', () => item.remove());
-            
-            canvas.appendChild(item);
-        }
-
-        // WEB AUDIO CONSOLE CHILL SYNTH GENERATOR LOOPS
-        let audioCtx = null;
-        let oscillator = null;
         let isPlaying = false;
+        function toggleRadio(btn) {
+            const track = document.getElementById('lofi-stream');
+            if(!isPlaying) { track.play().catch(()=>{}); btn.innerText = "STOP"; btn.style.background="#ff7675"; }
+            else { track.pause(); btn.innerText = "PLAY"; btn.style.background="#00cec9"; }
+            isPlaying = !isPlaying;
+        }
 
-        function toggleRadio() {
-            const btn = document.getElementById('audio-toggle-btn');
-            if(!isPlaying) {
-                if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function spawnSticker(emoji) {
+            const canvas = document.getElementById('canvas-room');
+            const item = document.createElement('div');
+            item.classList.add('placed-furniture');
+            item.innerText = emoji;
+            
+            // Spawn items neatly centered in the upper living space area initially
+            item.style.left = "50%";
+            item.style.top = "40%";
+
+            // Enable intuitive canvas spatial drag and drop event handling
+            let isDragging = false;
+            item.addEventListener('mousedown', (e) => { isDragging = true; item.style.zIndex = 100; });
+            
+            document.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                const bounds = canvas.getBoundingClientRect();
+                let x = e.clientX - bounds.left;
+                let y = e.clientY - bounds.top;
                 
-                // Create an ultra-low frequency cozy sub-ambient drone synth oscillator block
-                oscillator = audioCtx.createOscillator();
-                let gainNode = audioCtx.createGain();
-                
-                oscillator.type = 'triangle'; 
-                oscillator.frequency.setValueAtTime(98.00, audioCtx.currentTime); // Deep warm G2 lofi root pitch key node
-                
-                gainNode.gain.setValueAtTime(0.08, audioCtx.currentTime); // Low whisper volume line levels
-                
-                oscillator.connect(gainNode);
-                gainNode.connect(audioCtx.destination);
-                oscillator.start();
-                
-                btn.innerText = '■';
-                document.getElementById('radio-track-title').innerText = "Lo-Fi Lullaby Ambient Drone";
-                isPlaying = true;
-            } else {
-                if(oscillator) {
-                    oscillator.stop();
-                    oscillator.disconnect();
-                }
-                btn.innerText = '▶';
-                document.getElementById('radio-track-title').innerText = "Radio Muted";
-                isPlaying = false;
-            }
+                // Keep objects bound securely within workspace margins
+                if (x >= 0 && x <= bounds.width) item.style.left = `${x}px`;
+                if (y >= 0 && y <= bounds.height) item.style.top = `${y}px`;
+            });
+
+            document.addEventListener('mouseup', () => { isDragging = false; item.style.zIndex = 10; });
+            
+            // Double click deletion handler
+            item.addEventListener('dblclick', () => item.remove());
+
+            canvas.appendChild(item);
         }
     </script>
 </body>
