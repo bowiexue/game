@@ -1,149 +1,136 @@
-const workspace = document.getElementById('workspace');
-const canvas = document.getElementById('paintCanvas');
-const ctx = canvas.getContext('2d');
-
-const penBtn = document.getElementById('tool-pen');
-const highlighterBtn = document.getElementById('tool-highlighter');
-const colorInput = document.getElementById('brush-color');
-const sizeSelect = document.getElementById('brush-size');
-const templateSelect = document.getElementById('template-select');
-const clearBtn = document.getElementById('clear-btn');
-const trayItems = document.querySelectorAll('.tray-item');
-
-let painting = false;
-let activeTool = 'pen';
-let brushColor = '#6c5ce7';
-let brushSize = 8;
-let lastX = 0;
-let lastY = 0;
-
-function resizeCanvas() {
-    // Preserve old strokes during a layout change
-    const tempCanvas = document.createElement('canvas');
-    tempCanvas.width = canvas.width;
-    tempCanvas.height = canvas.height;
-    const tempCtx = tempCanvas.getContext('2d');
-    if(canvas.width > 0 && canvas.height > 0) tempCtx.drawImage(canvas, 0, 0);
-
-    canvas.width = workspace.clientWidth;
-    canvas.height = workspace.clientHeight;
+// Wrap initialization in a DOM check so it never crashes
+document.addEventListener('DOMContentLoaded', () => {
+    const workspace = document.getElementById('workspace');
+    const canvas = document.getElementById('paintCanvas');
+    if (!canvas || !workspace) return;
     
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
-    
-    ctx.drawImage(tempCanvas, 0, 0);
-    updateBrush();
-}
+    const ctx = canvas.getContext('2d');
+    const penBtn = document.getElementById('tool-pen');
+    const highlighterBtn = document.getElementById('tool-highlighter');
+    const colorInput = document.getElementById('brush-color');
+    const sizeSelect = document.getElementById('brush-size');
+    const templateSelect = document.getElementById('template-select');
+    const clearBtn = document.getElementById('clear-btn');
+    const trayItems = document.querySelectorAll('.tray-item');
 
-window.addEventListener('load', resizeCanvas);
-window.addEventListener('resize', resizeCanvas);
+    let painting = false;
+    let activeTool = 'pen';
+    let brushColor = '#6c5ce7';
+    let brushSize = 8;
+    let lastX = 0;
+    let lastY = 0;
 
-function startPosition(e) {
-    painting = true;
-    const rect = canvas.getBoundingClientRect();
-    lastX = e.clientX - rect.left;
-    lastY = e.clientY - rect.top;
-}
+    function resizeCanvas() {
+        const tempCanvas = document.createElement('canvas');
+        tempCanvas.width = canvas.width;
+        tempCanvas.height = canvas.height;
+        const tempCtx = tempCanvas.getContext('2d');
+        if(canvas.width > 0 && canvas.height > 0) tempCtx.drawImage(canvas, 0, 0);
 
-function endPosition() {
-    painting = false;
-    ctx.beginPath();
-}
-
-function draw(e) {
-    if (!painting) return;
-    const rect = canvas.getBoundingClientRect();
-    const currentX = e.clientX - rect.left;
-    const currentY = e.clientY - rect.top;
-
-    ctx.beginPath();
-    ctx.moveTo(lastX, lastY);
-    ctx.lineTo(currentX, currentY);
-    ctx.stroke();
-    
-    lastX = currentX;
-    lastY = currentY;
-}
-
-canvas.addEventListener('mousedown', startPosition);
-canvas.addEventListener('mouseup', endPosition);
-canvas.addEventListener('mousemove', draw);
-canvas.addEventListener('mouseleave', endPosition);
-
-function setTool(tool) {
-    activeTool = tool;
-    penBtn.classList.remove('active');
-    highlighterBtn.classList.remove('active');
-    
-    if(tool === 'pen') penBtn.classList.add('active');
-    if(tool === 'highlighter') highlighterBtn.classList.add('active');
-    updateBrush();
-}
-
-function updateBrush() {
-    brushColor = colorInput.value;
-    brushSize = parseInt(sizeSelect.value);
-    
-    ctx.strokeStyle = brushColor;
-    ctx.lineWidth = brushSize;
-    
-    if (activeTool === 'highlighter') {
-        ctx.globalCompositeOperation = 'multiply'; // Blends smoothly beneath stickers
-        let r = parseInt(brushColor.slice(1,3), 16);
-        let g = parseInt(brushColor.slice(3,5), 16);
-        let b = parseInt(brushColor.slice(5,7), 16);
-        ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, 0.35)`;
-    } else {
-        ctx.globalCompositeOperation = 'source-over';
-        ctx.strokeStyle = brushColor;
+        canvas.width = workspace.clientWidth;
+        canvas.height = workspace.clientHeight;
+        
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        
+        ctx.drawImage(tempCanvas, 0, 0);
+        updateBrush();
     }
-}
+    
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
 
-penBtn.addEventListener('click', () => setTool('pen'));
-highlighterBtn.addEventListener('click', () => setTool('highlighter'));
-colorInput.addEventListener('change', updateBrush);
-sizeSelect.addEventListener('change', updateBrush);
-templateSelect.addEventListener('change', (e) => workspace.className = 'workspace ' + e.target.value);
-clearBtn.addEventListener('click', () => {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    document.querySelectorAll('.placed-sticker').forEach(el => el.remove());
-});
+    function startPosition(e) {
+        painting = true;
+        const rect = canvas.getBoundingClientRect();
+        lastX = e.clientX - rect.left;
+        lastY = e.clientY - rect.top;
+    }
 
-trayItems.forEach(item => {
-    item.addEventListener('dragstart', (e) => e.dataTransfer.setData("text", e.target.innerText));
-});
+    function endPosition() {
+        painting = false;
+        ctx.beginPath();
+    }
 
-workspace.addEventListener('dragover', (e) => e.preventDefault());
-workspace.addEventListener('drop', (e) => {
-    e.preventDefault();
-    const emoji = e.dataTransfer.getData("text");
-    const rect = workspace.getBoundingClientRect();
-    const x = e.clientX - rect.left - 15;
-    const y = e.clientY - rect.top - 15;
-    createSticker(emoji, x, y);
-});
+    function draw(e) {
+        if (!painting) return;
+        const rect = canvas.getBoundingClientRect();
+        const currentX = e.clientX - rect.left;
+        const currentY = e.clientY - rect.top;
 
-function createSticker(emoji, left, top) {
-    const sticker = document.createElement('div');
-    sticker.className = 'placed-sticker';
-    sticker.innerText = emoji;
-    sticker.style.left = left + 'px';
-    sticker.style.top = top + 'px';
+        ctx.beginPath();
+        ctx.moveTo(lastX, lastY);
+        ctx.lineTo(currentX, currentY);
+        ctx.stroke();
+        
+        lastX = currentX;
+        lastY = currentY;
+    }
 
-    let isDraggingSticker = false;
-    sticker.addEventListener('mousedown', (e) => {
-        isDraggingSticker = true;
-        e.stopPropagation();
+    canvas.addEventListener('mousedown', startPosition);
+    canvas.addEventListener('mouseup', endPosition);
+    canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('mouseleave', endPosition);
+
+    function updateBrush() {
+        if(colorInput) brushColor = colorInput.value;
+        if(sizeSelect) brushSize = parseInt(sizeSelect.value);
+        
+        ctx.lineWidth = brushSize;
+        
+        if (activeTool === 'highlighter') {
+            ctx.globalCompositeOperation = 'multiply';
+            let r = parseInt(brushColor.slice(1,3), 16);
+            let g = parseInt(brushColor.slice(3,5), 16);
+            let b = parseInt(brushColor.slice(5,7), 16);
+            ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, 0.30)`; // Continuous smooth gel texture
+        } else {
+            ctx.globalCompositeOperation = 'source-over';
+            ctx.strokeStyle = brushColor;
+        }
+    }
+
+    if(penBtn) penBtn.addEventListener('click', () => { activeTool = 'pen'; penBtn.classList.add('active'); highlighterBtn?.classList.remove('active'); updateBrush(); });
+    if(highlighterBtn) highlighterBtn.addEventListener('click', () => { activeTool = 'highlighter'; highlighterBtn.classList.add('active'); penBtn?.classList.remove('active'); updateBrush(); });
+    if(colorInput) colorInput.addEventListener('change', updateBrush);
+    if(sizeSelect) sizeSelect.addEventListener('change', updateBrush);
+    if(templateSelect) templateSelect.addEventListener('change', (e) => workspace.className = 'workspace ' + e.target.value);
+    
+    if(clearBtn) clearBtn.addEventListener('click', () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        document.querySelectorAll('.placed-sticker').forEach(el => el.remove());
     });
 
-    window.addEventListener('mousemove', (e) => {
-        if (!isDraggingSticker) return;
+    trayItems.forEach(item => {
+        item.addEventListener('dragstart', (e) => e.dataTransfer.setData("text", e.target.innerText));
+    });
+
+    workspace.addEventListener('dragover', (e) => e.preventDefault());
+    workspace.addEventListener('drop', (e) => {
+        e.preventDefault();
+        const emoji = e.dataTransfer.setData ? e.dataTransfer.getData("text") : '';
         const rect = workspace.getBoundingClientRect();
-        sticker.style.left = (e.clientX - rect.left - 15) + 'px';
-        sticker.style.top = (e.clientY - rect.top - 15) + 'px';
+        createSticker(emoji, e.clientX - rect.left - 20, e.clientY - rect.top - 20);
     });
 
-    window.addEventListener('mouseup', () => isDraggingSticker = false);
-    sticker.addEventListener('dblclick', () => sticker.remove());
-    workspace.appendChild(sticker);
-}
+    function createSticker(emoji, left, top) {
+        if(!emoji) return;
+        const sticker = document.createElement('div');
+        sticker.className = 'placed-sticker';
+        sticker.innerText = emoji;
+        sticker.style.left = left + 'px';
+        sticker.style.top = top + 'px';
+
+        let isDraggingSticker = false;
+        sticker.addEventListener('mousedown', (e) => { isDraggingSticker = true; e.stopPropagation(); });
+        window.addEventListener('mousemove', (e) => {
+            if (!isDraggingSticker) return;
+            const rect = workspace.getBoundingClientRect();
+            sticker.style.left = (e.clientX - rect.left - 20) + 'px';
+            sticker.style.top = (e.clientY - rect.top - 20) + 'px';
+        });
+        window.addEventListener('mouseup', () => isDraggingSticker = false);
+        sticker.addEventListener('dblclick', () => sticker.remove());
+        workspace.appendChild(sticker);
+    }
+});
