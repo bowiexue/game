@@ -50,10 +50,10 @@
     <div class="game-window">
         <!-- TOP CONTROLS HUB -->
         <div class="nav-header">
-            <button class="btn-ui" style="background:#b2bec3" id="map-btn">⬅ Map</button>
+            <button class="btn-ui" style="background:#b2bec3" onclick="location.href='../../index.html'">⬅ Map</button>
             <h2 id="room-title">🏡 Avatar Designer</h2>
-            <button class="btn-ui" id="kitchen-teleport-btn" style="background:#fdcb6e; display:none;">Go to Kitchen 🍳</button>
-            <button class="btn-ui" id="dining-teleport-btn" style="background:#55efc4; display:none;">Return to Diner 🍽️</button>
+            <button class="btn-ui" id="kitchen-teleport-btn" style="background:#fdcb6e; display:none;" onclick="teleport('kitchen-room')">Go to Kitchen 🍳</button>
+            <button class="btn-ui" id="dining-teleport-btn" style="background:#55efc4; display:none;" onclick="teleport('dining-room')">Return to Diner 🍽️</button>
         </div>
 
         <!-- 1. CREATOR ROOM VIEW -->
@@ -67,29 +67,29 @@
                 </div>
                 <div class="closet-panel">
                     <div class="closet-title">🎩 Headwear</div>
-                    <div class="item-grid" id="hat-grid">
-                        <div class="item-node" data-emoji="👑">👑</div>
-                        <div class="item-node" data-emoji="🎀">🎀</div>
-                        <div class="item-node" data-emoji="🎩">🎩</div>
-                        <div class="item-node" data-emoji="">❌</div>
+                    <div class="item-grid">
+                        <div class="item-node" onclick="equipItem('hat', '👑')">👑</div>
+                        <div class="item-node" onclick="equipItem('hat', '🎀')">🎀</div>
+                        <div class="item-node" onclick="equipItem('hat', '🎩')">🎩</div>
+                        <div class="item-node" onclick="equipItem('hat', '')">❌</div>
                     </div>
                     
                     <div class="closet-title">👓 Expressions</div>
-                    <div class="item-grid" id="face-grid">
-                        <div class="item-node" data-emoji="🕶️">🕶️</div>
-                        <div class="item-node" data-emoji="🤓">🤓</div>
-                        <div class="item-node" data-emoji="😭">😭</div>
-                        <div class="item-node" data-emoji="">❌</div>
+                    <div class="item-grid">
+                        <div class="item-node" onclick="equipItem('face', '🕶️')">🕶️</div>
+                        <div class="item-node" onclick="equipItem('face', '🤓')">🤓</div>
+                        <div class="item-node" onclick="equipItem('face', '😭')">😭</div>
+                        <div class="item-node" onclick="equipItem('face', '')">❌</div>
                     </div>
 
                     <div class="closet-title">👗 Clothing Items</div>
-                    <div class="item-grid" id="cloth-grid">
-                        <div class="item-node" data-emoji="👔">👔</div>
-                        <div class="item-node" data-emoji="👗">👗</div>
-                        <div class="item-node" data-emoji="🎒">🎒</div>
-                        <div class="item-node" data-emoji="">❌</div>
+                    <div class="item-grid">
+                        <div class="item-node" onclick="equipItem('cloth', '👔')">👔</div>
+                        <div class="item-node" onclick="equipItem('cloth', '👗')">👗</div>
+                        <div class="item-node" onclick="equipItem('cloth', '🎒')">🎒</div>
+                        <div class="item-node" onclick="equipItem('cloth', '')">❌</div>
                     </div>
-                    <button class="btn-ui" id="done-btn" style="background:#2ecc71; width:100%; margin-top:20px; font-size:1.1rem; padding:12px;">Done! Enter Cafe ✨</button>
+                    <button class="btn-ui" style="background:#2ecc71; width:100%; margin-top:20px; font-size:1.1rem; padding:12px;" onclick="saveAvatarAndStart()">Done! Enter Cafe ✨</button>
                 </div>
             </div>
         </div>
@@ -114,11 +114,11 @@
         <div id="kitchen-room" class="screen-view">
             <div class="kitchen-canvas">
                 <h3>Select a Recipe to Cook:</h3>
-                <div class="item-grid" style="max-width:400px; margin:15px auto;" id="recipe-grid">
-                    <button class="btn-ui recipe-btn" style="background:white; color:black; font-size:1.5rem;" data-food="🥞">🥞</button>
-                    <button class="btn-ui recipe-btn" style="background:white; color:black; font-size:1.5rem;" data-food="🍰">🍰</button>
-                    <button class="btn-ui recipe-btn" style="background:white; color:black; font-size:1.5rem;" data-food="🍦">🍦</button>
-                    <button class="btn-ui recipe-btn" style="background:white; color:black; font-size:1.5rem;" data-food="🍔">🍔</button>
+                <div class="item-grid" style="max-width:400px; margin:15px auto;">
+                    <button class="btn-ui" style="background:white; color:black; font-size:1.5rem;" onclick="startBake('🥞')">🥞</button>
+                    <button class="btn-ui" style="background:white; color:black; font-size:1.5rem;" onclick="startBake('🍰')">🍰</button>
+                    <button class="btn-ui" style="background:white; color:black; font-size:1.5rem;" onclick="startBake('🍦')">🍦</button>
+                    <button class="btn-ui" style="background:white; color:black; font-size:1.5rem;" onclick="startBake('🍔')">🍔</button>
                 </div>
                 <div class="oven-station">
                     <div id="oven-status">Oven Idle</div>
