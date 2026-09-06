@@ -1,158 +1,149 @@
-let tokens = parseInt(localStorage.getItem('hub_tokens')) || 100;
-let seeds = { carrot: 2, rose: 0, pumpkin: 0 };
+const workspace = document.getElementById('workspace');
+const canvas = document.getElementById('paintCanvas');
+const ctx = canvas.getContext('2d');
 
-// Restore seed vaults arrays securely from system memories
-if(localStorage.getItem('garden_vault')) {
-    seeds = JSON.parse(localStorage.getItem('garden_vault'));
+const penBtn = document.getElementById('tool-pen');
+const highlighterBtn = document.getElementById('tool-highlighter');
+const colorInput = document.getElementById('brush-color');
+const sizeSelect = document.getElementById('brush-size');
+const templateSelect = document.getElementById('template-select');
+const clearBtn = document.getElementById('clear-btn');
+const trayItems = document.querySelectorAll('.tray-item');
+
+let painting = false;
+let activeTool = 'pen';
+let brushColor = '#6c5ce7';
+let brushSize = 8;
+let lastX = 0;
+let lastY = 0;
+
+function resizeCanvas() {
+    // Preserve old strokes during a layout change
+    const tempCanvas = document.createElement('canvas');
+    tempCanvas.width = canvas.width;
+    tempCanvas.height = canvas.height;
+    const tempCtx = tempCanvas.getContext('2d');
+    if(canvas.width > 0 && canvas.height > 0) tempCtx.drawImage(canvas, 0, 0);
+
+    canvas.width = workspace.clientWidth;
+    canvas.height = workspace.clientHeight;
+    
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    
+    ctx.drawImage(tempCanvas, 0, 0);
+    updateBrush();
 }
 
-const tokenUi = document.getElementById('token-ui');
-const seedUi = document.getElementById('seed-ui');
-const buyBtn = document.getElementById('buy-seed-btn');
+window.addEventListener('load', resizeCanvas);
+window.addEventListener('resize', resizeCanvas);
 
-// Dynamic crop catalog arrays listing growth constraints 
-const cropCatalog = {
-    carrot: { label: 'Carrot', cost: 15, payout: 45, time: 100, icons: ['🌱','🌿','🥕'] },
-    rose: { label: 'Aesthetic Rose', cost: 40, payout: 110, time: 70, icons: ['🌱','🌿','🌹'] },
-    pumpkin: { label: 'Golden Pumpkin', cost: 100, payout: 350, time: 40, icons: ['🌱','🌿','🎃'] }
-};
-
-let activeSeedSelection = 'carrot';
-
-// Re-render inventory headers
-function saveGlobalState() {
-    localStorage.setItem('hub_tokens', tokens);
-    localStorage.setItem('garden_vault', JSON.stringify(seeds));
-    tokenUi.innerText = tokens;
-    seedUi.innerText = `${seeds.carrot} Carrots | ${seeds.rose} Roses | ${seeds.pumpkin} Pumpkins`;
+function startPosition(e) {
+    painting = true;
+    const rect = canvas.getBoundingClientRect();
+    lastX = e.clientX - rect.left;
+    lastY = e.clientY - rect.top;
 }
 
-// Dynamically morph shop button context based on template selectors
-function injectShopControls() {
-    const banner = document.querySelector('.shop-banner');
-    banner.innerHTML = `
-        <div style="text-align:left;">
-            <label><strong>Select Seed Profile:</strong></label>
-            <select id="seed-shop-selector" style="padding:4px; margin-bottom:5px;">
-                <option value="carrot">Carrot Seed (15🪙)</option>
-                <option value="rose">Rose Seed (40🪙)</option>
-                <option value="pumpkin">Golden Pumpkin (100🪙)</option>
-            </select>
-            <div id="seed-ui" style="font-size:0.9rem; color:#57606f; margin-top:4px;"></div>
-        </div>
-        <button class="buy-btn" id="buy-seed-btn">Purchase Selected</button>
-    `;
+function endPosition() {
+    painting = false;
+    ctx.beginPath();
 }
-injectShopControls();
 
-const seedSelector = document.getElementById('seed-shop-selector');
-seedSelector.addEventListener('change', (e) => { activeSeedSelection = e.target.value; });
+function draw(e) {
+    if (!painting) return;
+    const rect = canvas.getBoundingClientRect();
+    const currentX = e.clientX - rect.left;
+    const currentY = e.clientY - rect.top;
 
-document.getElementById('buy-seed-btn').addEventListener('click', () => {
-    let chosen = cropCatalog[activeSeedSelection];
-    if (tokens >= chosen.cost) {
-        tokens -= chosen.cost;
-        seeds[activeSeedSelection]++;
-        saveGlobalState();
+    ctx.beginPath();
+    ctx.moveTo(lastX, lastY);
+    ctx.lineTo(currentX, currentY);
+    ctx.stroke();
+    
+    lastX = currentX;
+    lastY = currentY;
+}
+
+canvas.addEventListener('mousedown', startPosition);
+canvas.addEventListener('mouseup', endPosition);
+canvas.addEventListener('mousemove', draw);
+canvas.addEventListener('mouseleave', endPosition);
+
+function setTool(tool) {
+    activeTool = tool;
+    penBtn.classList.remove('active');
+    highlighterBtn.classList.remove('active');
+    
+    if(tool === 'pen') penBtn.classList.add('active');
+    if(tool === 'highlighter') highlighterBtn.classList.add('active');
+    updateBrush();
+}
+
+function updateBrush() {
+    brushColor = colorInput.value;
+    brushSize = parseInt(sizeSelect.value);
+    
+    ctx.strokeStyle = brushColor;
+    ctx.lineWidth = brushSize;
+    
+    if (activeTool === 'highlighter') {
+        ctx.globalCompositeOperation = 'multiply'; // Blends smoothly beneath stickers
+        let r = parseInt(brushColor.slice(1,3), 16);
+        let g = parseInt(brushColor.slice(3,5), 16);
+        let b = parseInt(brushColor.slice(5,7), 16);
+        ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, 0.35)`;
     } else {
-        alert("Tokens low! Play Star Catcher to fill up your wallet.");
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.strokeStyle = brushColor;
     }
+}
+
+penBtn.addEventListener('click', () => setTool('pen'));
+highlighterBtn.addEventListener('click', () => setTool('highlighter'));
+colorInput.addEventListener('change', updateBrush);
+sizeSelect.addEventListener('change', updateBrush);
+templateSelect.addEventListener('change', (e) => workspace.className = 'workspace ' + e.target.value);
+clearBtn.addEventListener('click', () => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    document.querySelectorAll('.placed-sticker').forEach(el => el.remove());
 });
 
-let plotsData = [
-    { id: 0, status: 'empty', water: 100, growth: 0, type: null, interval: null },
-    { id: 1, status: 'empty', water: 100, growth: 0, type: null, interval: null },
-    { id: 2, status: 'empty', water: 100, growth: 0, type: null, interval: null }
-];
-
-document.querySelectorAll('.plot-card').forEach((card, index) => {
-    const btn = card.querySelector('.action-btn');
-    btn.addEventListener('click', () => handlePlotAction(index, card));
+trayItems.forEach(item => {
+    item.addEventListener('dragstart', (e) => e.dataTransfer.setData("text", e.target.innerText));
 });
 
-function handlePlotAction(id, card) {
-    let plot = plotsData[id];
-    const btn = card.querySelector('.action-btn');
-    const icon = card.querySelector('.stage-icon');
-    const txt = card.querySelector('.status-txt');
-    const bar = card.querySelector('.progress');
+workspace.addEventListener('dragover', (e) => e.preventDefault());
+workspace.addEventListener('drop', (e) => {
+    e.preventDefault();
+    const emoji = e.dataTransfer.getData("text");
+    const rect = workspace.getBoundingClientRect();
+    const x = e.clientX - rect.left - 15;
+    const y = e.clientY - rect.top - 15;
+    createSticker(emoji, x, y);
+});
 
-    if (plot.status === 'empty') {
-        if (seeds[activeSeedSelection] > 0) {
-            seeds[activeSeedSelection]--;
-            plot.status = 'growing';
-            plot.type = activeSeedSelection;
-            plot.growth = 0;
-            plot.water = 100;
-            saveGlobalState();
+function createSticker(emoji, left, top) {
+    const sticker = document.createElement('div');
+    sticker.className = 'placed-sticker';
+    sticker.innerText = emoji;
+    sticker.style.left = left + 'px';
+    sticker.style.top = top + 'px';
 
-            let config = cropCatalog[plot.type];
-            txt.innerText = `${config.label} (Sprout)`;
-            icon.innerText = config.icons[0];
-            btn.innerText = "💧 Give Water";
-            btn.className = "action-btn water";
-            bar.className = "progress water-fill";
-            bar.style.width = "100%";
+    let isDraggingSticker = false;
+    sticker.addEventListener('mousedown', (e) => {
+        isDraggingSticker = true;
+        e.stopPropagation();
+    });
 
-            plot.interval = setInterval(() => tickCrop(id, card), 1000);
-        } else {
-            alert(`Buy some ${activeSeedSelection} seeds from the vendor cabinet above first!`);
-        }
-    } 
-    else if (plot.status === 'growing') {
-        plot.water = Math.min(100, plot.water + 35);
-        bar.style.width = plot.water + "%";
-    } 
-    else if (plot.status === 'mature') {
-        clearInterval(plot.interval);
-        let config = cropCatalog[plot.type];
-        plot.status = 'empty';
-        tokens += config.payout;
-        saveGlobalState();
+    window.addEventListener('mousemove', (e) => {
+        if (!isDraggingSticker) return;
+        const rect = workspace.getBoundingClientRect();
+        sticker.style.left = (e.clientX - rect.left - 15) + 'px';
+        sticker.style.top = (e.clientY - rect.top - 15) + 'px';
+    });
 
-        icon.innerText = "🟫";
-        txt.innerText = "Empty Soil Patch";
-        btn.innerText = "Plant Crop";
-        btn.className = "action-btn plant";
-        bar.style.width = "0%";
-    }
+    window.addEventListener('mouseup', () => isDraggingSticker = false);
+    sticker.addEventListener('dblclick', () => sticker.remove());
+    workspace.appendChild(sticker);
 }
-
-function tickCrop(id, card) {
-    let plot = plotsData[id];
-    let config = cropCatalog[plot.type];
-    const bar = card.querySelector('.progress');
-    const icon = card.querySelector('.stage-icon');
-    const txt = card.querySelector('.status-txt');
-    const btn = card.querySelector('.action-btn');
-
-    if (plot.status !== 'growing') return;
-
-    plot.water = Math.max(0, plot.water - 6);
-
-    if (plot.water > 0) {
-        plot.growth += 5;
-        if (plot.growth >= 50 && plot.growth < 100) {
-            icon.innerText = config.icons[1];
-            txt.innerText = `Growing ${config.label}`;
-        }
-        if (plot.growth >= 100) {
-            plot.status = 'mature';
-            icon.innerText = config.icons[2];
-            txt.innerText = `${config.label} Harvest Ready!`;
-            btn.innerText = `🧺 Harvest (+${config.payout}🪙)`;
-            btn.className = "action-btn harvest";
-            bar.className = "progress grow-fill";
-            bar.style.width = "100%";
-            return;
-        }
-    }
-
-    if (plot.water <= 0) {
-        txt.innerText = "⚠️ Dried Out! (Needs Water)";
-    } else {
-        bar.className = "progress water-fill";
-        bar.style.width = plot.water + "%";
-    }
-}
-saveGlobalState();
