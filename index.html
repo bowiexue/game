@@ -95,13 +95,14 @@
 </div>
 
 
-        <div class="card" style="opacity: 0.5;">
-            <div class="icon">🌱</div>
-            <h3>Gardening</h3>
-            <p>Plant systems and watering loops matching Grow a Garden mechanics.</p>
-            <button class="play-btn" disabled>Coming Soon</button>
-        </div>
-    </main>
+        <!-- Locate the Gardening card block inside your root index.html, remove opacity settings, and add the active path redirection trigger: -->
+<div class="card">
+    <div class="icon">🌱</div>
+    <h3>Gardening</h3>
+    <p>Plant systems and watering loops matching Grow a Garden mechanics.</p>
+    <button class="play-btn" onclick="location.href='./games/gardening/index.html'">Play Game</button>
+</div>
+
 
     <script>
         // Synchronize wallet balances with shared LocalStorage data 
