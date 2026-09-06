@@ -1,82 +1,58 @@
-// GLOBAL STATE BALANCES
 let character = { hat: '', face: '', cloth: '' };
 let currentHeldFood = '';
 
-// DYNAMIC ACCESORY ATTACHMENT ROUTINES
 function equipItem(type, emoji) {
     character[type] = emoji;
-    const targetElement = document.getElementById(`c-${type}`);
-    if (targetElement) {
-        targetElement.innerText = emoji;
-    }
+    const el = document.getElementById(`c-${type}`);
+    if (el) el.innerText = emoji;
 }
 
-// LOCKS CHARACTER IN PROFILE ENGINE
 function saveAvatarAndStart() {
-    const dHat = document.getElementById('d-hat');
-    const dFace = document.getElementById('d-face');
-    const dCloth = document.getElementById('d-cloth');
-    
-    if (dHat) dHat.innerText = character.hat;
-    if (dFace) dFace.innerText = character.face;
-    if (dCloth) dCloth.innerText = character.cloth;
-    
+    document.getElementById('d-hat').innerText = character.hat;
+    document.getElementById('d-face').innerText = character.face;
+    document.getElementById('d-cloth').innerText = character.cloth;
     teleport('dining-room');
 }
 
-// ROOM TELEPORTATION NAVIGATION SWITCHES
 function teleport(roomID) {
-    // Hide all viewports completely
     document.querySelectorAll('.screen-view').forEach(view => view.classList.remove('active'));
+    document.getElementById(roomID).classList.add('active');
     
-    // Show chosen room map layer
-    const activeRoom = document.getElementById(roomID);
-    if (activeRoom) activeRoom.classList.add('active');
-    
-    const roomTitle = document.getElementById('room-title');
-    const kitchenBtn = document.getElementById('kitchen-teleport-btn');
-    const diningBtn = document.getElementById('dining-teleport-btn');
+    const title = document.getElementById('room-title');
+    const kBtn = document.getElementById('kitchen-teleport-btn');
+    const dBtn = document.getElementById('dining-teleport-btn');
 
     if (roomID === 'creator-room') {
-        if (roomTitle) roomTitle.innerText = "🏡 Avatar Designer";
-        if (kitchenBtn) kitchenBtn.style.display = 'none';
-        if (diningBtn) diningBtn.style.display = 'none';
-    } 
-    else if (roomID === 'dining-room') {
-        if (roomTitle) roomTitle.innerText = "🍽️ Diner Floor";
-        if (kitchenBtn) kitchenBtn.style.display = 'block';
-        if (diningBtn) diningBtn.style.display = 'none';
-        
-        // Serve food instantly upon teleport arrival
+        title.innerText = "🏡 Avatar Designer"; kBtn.style.display = 'none'; dBtn.style.display = 'none';
+    } else if (roomID === 'dining-room') {
+        title.innerText = "🍽️ Diner Floor"; kBtn.style.display = 'block'; dBtn.style.display = 'none';
         if (currentHeldFood) {
-            const plateSlot = document.getElementById('plate-slot');
-            if (plateSlot) plateSlot.innerText = currentHeldFood;
-            
+            const plate = document.getElementById('plate-slot');
+            if (plate) plate.innerText = currentHeldFood;
             setTimeout(() => {
-                alert("The guest ate the delicious food you brought from the kitchen! 🦊✨");
-                if (plateSlot) plateSlot.innerText = '🍽️';
+                alert(`The client happily munched down your handmade ${currentHeldFood}! 🦊✨`);
+                if (plate) plate.innerText = '🍽️';
                 currentHeldFood = '';
             }, 1200);
         }
-    } 
-    else if (roomID === 'kitchen-room') {
-        if (roomTitle) roomTitle.innerText = "🍳 Preparation Kitchen";
-        if (kitchenBtn) kitchenBtn.style.display = 'none';
-        if (diningBtn) diningBtn.style.display = 'block';
+    } else if (roomID === 'kitchen-room') {
+        title.innerText = "🍳 Preparation Kitchen"; kBtn.style.display = 'none'; dBtn.style.display = 'block';
     }
 }
 
-// KITCHEN MICROWAVE OVEN TICKERS
-function startBake(foodItem) {
-    const ovenStatus = document.getElementById('oven-status');
-    const ovenDisplay = document.getElementById('oven-display');
-
-    if (ovenStatus) ovenStatus.innerText = "Baking treats... ⏱️";
-    if (ovenDisplay) ovenDisplay.innerText = '🔥';
+function prepareFood(foodItem, machine) {
+    const status = document.getElementById('kitchen-status');
+    const display = document.getElementById('kitchen-display');
+    
+    if (machine === 'oven') {
+        status.innerText = "Baking item inside heating elements... 🔥"; display.innerText = '⏳';
+    } else {
+        status.innerText = "Churning sub-zero ice crystals... ❄️"; display.innerText = '🌀';
+    }
     
     setTimeout(() => {
         currentHeldFood = foodItem;
-        if (ovenStatus) ovenStatus.innerText = "Finished! Click 'Return to Diner' to serve!";
-        if (ovenDisplay) ovenDisplay.innerText = foodItem;
-    }, 1500);
+        status.innerText = "Order finished! Click 'Return to Diner' to deliver it!";
+        display.innerText = foodItem;
+    }, 1400);
 }
