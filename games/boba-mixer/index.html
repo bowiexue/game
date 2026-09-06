@@ -3,104 +3,130 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Boba Tea Simulation</title>
+    <title>Boba Alchemy Lab Pro</title>
     <style>
-        body { background: #fdf6ec; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; padding: 30px; }
-        .game-box { background: white; border: 2px solid #e6d0b7; border-radius: 16px; padding: 25px; width: 100%; max-width: 450px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); text-align: center; }
-        .order-ticket { background: #fff9e6; border: 2px dashed #f39c12; border-radius: 8px; padding: 15px; margin-bottom: 20px; font-weight: bold; }
-        .cup-container { width: 140px; height: 200px; border: 4px solid #4a3728; border-top: none; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; margin: 20px auto; position: relative; background: #fff; overflow: hidden; }
-        .liquid { position: absolute; bottom: 0; left: 0; width: 100%; height: 0%; transition: height 0.4s, background-color 0.4s; }
-        .boba-pearls { position: absolute; bottom: 5px; left: 0; width: 100%; display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; font-size: 14px; }
-        .ingredients-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
-        .ing-btn { background: #f8f9fa; border: 2px solid #dee2e6; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer; }
-        .ing-btn:hover { background: #e8ecef; }
+        :root { --bg: #fdf6ec; --border: #e6d0b7; --text: #4a3728; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
+        body { background: var(--bg); color: var(--text); padding: 30px; display: flex; flex-direction: column; align-items: center; }
+        .nav-row { width: 100%; max-width: 550px; margin-bottom: 15px; text-align: left; }
+        .back-btn { background: #7f8c8d; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        .game-box { background: white; border: 2px solid var(--border); border-radius: 16px; padding: 25px; width: 100%; max-width: 550px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); text-align: center; }
+        .order-ticket { background: #fff9e6; border: 2px dashed #f39c12; border-radius: 8px; padding: 15px; margin-bottom: 20px; font-weight: bold; text-align: left; }
+        .cup-container { width: 130px; height: 180px; border: 4px solid #4a3728; border-top: none; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; margin: 15px auto; position: relative; background: #fff; overflow: hidden; }
+        .liquid { position: absolute; bottom: 0; left: 0; width: 100%; height: 0%; transition: height 0.4s, background-color 0.4s; opacity: 0.85; }
+        .boba-pearls { position: absolute; bottom: 5px; left: 0; width: 100%; display: flex; flex-wrap: wrap; justify-content: center; gap: 3px; font-size: 14px; }
+        .tabs { display: flex; gap: 5px; margin-bottom: 15px; background: #f1f2f6; padding: 5px; border-radius: 8px; }
+        .tab-btn { flex: 1; padding: 8px; background: none; border: none; font-weight: bold; cursor: pointer; border-radius: 6px; font-size: 0.85rem; }
+        .tab-btn.active { background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .ingredients-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; min-height: 120px; }
+        .ing-btn { background: #f8f9fa; border: 2px solid #dee2e6; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 0.9rem; }
+        .ing-btn:hover { background: #e8ecef; border-color: #b08d5c; }
         .action-bar { margin-top: 20px; display: flex; gap: 10px; }
-        .action-bar button { flex: 1; padding: 12px; font-weight: bold; border-radius: 8px; border: none; cursor: pointer; }
+        .action-bar button { flex: 1; padding: 12px; font-weight: bold; border-radius: 8px; border: none; cursor: pointer; color: white; }
     </style>
 </head>
 <body>
 
+    <div class="nav-row">
+        <button class="back-btn" onclick="location.href='../../index.html'">⬅ Return to Map</button>
+    </div>
+
     <div class="game-box">
-        <h1 style="color: #8c6239; font-size: 1.6rem; margin-bottom: 15px;">🍵 Boba Alchemy Lab</h1>
-        <div class="order-ticket" id="order-box">Loading customer order...</div>
+        <h1 style="color: #8c6239; font-size: 1.6rem; margin-bottom: 10px;">🍵 Boba Alchemy Lab Pro</h1>
+        <div class="order-ticket" id="order-box">Generating custom brew request...</div>
 
         <div class="cup-container">
             <div id="liquid-layer" class="liquid"></div>
             <div id="pearls-layer" class="boba-pearls"></div>
         </div>
 
-        <div class="ingredients-grid">
-            <button class="ing-btn" onclick="addBase('Matcha', '#85a970')">🍵 Matcha Base</button>
-            <button class="ing-btn" onclick="addBase('Taro Milk', '#d1b9dc')">🍠 Taro Base</button>
-            <button class="ing-btn" onclick="addBase('Brown Sugar', '#b08d5c')">🧋 Classic Base</button>
-            <button class="ing-btn" onclick="addBase('Thai Tea', '#f39c12')">🍂 Thai Base</button>
-            <button class="ing-btn" onclick="addTopping('Tapioca')">⚫ Tapioca Pearls</button>
-            <button class="ing-btn" onclick="addTopping('Popping Boba')">💥 Bursting Boba</button>
-            <button class="ing-btn" onclick="addTopping('Lychee Jelly')">⬜ Lychee Jelly</button>
-            <button class="ing-btn" onclick="addTopping('Red Bean')">🫘 Red Bean</button>
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('tea')">🍃 Teas</button>
+            <button class="tab-btn" onclick="switchTab('milk')">🥛 Milks</button>
+            <button class="tab-btn" onclick="switchTab('flavor')">🍯 Syrups</button>
+            <button class="tab-btn" onclick="switchTab('topping')">⚫ Toppings</button>
         </div>
 
+        <div class="ingredients-grid" id="ingredients-grid"></div>
+
         <div class="action-bar">
-            <button style="background: #e74c3c; color: white;" onclick="resetCup()">Reset 🗑️</button>
-            <button style="background: #2ecc71; color: white;" onclick="serveDrink()">Serve Drink ✔️</button>
+            <button style="background: #e74c3c;" onclick="resetCup()">Reset 🗑️</button>
+            <button style="background: #2ecc71;" onclick="serveDrink()">Serve Drink ✔️</button>
         </div>
     </div>
 
     <script>
-        // Database arrays containing ingredients to dynamically form over 20+ drink mutations
-        const bases = [{name: 'Matcha', color:'#85a970'}, {name: 'Taro Milk', color:'#d1b9dc'}, {name: 'Brown Sugar', color:'#b08d5c'}, {name: 'Thai Tea', color:'#f39c12'}];
-        const toppings = ['Tapioca', 'Popping Boba', 'Lychee Jelly', 'Red Bean'];
-        const sweetnessLevels = ['30% Sweet', '50% Sweet', '70% Sweet', '100% Sweet'];
+        const menu = {
+            tea: [{name:'Matcha Green', color:'#85a970'}, {name:'Thai Black', color:'#f39c12'}, {name:'Oolong Jade', color:'#d2b48c'}, {name:'Earl Grey', color:'#a0522d'}],
+            milk: [{name:'Oat Milk', color:'#f5f5dc'}, {name:'Almond Milk', color:'#fff8dc'}, {name:'Whole Milk', color:'#f8f9fa'}, {name:'Soy Milk', color:'#fffff0'}],
+            flavor: [{name:'Brown Sugar', color:'#5c4033'}, {name:'Taro Purple', color:'#d1b9dc'}, {name:'Mango Puree', color:'#ffd700'}, {name:'Strawberry', color:'#ffb6c1'}],
+            topping: [{name:'Tapioca Pearls', emo:'⚫'}, {name:'Popping Boba', emo:'💥'}, {name:'Lychee Jelly', emo:'⬜'}, {name:'Red Bean', emo:'🫘'}]
+        };
 
-        let currentOrder = {};
-        let playerBase = "", playerTopping = "";
+        let currentOrder = {}, playerSelection = { tea: '', milk: '', flavor: '', topping: '' }, activeTab = 'tea';
 
-        function generateRandomOrder() {
-            const randBase = bases[Math.floor(Math.random() * bases.length)];
-            const randTopping = toppings[Math.floor(Math.random() * toppings.length)];
-            const randSweet = sweetnessLevels[Math.floor(Math.random() * sweetnessLevels.length)];
+        function generateOrder() {
+            const rTea = menu.tea[Math.floor(Math.random() * menu.tea.length)].name;
+            const rMilk = menu.milk[Math.floor(Math.random() * menu.milk.length)].name;
+            const rFlav = menu.flavor[Math.floor(Math.random() * menu.flavor.length)].name;
+            const rTop = menu.topping[Math.floor(Math.random() * menu.topping.length)].name;
+            currentOrder = { tea: rTea, milk: rMilk, flavor: rFlav, topping: rTop };
             
-            currentOrder = { base: randBase.name, topping: randTopping, sweetness: randSweet };
             document.getElementById('order-box').innerHTML = `
-                <div style='font-size:0.85rem; color:#7f8c8d;'>CURRENT REQUEST:</div>
-                ${currentOrder.base} with ${currentOrder.topping} (${currentOrder.sweetness})
+                <div style='font-size:0.8rem; color:#7f8c8d; margin-bottom:4px;'>CUSTOMER SPECIFICATION:</div>
+                • Base: ${rTea}<br>• Creamer: ${rMilk}<br>• Swirl: ${rFlav}<br>• Garnish: ${rTop}
             `;
         }
 
-        function addBase(name, color) {
-            playerBase = name;
-            const liq = document.getElementById('liquid-layer');
-            liq.style.height = "75%";
-            liq.style.backgroundColor = color;
+        function renderIngredients() {
+            const grid = document.getElementById('ingredients-grid');
+            grid.innerHTML = '';
+            menu[activeTab].forEach(item => {
+                const btn = document.createElement('button');
+                btn.className = 'ing-btn';
+                btn.innerText = item.name;
+                btn.onclick = () => selectIngredient(item);
+                grid.appendChild(btn);
+            });
         }
 
-        function addTopping(name) {
-            playerTopping = name;
-            const layer = document.getElementById('pearls-layer');
-            layer.innerHTML = "";
-            let symbol = name === 'Tapioca' ? '⚫' : name === 'Red Bean' ? '🫘' : '⚪';
-            for(let i=0; i<8; i++) { layer.innerHTML += `<span>${symbol}</span>`; }
+        function switchTab(tab) {
+            activeTab = tab;
+            document.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active', b.innerText.toLowerCase().includes(tab)));
+            renderIngredients();
+        }
+
+        function selectIngredient(item) {
+            playerSelection[activeTab] = item.name;
+            if (activeTab !== 'topping') {
+                const liq = document.getElementById('liquid-layer');
+                liq.style.height = "80%";
+                liq.style.backgroundColor = item.color;
+            } else {
+                const layer = document.getElementById('pearls-layer');
+                layer.innerHTML = '';
+                for(let i=0; i<10; i++) layer.innerHTML += `<span>${item.emo}</span>`;
+            }
         }
 
         function resetCup() {
-            playerBase = ""; playerTopping = "";
+            playerSelection = { tea: '', milk: '', flavor: '', topping: '' };
             document.getElementById('liquid-layer').style.height = "0%";
-            document.getElementById('pearls-layer').innerHTML = "";
+            document.getElementById('pearls-layer').innerHTML = '';
         }
 
         function serveDrink() {
-            if (playerBase === currentOrder.base && playerTopping === currentOrder.topping) {
-                alert("✨ Perfect Match! +20 Tokens earned!");
-                let tokens = parseInt(localStorage.getItem('hub_tokens') || 100) + 20;
-                localStorage.setItem('hub_tokens', tokens);
+            if (playerSelection.tea === currentOrder.tea && playerSelection.milk === currentOrder.milk && 
+                playerSelection.flavor === currentOrder.flavor && playerSelection.topping === currentOrder.topping) {
+                alert("✨ Recipe Perfected! +20 Tokens!");
+                localStorage.setItem('hub_tokens', parseInt(localStorage.getItem('hub_tokens') || 100) + 20);
             } else {
-                alert("❌ Wrong order recipe! Try again.");
+                alert("❌ Flavor profile does not match request. Try resetting!");
             }
-            resetCup();
-            generateRandomOrder();
+            resetCup(); generateOrder();
         }
 
-        generateRandomOrder();
+        generateOrder(); renderIngredients();
     </script>
 </body>
 </html>
