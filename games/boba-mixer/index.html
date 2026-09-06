@@ -5,39 +5,52 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Boba Alchemy Lab Pro</title>
     <style>
-        :root { --bg: #fdf6ec; --border: #e6d0b7; --text: #4a3728; }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
+        :root { --bg: #fdf6ec; --border: #4a3728; --text: #4a3728; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Courier New', Courier, monospace; }
         body { background: var(--bg); color: var(--text); padding: 30px; display: flex; flex-direction: column; align-items: center; }
+        
         .nav-row { width: 100%; max-width: 550px; margin-bottom: 15px; text-align: left; }
-        .back-btn { background: #7f8c8d; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: bold; }
-        .game-box { background: white; border: 2px solid var(--border); border-radius: 16px; padding: 25px; width: 100%; max-width: 550px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); text-align: center; }
-        .order-ticket { background: #fff9e6; border: 2px dashed #f39c12; border-radius: 8px; padding: 15px; margin-bottom: 20px; font-weight: bold; text-align: left; }
-        .cup-container { width: 130px; height: 180px; border: 4px solid #4a3728; border-top: none; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; margin: 15px auto; position: relative; background: #fff; overflow: hidden; }
-        .liquid { position: absolute; bottom: 0; left: 0; width: 100%; height: 0%; transition: height 0.4s, background-color 0.4s; opacity: 0.85; }
-        .boba-pearls { position: absolute; bottom: 5px; left: 0; width: 100%; display: flex; flex-wrap: wrap; justify-content: center; gap: 3px; font-size: 14px; }
-        .tabs { display: flex; gap: 5px; margin-bottom: 15px; background: #f1f2f6; padding: 5px; border-radius: 8px; }
-        .tab-btn { flex: 1; padding: 8px; background: none; border: none; font-weight: bold; cursor: pointer; border-radius: 6px; font-size: 0.85rem; }
-        .tab-btn.active { background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .back-btn { background: var(--border); color: white; border: none; padding: 10px 16px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        
+        .game-box { background: white; border: 4px solid var(--border); border-radius: 12px; padding: 25px; width: 100%; max-width: 550px; box-shadow: 0 6px 0 rgba(0,0,0,0.05); text-align: center; }
+        .order-ticket { background: #fff9e6; border: 3px dashed #f39c12; border-radius: 8px; padding: 15px; margin-bottom: 20px; font-weight: bold; text-align: left; }
+        
+        /* The Pixel Cup and Frame constraints */
+        .cup-container { width: 140px; height: 190px; border: 4px solid var(--border); border-top: none; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; margin: 20px auto; position: relative; background: #fff; overflow: hidden; }
+        .liquid { position: absolute; bottom: 0; left: 0; width: 100%; height: 0%; transition: height 0.4s, background-color 0.4s; opacity: 0.85; z-index: 1; }
+        
+        /* Sandbox Workspace mapping randomized positions */
+        .boba-canvas { position: absolute; bottom: 0; left: 0; width: 100%; height: 100%; z-index: 5; pointer-events: none; }
+        
+        /* Pixel Art Topping Blueprint Classes */
+        .pixel-garnish { position: absolute; width: 14px; height: 14px; transform: translate(-50%, -50%); display: inline-block; }
+        .pixel-garnish svg { width: 100%; height: 100%; image-rendering: pixelated; }
+
+        .tabs { display: flex; gap: 5px; margin-bottom: 15px; background: #f1f2f6; padding: 5px; border-radius: 8px; border: 2px solid var(--border); }
+        .tab-btn { flex: 1; padding: 8px; background: none; border: none; font-weight: bold; cursor: pointer; border-radius: 6px; font-size: 0.85rem; color: var(--text); }
+        .tab-btn.active { background: var(--border); color: white; }
+        
         .ingredients-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; min-height: 120px; }
-        .ing-btn { background: #f8f9fa; border: 2px solid #dee2e6; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 0.9rem; }
-        .ing-btn:hover { background: #e8ecef; border-color: #b08d5c; }
+        .ing-btn { background: #f8f9fa; border: 3px solid var(--border); padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 0.9rem; color: var(--text); }
+        .ing-btn:hover { background: #e8ecef; background: #fcf3e8; }
+        
         .action-bar { margin-top: 20px; display: flex; gap: 10px; }
-        .action-bar button { flex: 1; padding: 12px; font-weight: bold; border-radius: 8px; border: none; cursor: pointer; color: white; }
+        .action-bar button { flex: 1; padding: 12px; font-weight: bold; border-radius: 8px; border: 3px solid var(--border); cursor: pointer; color: white; }
     </style>
 </head>
 <body>
 
     <div class="nav-row">
-        <button class="back-btn" onclick="location.href='../../index.html'">⬅ Return to Map</button>
+        <button class="back-btn" onclick="location.href='../../index.html'">◀ RETURN TO HUB</button>
     </div>
 
     <div class="game-box">
-        <h1 style="color: #8c6239; font-size: 1.6rem; margin-bottom: 10px;">🍵 Boba Alchemy Lab Pro</h1>
+        <h1 style="font-size: 1.4rem; margin-bottom: 15px; text-transform: uppercase;">🧋 Pixel Boba Lab</h1>
         <div class="order-ticket" id="order-box">Generating custom brew request...</div>
 
         <div class="cup-container">
             <div id="liquid-layer" class="liquid"></div>
-            <div id="pearls-layer" class="boba-pearls"></div>
+            <div id="boba-canvas" class="boba-canvas"></div>
         </div>
 
         <div class="tabs">
@@ -50,8 +63,8 @@
         <div class="ingredients-grid" id="ingredients-grid"></div>
 
         <div class="action-bar">
-            <button style="background: #e74c3c;" onclick="resetCup()">Reset 🗑️</button>
-            <button style="background: #2ecc71;" onclick="serveDrink()">Serve Drink ✔️</button>
+            <button style="background: #e74c3c;" onclick="resetCup()">RESET 🗑️</button>
+            <button style="background: #2ecc71;" onclick="serveDrink()">SERVE ✔️</button>
         </div>
     </div>
 
@@ -60,7 +73,20 @@
             tea: [{name:'Matcha Green', color:'#85a970'}, {name:'Thai Black', color:'#f39c12'}, {name:'Oolong Jade', color:'#d2b48c'}, {name:'Earl Grey', color:'#a0522d'}],
             milk: [{name:'Oat Milk', color:'#f5f5dc'}, {name:'Almond Milk', color:'#fff8dc'}, {name:'Whole Milk', color:'#f8f9fa'}, {name:'Soy Milk', color:'#fffff0'}],
             flavor: [{name:'Brown Sugar', color:'#5c4033'}, {name:'Taro Purple', color:'#d1b9dc'}, {name:'Mango Puree', color:'#ffd700'}, {name:'Strawberry', color:'#ffb6c1'}],
-            topping: [{name:'Tapioca Pearls', emo:'⚫'}, {name:'Popping Boba', emo:'💥'}, {name:'Lychee Jelly', emo:'⬜'}, {name:'Red Bean', emo:'🫘'}]
+            topping: [
+                {name:'Tapioca Pearls', key:'tapioca'}, 
+                {name:'Popping Boba', key:'popping'}, 
+                {name:'Lychee Jelly', key:'lychee'}, 
+                {name:'Red Bean', key:'bean'}
+            ]
+        };
+
+        // Complete set of pixel art vector blueprints to swap out dynamic models instantly
+        const pixelVectors = {
+            tapioca: `<svg viewBox="0 0 8 8"><path d="M2,1 H6 V2 H7 V6 H6 V7 H2 V6 H1 V2 H2 Z" fill="#2d3436"/><path d="M3,2 H5 V3 H3 Z" fill="#636e72"/></svg>`,
+            popping: `<svg viewBox="0 0 8 8"><path d="M2,1 H6 V2 H7 V6 H6 V7 H2 V6 H1 V2 H2 Z" fill="#ff7675"/><path d="M3,2 H5 V3 H3 Z" fill="#fab1a0"/></svg>`,
+            lychee:  `<svg viewBox="0 0 8 8"><rect x="1" y="1" width="6" height="6" fill="#eceff1" stroke="#b0bec5" stroke-width="1"/></svg>`,
+            bean:    `<svg viewBox="0 0 8 8"><path d="M1,3 H6 V4 H7 V6 H5 V7 H2 V6 H1 Z" fill="#c0392b"/><path d="M2,4 H4 V5 H2 Z" fill="#e74c3c"/></svg>`
         };
 
         let currentOrder = {}, playerSelection = { tea: '', milk: '', flavor: '', topping: '' }, activeTab = 'tea';
@@ -73,8 +99,8 @@
             currentOrder = { tea: rTea, milk: rMilk, flavor: rFlav, topping: rTop };
             
             document.getElementById('order-box').innerHTML = `
-                <div style='font-size:0.8rem; color:#7f8c8d; margin-bottom:4px;'>CUSTOMER SPECIFICATION:</div>
-                • Base: ${rTea}<br>• Creamer: ${rMilk}<br>• Swirl: ${rFlav}<br>• Garnish: ${rTop}
+                <div style='font-size:0.75rem; color:#7f8c8d; margin-bottom:4px;'>ORDER SPECIFICATION:</div>
+                • BASE: ${rTea.toUpperCase()}<br>• MILK: ${rMilk.toUpperCase()}<br>• SWIRL: ${rFlav.toUpperCase()}<br>• TOPPING: ${rTop.toUpperCase()}
             `;
         }
 
@@ -92,7 +118,7 @@
 
         function switchTab(tab) {
             activeTab = tab;
-            document.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active', b.innerText.toLowerCase().includes(tab)));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.innerText.toLowerCase().includes(tab.substring(0, 3))));
             renderIngredients();
         }
 
@@ -100,33 +126,55 @@
             playerSelection[activeTab] = item.name;
             if (activeTab !== 'topping') {
                 const liq = document.getElementById('liquid-layer');
-                liq.style.height = "80%";
+                liq.style.height = "75%";
                 liq.style.backgroundColor = item.color;
             } else {
-                const layer = document.getElementById('pearls-layer');
-                layer.innerHTML = '';
-                for(let i=0; i<10; i++) layer.innerHTML += `<span>${item.emo}</span>`;
+                generatePixelToppings(item.key);
+            }
+        }
+
+        // The physics randomization machine to break straight rows and create natural settling piles
+        function generatePixelToppings(key) {
+            const canvas = document.getElementById('boba-canvas');
+            canvas.innerHTML = ''; // Reset current piles
+            
+            // Spawn 14 unique units with structured vertical stacking scatter paths
+            for (let i = 0; i < 14; i++) {
+                const node = document.createElement('div');
+                node.classList.add('pixel-garnish');
+                node.innerHTML = pixelVectors[key];
+
+                // Width boundaries range roughly 15px up to 115px inside glass constraints
+                let randomX = Math.floor(Math.random() * 100) + 16;
+                
+                // Tier layering calculations to pile toppings safely high on top of base layers
+                let baseLayerOffset = 185; 
+                if (i > 4) baseLayerOffset = 173;
+                if (i > 9) baseLayerOffset = 160;
+                
+                // Small localized stagger wiggle factor adjustments
+                let microY = Math.floor(Math.random() * 8) - 4;
+                let randomY = baseLayerOffset + microY;
+
+                node.style.left = `${randomX}px`;
+                node.style.top = `${randomY}px`;
+                canvas.appendChild(node);
             }
         }
 
         function resetCup() {
             playerSelection = { tea: '', milk: '', flavor: '', topping: '' };
             document.getElementById('liquid-layer').style.height = "0%";
-            document.getElementById('pearls-layer').innerHTML = '';
+            document.getElementById('boba-canvas').innerHTML = '';
         }
 
         function serveDrink() {
             if (playerSelection.tea === currentOrder.tea && playerSelection.milk === currentOrder.milk && 
                 playerSelection.flavor === currentOrder.flavor && playerSelection.topping === currentOrder.topping) {
                 alert("✨ Recipe Perfected! +20 Tokens!");
-                localStorage.setItem('hub_tokens', parseInt(localStorage.getItem('hub_tokens') || 100) + 20);
-            } else {
-                alert("❌ Flavor profile does not match request. Try resetting!");
+localStorage.setItem('hub_tokens', parseInt(localStorage.getItem('hub_tokens') || 100) +
+                     20);
+            }else{
+                alert("❌ Flavor profiles mismatched. Take a look at the ticket details!");
             }
-            resetCup(); generateOrder();
-        }
-
-        generateOrder(); renderIngredients();
-    </script>
-</body>
-</html>
+            generateOrder(); renderIngredients();
