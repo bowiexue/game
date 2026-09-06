@@ -1,105 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Toca Shiba Cafe Pro</title>
-    <!-- LINK TO EXTERNAL CSS SECTION -->
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <div class="game-window">
-        <div class="nav-header">
-            <button class="btn-ui" id="btn-map-nav">⬅ Map</button>
-            <h2 id="room-title">🏡 Avatar Designer</h2>
-            <button class="btn-ui" id="kitchen-teleport-btn" style="display:none;">Go to Kitchen 🍳</button>
-            <button class="btn-ui" id="dining-teleport-btn" style="display:none;">Return to Diner 🍽️</button>
-        </div>
-
-        <!-- 1. CREATOR VIEW -->
-        <div id="creator-room" class="screen-view active">
-            <div class="creator-container">
-                <div class="avatar-pod">
-                    <div class="dog-anchor-stack">
-                        <div class="dog-base">🐕</div>
-                        <div class="dog-hat" id="c-hat"></div>
-                        <div class="dog-face" id="c-face"></div>
-                        <div class="dog-cloth" id="c-cloth"></div>
-                    </div>
-                </div>
-                <div class="closet-panel">
-                    <div class="closet-title">🎩 Headwear</div>
-                    <div class="item-grid" id="closet-hats">
-                        <div class="item-node" data-emoji="👑">👑</div>
-                        <div class="item-node" data-emoji="🎀">🎀</div>
-                        <div class="item-node" data-emoji="🎩">🎩</div>
-                        <div class="item-node" data-emoji="">❌</div>
-                    </div>
-                    <div class="closet-title">🕶️ Glasses</div>
-                    <div class="item-grid" id="closet-glasses">
-                        <div class="item-node" data-emoji="🕶️">🕶️</div>
-                        <div class="item-node" data-emoji="🤓">🤓</div>
-                        <div class="item-node" data-emoji="😭">😭</div>
-                        <div class="item-node" data-emoji="">❌</div>
-                    </div>
-                    <div class="closet-title">👗 Clothing</div>
-                    <div class="item-grid" id="closet-clothes">
-                        <div class="item-node" data-emoji="👔">👔</div>
-                        <div class="item-node" data-emoji="👗">👗</div>
-                        <div class="item-node" data-emoji="🎒">🎒</div>
-                        <div class="item-node" data-emoji="">❌</div>
-                    </div>
-                    <button class="btn-ui" id="btn-avatar-done" style="background:#2ecc71; width:100%; margin-top:20px;">Done! Enter Cafe ✨</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- 2. DETAILED DINING ROOM -->
-        <div id="dining-room" class="screen-view">
-            <div class="dining-canvas">
-                <div class="window-decor"><div class="window-sun"></div></div>
-                <div class="my-avatar-token">
-                    <div class="dog-anchor-stack">
-                        <div class="dog-base">🐕</div>
-                        <div class="dog-hat" id="d-hat"></div>
-                        <div class="dog-face" id="d-face"></div>
-                        <div class="dog-cloth" id="d-cloth"></div>
-                    </div>
-                </div>
-                <div class="chair-prop"></div>
-                <div class="customer-token">🦊</div>
-                <div class="table-prop">
-                    <div style="font-size:0.8rem; font-weight:bold; color:white; margin-bottom:5px;">SERVE HERE</div>
-                    <div id="plate-slot">🍽️</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 3. MULTI-INGREDIENT KITCHEN BENCH -->
-        <div id="kitchen-room" class="screen-view">
-            <div class="kitchen-canvas">
-                <div class="pantry-box">
-                    <div>
-                        <div class="closet-title" style="background:#ff7675; margin-bottom:10px;">Select Ingredients</div>
-                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;" id="pantry-ingredients">
-                            <button class="ingredient-btn" data-ing="🍞">🍞 Dough</button>
-                            <button class="ingredient-btn" data-ing="🥛">🥛 Cream</button>
-                            <button class="ingredient-btn" data-ing="🍓">🍓 Strawberries</button>
-                            <button class="ingredient-btn" data-ing="🥩">🥩 Meat Patty</button>
-                        </div>
-                    </div>
-                    <button class="btn-ui" id="btn-clear-pot" style="background:#e74c3c; width:100%;">Clear Mixing Pot 🗑️</button>
-                </div>
-                <div class="kitchen-bench">
-                    <h3 style="color:white; text-align:center;">Mixing Bowl Counter</h3>
-                    <div class="mix-bin" id="bowl-display">Empty Pot</div>
-                    <button class="btn-ui" id="btn-craft-dish" style="background:#2ecc71; width:100%; font-size:1.1rem; padding:10px;">Combine & Craft Dish 🍳</button>
-                </div>
-            </div>
-        </div>
+<main class="grid">
+    <div class="card">
+        <div class="icon">🍵</div>
+        <h3>Tea Brewer</h3>
+        <p>A slow-paced, soothing custom recipe tea mixer simulator.</p>
+        <button class="play-btn" onclick="location.href='./games/boba-mixer/index.html'">Play Game</button>
     </div>
-
-    <!-- LINK TO EXTERNAL JAVASCRIPT SECTION -->
-    <script src="script.js"></script>
-</body>
-</html>
+    <div class="card">
+        <div class="icon">🧺</div>
+        <h3>Diorama Decorator</h3>
+        <p>Arrange adorable bedroom items on shelves while listening to lo-fi tunes.</p>
+        <button class="play-btn" onclick="location.href='./games/scrapbook/index.html'">Play Game</button>
+    </div>
+    <div class="card">
+        <div class="icon">🪴</div>
+        <h3>Bonsai Sanctuary</h3>
+        <p>Propagate small cuttings and watch them grow over time.</p>
+        <button class="play-btn" onclick="location.href='./games/gardening/index.html'">Play Game</button>
+    </div>
+    <div class="card">
+        <div class="icon">♨️</div>
+        <h3>Capybara Onsen</h3>
+        <p>Manage a traditional, misty hot spring bathhouse for sleepy animals.</p>
+        <button class="play-btn" onclick="location.href='./games/shiba-cafe/index.html'">Play Game</button>
+    </div>
+</main>
