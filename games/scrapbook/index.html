@@ -3,107 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lofi Diorama Room Decorator</title>
+    <title>Cosy Diorama Creator Pro</title>
     <style>
-        body { background: #ebf3f5; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; padding: 25px; }
-        .container { display: grid; grid-template-columns: 260px 1fr; gap: 25px; max-width: 950px; width: 100%; }
+        body { background: #ebf3f5; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+        .nav-row { width: 100%; max-width: 1100px; margin-bottom: 15px; }
+        .back-btn { background: #7f8c8d; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        .container { display: grid; grid-template-columns: 320px 1fr; gap: 20px; max-width: 1100px; width: 100%; }
         
-        /* Left Inventory Sidebar */
-        .picker-panel { background: white; border: 2px solid #b2bec3; border-radius: 16px; padding: 20px; }
-        .item-category-title { font-weight: bold; margin: 15px 0 8px 0; color: #636e72; font-size: 0.9rem; }
-        .sticker-tray { display: flex; gap: 10px; flex-wrap: wrap; }
-        .sticker-node { font-size: 2.2rem; background: #f1f2f6; border: none; border-radius: 8px; width: 55px; height: 55px; cursor: grab; display: flex; align-items: center; justify-content: center; transition: transform 0.1s; }
-        .sticker-node:hover { transform: scale(1.1); background: #dfe4ea; }
+        .sidebar { background: white; border: 2px solid #b2bec3; border-radius: 16px; padding: 20px; height: 580px; overflow-y: auto; }
+        .category-title { font-weight: bold; margin-top: 15px; color: #2d3436; border-bottom: 2px solid #f1f2f6; padding-bottom: 4px; }
+        .item-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 8px; }
+        .item-btn { font-size: 1.8rem; background: #f1f2f6; border: none; border-radius: 8px; padding: 8px; cursor: pointer; transition: transform 0.1s; }
+        .item-btn:hover { transform: scale(1.1); background: #dfe4ea; }
 
-        /* Right Room Canvas Board Workspace */
-        .canvas-board { background: #ffeaa7; border: 8px solid #d63031; border-radius: 20px; height: 480px; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.06); overflow: hidden; }
-        .room-floor { position: absolute; bottom: 0; width: 100%; height: 35%; background: #fab1a0; border-top: 4px solid #ff7675; }
+        .canvas-board { background: #ffeaa7; border: 8px solid #6c5ce7; border-radius: 20px; height: 580px; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.05); overflow: hidden; }
+        .canvas-floor { position: absolute; bottom: 0; width: 100%; height: 30%; background: #fab1a0; border-top: 4px solid #ff7675; }
         
-        .placed-furniture { position: absolute; font-size: 3.5rem; cursor: move; user-select: none; transform: translate(-50%, -50%); z-index: 10; }
-        
-        .radio-station { background: #2d3436; color: #00cec9; padding: 12px; border-radius: 12px; margin-top: 15px; display: flex; align-items: center; justify-content: space-between; font-family: monospace; }
+        .placed-element { position: absolute; font-size: 3.5rem; cursor: move; user-select: none; transform: translate(-50%, -50%); z-index: 10; font-size: var(--sz, 3.5rem); }
+        .controls-hint { background: #2d3436; color: white; padding: 10px; border-radius: 8px; margin-top: 15px; width: 100%; text-align: center; font-size: 0.85rem; }
     </style>
 </head>
 <body>
 
-    <h1 style="color: #d63031; margin-bottom: 20px;">🧺 Custom Lofi Room Decorator</h1>
+    <div class="nav-row">
+        <button class="back-btn" onclick="location.href='../../index.html'">⬅ Return to Map</button>
+    </div>
 
     <div class="container">
-        <!-- Sidebar item tray asset container -->
-        <aside class="picker-panel">
-            <h3>🗄️ Item Inventory</h3>
+        <aside class="sidebar">
+            <h3 style="color:#6c5ce7;">🎨 Decorator Catalog</h3>
             
-            <div class="item-category-title">🛋️ Comfort Items</div>
-            <div class="sticker-tray">
-                <button class="sticker-node" onclick="spawnSticker('🪟')">🪟</button>
-                <button class="sticker-node" onclick="spawnSticker('🛋️')">🛋️</button>
-                <button class="sticker-node" onclick="spawnSticker('🪑')">🪑</button>
-                <button class="sticker-node" onclick="spawnSticker('🛏️')">🛏️</button>
+            <div class="category-title">🖼️ Themes & Backgrounds</div>
+            <div class="item-row">
+                <button class="item-btn" style="font-size:1rem;" onclick="setTheme('#ffeaa7', '#fab1a0')">🪵 Cozy</button>
+                <button class="item-btn" style="font-size:1rem;" onclick="setTheme('#81ecec', '#00cec9')">🌊 Aqua</button>
+                <button class="item-btn" style="font-size:1rem;" onclick="setTheme('#a29bfe', '#6c5ce7')">🌌 Cyber</button>
+                <button class="item-btn" style="font-size:1rem;" onclick="setTheme('#ff7675', '#d63031')">🎈 Retro</button>
             </div>
 
-            <div class="item-category-title">🪴 Aesthetic Accents</div>
-            <div class="sticker-tray">
-                <button class="sticker-node" onclick="spawnSticker('🪴')">🪴</button>
-                <button class="sticker-node" onclick="spawnSticker('📚')">📚</button>
-                <button class="sticker-node" onclick="spawnSticker('🐱')">🐱</button>
-                <button class="sticker-node" onclick="spawnSticker('📺')">📺</button>
+            <div class="category-title">🪑 Framework Furniture</div>
+            <div class="item-row">
+                <button class="item-btn" onclick="spawn('🛌')">还原🛌</button><button class="item-btn" onclick="spawn('🛋️')">🛋️</button>
+                <button class="item-btn" onclick="spawn('🪑')">🪑</button><button class="item-btn" onclick="spawn('🧱')">🧱</button>
+                <button class="item-btn" onclick="spawn('🪟')">🪟</button><button class="item-btn" onclick="spawn('🚪')">🚪</button>
+                <button class="item-btn" onclick="spawn('🪜')">🪜</button><button class="item-btn" onclick="spawn('🗄️')">🗄️</button>
             </div>
 
-            <!-- Integrated Radio Interface Block -->
-            <div class="item-category-title">📻 Room Radio Station</div>
-            <div class="radio-station">
-                <span>🎵 Lofi Chill Beats</span>
-                <button style="background:#00cec9; border:none; padding:4px 8px; border-radius:4px; font-weight:bold; cursor:pointer;" onclick="toggleRadio(this)">PLAY</button>
+            <div class="category-title">🪴 Cozy Electronics & Foliage</div>
+            <div class="item-row">
+                <button class="item-btn" onclick="spawn('🪴')">🪴</button><button class="item-btn" onclick="spawn('🌵')">🌵</button>
+                <button class="item-btn" onclick="spawn('🌸')">🌸</button><button class="item-btn" onclick="spawn('🖥️')">🖥️</button>
+                <button class="item-btn" onclick="spawn('📺')">📺</button><button class="item-btn" onclick="spawn('📻')">📻</button>
+                <button class="item-btn" onclick="spawn('💡')">💡</button><button class="item-btn" onclick="spawn('📚')">📚</button>
             </div>
-            <audio id="lofi-stream" loop src="https://streamguys1.com"></audio>
+
+            <div class="category-title">🐱 Companions & Collectibles</div>
+            <div class="item-row">
+                <button class="item-btn" onclick="spawn('🐱')">🐱</button><button class="item-btn" onclick="spawn('🐶')">🐶</button>
+                <button class="item-btn" onclick="spawn('🐹')">🐹</button><button class="item-btn" onclick="spawn('🧸')">🧸</button>
+                <button class="item-btn" onclick="spawn('🎨')">🎨</button><button class="item-btn" onclick="spawn('🎮')">🎮</button>
+                <button class="item-btn" onclick="spawn('🍕')">🍕</button><button class="item-btn" onclick="spawn('☕')">☕</button>
+            </div>
         </aside>
 
-        <!-- Room workspace playground area panel -->
         <main class="canvas-board" id="canvas-room">
-            <div class="room-floor"></div>
-            <!-- Dynamic elements spawn freely here without row limits -->
+            <div class="canvas-floor" id="canvas-floor"></div>
         </main>
     </div>
 
+    <div class="controls-hint">💡 <b>Drag</b> to shift coordinates • <b>Click + scroll mouse wheel</b> to alter item size bounds • <b>Double click</b> to discard</div>
+
     <script>
-        let isPlaying = false;
-        function toggleRadio(btn) {
-            const track = document.getElementById('lofi-stream');
-            if(!isPlaying) { track.play().catch(()=>{}); btn.innerText = "STOP"; btn.style.background="#ff7675"; }
-            else { track.pause(); btn.innerText = "PLAY"; btn.style.background="#00cec9"; }
-            isPlaying = !isPlaying;
+        function setTheme(wall, floor) {
+            document.getElementById('canvas-room').style.backgroundColor = wall;
+            document.getElementById('canvas-floor').style.backgroundColor = floor;
         }
 
-        function spawnSticker(emoji) {
+        function spawn(emoji) {
             const canvas = document.getElementById('canvas-room');
             const item = document.createElement('div');
-            item.classList.add('placed-furniture');
+            item.classList.add('placed-element');
             item.innerText = emoji;
-            
-            // Spawn items neatly centered in the upper living space area initially
-            item.style.left = "50%";
-            item.style.top = "40%";
+            item.style.left = "50%"; item.style.top = "45%";
+            let sz = 3.5;
+            item.style.setProperty('--sz', `${sz}rem`);
 
-            // Enable intuitive canvas spatial drag and drop event handling
             let isDragging = false;
-            item.addEventListener('mousedown', (e) => { isDragging = true; item.style.zIndex = 100; });
+            item.addEventListener('mousedown', () => { isDragging = true; item.style.zIndex = 1000; });
             
             document.addEventListener('mousemove', (e) => {
                 if (!isDragging) return;
-                const bounds = canvas.getBoundingClientRect();
-                let x = e.clientX - bounds.left;
-                let y = e.clientY - bounds.top;
-                
-                // Keep objects bound securely within workspace margins
-                if (x >= 0 && x <= bounds.width) item.style.left = `${x}px`;
-                if (y >= 0 && y <= bounds.height) item.style.top = `${y}px`;
+                const b = canvas.getBoundingClientRect();
+                let x = e.clientX - b.left, y = e.clientY - b.top;
+                if (x >= 0 && x <= b.width) item.style.left = `${x}px`;
+                if (y >= 0 && y <= b.height) item.style.top = `${y}px`;
             });
 
             document.addEventListener('mouseup', () => { isDragging = false; item.style.zIndex = 10; });
-            
-            // Double click deletion handler
+            item.addEventListener('wheel', (e) => { e.preventDefault(); sz += e.deltaY < 0 ? 0.3 : -0.3; sz = Math.max(1.5, Math.min(7, sz)); item.style.setProperty('--sz', `${sz}rem`); });
             item.addEventListener('dblclick', () => item.remove());
-
             canvas.appendChild(item);
         }
     </script>
