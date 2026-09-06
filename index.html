@@ -16,12 +16,12 @@
         header { text-align: center; margin-bottom: 35px; }
         header h1 { color: var(--primary); font-size: 2.5rem; margin-bottom: 8px; }
         
-        /* The Fixed Grid Wrapper that stops layout vertical stacking */
+        /* The Fixed Grid Wrapper that maps all 6 games side-by-side */
         .grid { 
             display: grid; 
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
             gap: 25px; 
-            max-width: 950px; 
+            max-width: 1050px; 
             width: 100%; 
             margin-top: 20px;
         }
@@ -69,37 +69,53 @@
         <p>Your beautiful portfolio launcher. Switch between worlds instantly!</p>
     </header>
 
-    <!-- MAIN DASHBOARD CONTENT MATRIX GRID -->
+    <!-- MAIN DASHBOARD CONTENT MATRIX GRID LISTING ALL 6 COZY MODULES -->
     <main class="grid">
-        <!-- Game 1 -->
+        <!-- Game 1: Star Catcher -->
+        <div class="card">
+            <div class="icon">⭐</div>
+            <h3>Star Catcher</h3>
+            <p>Catch falling stars into your mechanical jar and buy permanent performance boosts.</p>
+            <button class="play-btn" onclick="location.href='./games/star-catcher/index.html'">Play Game</button>
+        </div>
+
+        <!-- Game 2: Tamagotchi -->
+        <div class="card">
+            <div class="icon">👾</div>
+            <h3>Tamagotchi Pet</h3>
+            <p>Keep your virtual buddy happy, accumulate tokens, and unlock the luxury 10-item wardrobe shop.</p>
+            <button class="play-btn" onclick="location.href='./games/tamagotchi/index.html'">Play Game</button>
+        </div>
+
+        <!-- Game 3: Tea Brewer -->
         <div class="card">
             <div class="icon">🍵</div>
             <h3>Tea Brewer</h3>
-            <p>A slow-paced, soothing custom recipe tea mixer simulator.</p>
+            <p>A slow-paced, soothing custom recipe tea mixer simulator with cozy steam animations.</p>
             <button class="play-btn" onclick="location.href='./games/boba-mixer/index.html'">Play Game</button>
         </div>
 
-        <!-- Game 2 -->
+        <!-- Game 4: Diorama Decorator -->
         <div class="card">
             <div class="icon">🧺</div>
             <h3>Diorama Decorator</h3>
-            <p>Arrange adorable bedroom items on shelves while listening to lo-fi tunes.</p>
+            <p>Arrange adorable bedroom items on shelves while listening to a relaxing virtual lofi radio station.</p>
             <button class="play-btn" onclick="location.href='./games/scrapbook/index.html'">Play Game</button>
         </div>
 
-        <!-- Game 3 -->
+        <!-- Game 5: Bonsai Sanctuary -->
         <div class="card">
             <div class="icon">🪴</div>
             <h3>Bonsai Sanctuary</h3>
-            <p>Propagate small cuttings and watch them grow over time.</p>
+            <p>Propagate small cutting variables on room shelves and watch them grow over time.</p>
             <button class="play-btn" onclick="location.href='./games/gardening/index.html'">Play Game</button>
         </div>
 
-        <!-- Game 4 -->
+        <!-- Game 6: Capybara Onsen Spa -->
         <div class="card">
             <div class="icon">♨️</div>
             <h3>Capybara Onsen</h3>
-            <p>Manage a traditional, misty hot spring bathhouse for sleepy animals.</p>
+            <p>Manage a traditional, misty hot spring bathhouse to serve sleepy capybaras, ducks, and frogs.</p>
             <button class="play-btn" onclick="location.href='./games/shiba-cafe/index.html'">Play Game</button>
         </div>
     </main>
