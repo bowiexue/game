@@ -3,103 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Wandering Capybara Onsen</title>
-    <!-- LINK TO STRUCTURAL VISUAL STYLES -->
+    <title>Capybara Onsen Designer</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="game-window">
-        <div class="nav-header">
-            <button class="btn-ui" id="btn-map-nav">⬅ Map</button>
-            <h2 id="room-title">🏡 Avatar Designer</h2>
-            <button class="btn-ui" id="kitchen-teleport-btn" style="display:none;">Go to Kitchen 🍳</button>
-            <button class="btn-ui" id="dining-teleport-btn" style="display:none;">Return to Diner 🍽️</button>
-        </div>
-
-        <!-- 1. CREATOR ROOM VIEW -->
-        <div id="creator-room" class="screen-view active">
-            <div class="creator-container">
-                <div class="avatar-pod">
-                    <div class="dog-anchor-stack">
-                        <div class="animal-base">🦫</div>
-                        <div class="animal-hat" id="c-hat"></div>
-                        <div class="animal-face" id="c-face"></div>
-                        <div class="animal-cloth" id="c-cloth"></div>
-                    </div>
-                </div>
-                <div class="closet-panel">
-                    <div class="closet-title">🎩 Headwear</div>
-                    <div class="item-grid" id="closet-hats">
-                        <div class="item-node" data-emoji="👑">👑</div>
-                        <div class="item-node" data-emoji="🎀">🎀</div>
-                        <div class="item-node" data-emoji="🎩">🎩</div>
-                        <div class="item-node" data-emoji="">❌</div>
-                    </div>
-                    <div class="closet-title">🕶️ Glasses</div>
-                    <div class="item-grid" id="closet-glasses">
-                        <div class="item-node" data-emoji="🕶️">🕶️</div>
-                        <div class="item-node" data-emoji="🤓">🤓</div>
-                        <div class="item-node" data-emoji="😭">😭</div>
-                        <div class="item-node" data-emoji="">❌</div>
-                    </div>
-                    <div class="closet-title">👗 Clothing</div>
-                    <div class="item-grid" id="closet-clothes">
-                        <div class="item-node" data-emoji="👔">👔</div>
-                        <div class="item-node" data-emoji="👗">👗</div>
-                        <div class="item-node" data-emoji="🎒">🎒</div>
-                        <div class="item-node" data-emoji="">❌</div>
-                    </div>
-                    <button class="btn-ui" id="btn-avatar-done" style="background:#2ecc71; width:100%; margin-top:20px;">Done! Enter Onsen ♨️</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- 2. MISTY BATHHOUSE TUB FLOOR -->
-        <div id="dining-room" class="screen-view">
-            <div class="dining-canvas">
-                <div class="mist-cloud"></div>
-                <div class="my-avatar-token">
-                    <div class="dog-anchor-stack">
-                        <div class="animal-base">🦫</div>
-                        <div class="animal-hat" id="d-hat"></div>
-                        <div class="animal-face" id="d-face"></div>
-                        <div class="animal-cloth" id="d-cloth"></div>
-                    </div>
-                </div>
-                <div class="chair-prop"></div>
-                <div class="customer-token">🦆</div>
-                <div class="table-prop">
-                    <div style="font-size:0.8rem; font-weight:bold; color:white; margin-bottom:5px;">SPA TUB</div>
-                    <div id="plate-slot">♨️</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 3. SPA PREPARATION BENCH -->
-        <div id="kitchen-room" class="screen-view">
-            <div class="kitchen-canvas">
-                <div class="pantry-box">
-                    <div>
-                        <div class="closet-title" style="background:#ff7675; margin-bottom:10px;">Select Comfort Items</div>
-                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;" id="pantry-ingredients">
-                            <button class="ingredient-btn" data-ing="🍊">🍊 Yuzu Fruit</button>
-                            <button class="ingredient-btn" data-ing="🧼">🧼 Bath Salts</button>
-                            <button class="ingredient-btn" data-ing="🧖">🧖 Hot Towel</button>
-                            <button class="ingredient-btn" data-ing="🍵">🍵 Green Tea</button>
-                        </div>
-                    </div>
-                    <button class="btn-ui" id="btn-clear-pot" style="background:#e74c3c; width:100%;">Clear Basket 🗑️</button>
-                </div>
-                <div class="kitchen-bench">
-                    <h3 style="color:white; text-align:center;">Spa Preparation Desk</h3>
-                    <div class="mix-bin" id="bowl-display">Empty Basket</div>
-                    <button class="btn-ui" id="btn-craft-dish" style="background:#2ecc71; width:100%; font-size:1.1rem; padding:10px;">Prepare Treatment ♨️</button>
-                </div>
-            </div>
-        </div>
+    <div class="nav-row">
+        <button class="back-btn" onclick="location.href='../../index.html'">⬅ Return to Map</button>
     </div>
 
-    <!-- LINK TO LOGIC RUNTIME ENGINE -->
-    <script src="script.js"></script>
+    <div class="game-layout">
+        <!-- LEFT COLUMN: AVATAR STUDIO -->
+        <section class="card-section">
+            <h2>🦫 Avatar Designer</h2>
+            
+            <div class="item-category">
+                <div class="category-title">👒 Headwear</div>
+                <div class="options-row">
+                    <button class="option-node" onclick="setLayer('head', '👑')">👑</button>
+                    <button class="option-node" onclick="setLayer('head', '🎀')">🎀</button>
+                    <button class="option-node" onclick="setLayer('head', '🎩')">🎩</button>
+                    <button class="option-node remove-btn" onclick="setLayer('head', '')">❌</button>
+                </div>
+            </div>
+
+            <div class="item-category">
+                <div class="category-title">👓 Glasses</div>
+                <div class="options-row">
+                    <button class="option-node" onclick="setLayer('glass', '🕶️')">🕶️</button>
+                    <button class="option-node" onclick="setLayer('glass', '🤓')">🤓</button>
+                    <button class="option-node remove-btn" onclick="setLayer('glass', '')">❌</button>
+                </div>
+            </div>
+
+            <div class="avatar-display-box">
+                <div class="base-avatar">
+                    🦫
+                    <div id="layer-head" class="overlay-layer layer-head"></div>
+                    <div id="layer-glass" class="overlay-layer layer-glass"></div>
+                </div>
+            </div>
+
+            <button class="action-btn success">Done! Enter Onsen ♨️</button>
+        </section>
+
+        <!-- RIGHT COLUMN: SPA PREPARATION DESK -->
+        <section class="card-section">
+            <h2>🧺 Select Comfort Items</h2>
+            
+            <div class="button-grid">
+                <button class="grid-item-btn" onclick="addToBasket('🍊 Yuzu Fruit')">🍊 Yuzu Fruit</button>
+                <button class="grid-item-btn" onclick="addToBasket('🧼 Bath Salts')">🧼 Bath Salts</button>
+                <button class="grid-item-btn" onclick="addToBasket('🧣 Hot Towel')">🧣 Hot Towel</button>
+                <button class="grid-item-btn" onclick="addToBasket('🍵 Green Tea')">🍵 Green Tea</button>
+            </div>
+
+            <button class="action-btn danger" onclick="clearBasket()">Clear Basket 🗑️</button>
+            
+            <h2 style="margin-top:20px; font-size:1.1rem;">Spa Preparation Desk</h2>
+            <div id="basket-view" class="basket-status">Empty Basket</div>
+
+            <button class="action-btn success" onclick="alert('Treatment Prepared!')">Prepare Treatment ♨️</button>
+        </section>
+    </div>
+
+    <script>
+        let basket = [];
+        function setLayer(layer, emoji) {
+            document.getElementById(`layer-${layer}`).innerText = emoji;
+        }
+        function addToBasket(item) {
+            if(!basket.includes(item)) basket.push(item);
+            updateBasketUI();
+        }
+        function clearBasket() {
+            basket = [];
+            updateBasketUI();
+        }
+        function updateBasketUI() {
+            const el = document.getElementById('basket-view');
+            el.innerText = basket.length > 0 ? basket.join(', ') : 'Empty Basket';
+        }
+    </script>
 </body>
 </html>
