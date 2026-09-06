@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tamagotchi Pet Simulation</title>
+    <style>
+        body { background: #f5f6fa; font-family: 'Segoe UI', sans-serif; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+        .game-box { background: white; padding: 25px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); max-width: 500px; width: 100%; text-align: center; }
+        .back-btn { background: #718093; color: white; border: none; padding: 10px 15px; border-radius: 6px; font-weight: bold; cursor: pointer; float: left; }
+        
+        .stage { background: #f8f9fa; border: 3px solid #6c5ce7; border-radius: 12px; padding: 30px; margin: 20px 0; position: relative; }
+        #pet { font-size: 5rem; display: inline-block; position: relative; }
+        #hat-slot { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); font-size: 2.2rem; }
+        
+        .bars { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; text-align: left; }
+        .bar { background: #eee; height: 16px; border-radius: 8px; overflow: hidden; margin-top: 4px; }
+        .fill { height: 100%; width: 100%; transition: width 0.3s; }
+        
+        .act-btn { border: none; padding: 12px 20px; border-radius: 8px; color: white; font-weight: bold; cursor: pointer; font-size: 1rem; margin: 5px; }
+        .shop { border-top: 2px solid #eee; padding-top: 15px; margin-top: 15px; }
+        .shop-items { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .item-card { background: #f1f2f6; padding: 10px; border-radius: 8px; }
+    </style>
+</head>
+<body>
+
+    <div class="game-box">
+        <button class="back-btn" onclick="location.href='../../index.html'">⬅ Hub Menu</button>
+        <h2 style="color:#6c5ce7; margin-bottom: 5px;">👾 Custom Pet Sim</h2>
+        <p>Keep your pet's needs high! Safe levels yield free tokens every 3 seconds.</p>
+
+        <div style="font-weight: bold; margin-top: 15px;">Your Wallet: 🪙 <span id="token-ui">100</span></div>
+
+        <div class="stage">
+            <div id="pet">🐱<span id="hat-slot"></span></div>
+            <div class="bars">
+                <div>Hunger: <div class="bar"><div id="f-hunger" class="fill" style="background:#ff6b6b;"></div></div></div>
+                <div>Joy: <div class="bar"><div id="f-joy" class="fill" style="background:#1dd1a1;"></div></div></div>
+            </div>
+            <button class="act-btn" style="background:#1dd1a1;" onclick="feed()">🍖 Feed Snack</button>
+            <button class="act-btn" style="background:#feca57;" onclick="play()">🧸 Play Toy</button>
+        </div>
+
+        <div class="shop">
+            <h3 style="margin-bottom: 10px;">🎩 Costume Hat Shop</h3>
+            <div class="shop-items">
+                <div class="item-card"><h4>Crown (50🪙)</h4><button class="act-btn" style="background:#6c5ce7; padding:6px;" onclick="buyHat('👑', 50)">Buy/Equip</button></div>
+                <div class="item-card"><h4>Shades (80🪙)</h4><button class="act-btn" style="background:#6c5ce7; padding:6px;" onclick="buyHat('🕶️', 80)">Buy/Equip</button></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let tokens = parseInt(localStorage.getItem('hub_tokens')) || 100;
+        let hunger = 100;
+        let joy = 100;
+
+        function updateUI() {
+            document.getElementById('token-ui').innerText = tokens;
+            document.getElementById('f-hunger').style.width = hunger + '%';
+            document.getElementById('f-joy').style.width = joy + '%';
+            localStorage.setItem('hub_tokens', tokens);
+        }
+        updateUI();
+
+        // Drain loop over time
+        setInterval(() => {
+            hunger = Math.max(0, hunger - 4);
+            joy = Math.max(0, joy - 3);
+            
+            // Give passive income if well looked after
+            if (hunger > 40 && joy > 40) {
+                tokens += 2;
+            }
+            updateUI();
+        }, 3000);
+
+        function feed() { hunger = Math.min(100, hunger + 25); updateUI(); }
+        function play() { joy = Math.min(100, joy + 20); updateUI(); }
+
+        function buyHat(emoji, cost) {
+            if (tokens >= cost) {
+                tokens -= cost;
+                document.getElementById('hat-slot').innerText = emoji;
+                updateUI();
+            } else {
+                alert("Insufficient tokens! Keep your pet thriving to accumulate wealth.");
+            }
+        }
+    </script>
+</body>
+</html>
