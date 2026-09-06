@@ -1,63 +1,59 @@
-// High fidelity hand-shaded retro vector library with built-in asset scale metrics
+// High fidelity hand-shaded retro blueprints mapped by custom width/height aspect ratios
 const blueprints = {
     beds: {
-        canopyBed: {
-            size: 155,
-            svg: `<svg viewBox="0 0 24 24"><path d="M2,4 H22 V22 H2 Z" fill="none"/><path d="M2,4 H22 V6 H20 V20 H18 V6 H6 V20 H4 V6 H2 Z" fill="#4a2810" stroke="#2c3e50" stroke-width="0.5"/><path d="M4,13 H20 V19 H4 Z" fill="#2980b9" stroke="#2c3e50" stroke-width="0.5"/><rect x="4" y="16" width="16" height="3" fill="#1f618d"/><rect x="5" y="13" width="5" height="3" fill="#ffffff" stroke="#2c3e50" stroke-width="0.5"/><rect x="5" y="14" width="4" height="2" fill="#eaeded"/><path d="M10,13 H20 V14 H10 Z" fill="#5dade2"/></svg>`
+        canopyFourPoster: {
+            w: 160, h: 145, // Large vertical statement piece
+            svg: `<svg viewBox="0 0 32 32"><path d="M2,2 H30 V30 H2 Z" fill="none"/><path d="M2,2 H30 V4 H26 V28 H24 V4 H8 V28 H6 V4 H2 Z" fill="#3d2314" stroke="#2c3e50" stroke-width="0.5"/><path d="M6,18 H26 V28 H6 Z" fill="#2980b9" stroke="#2c3e50" stroke-width="0.5"/><rect x="6" y="22" width="20" height="6" fill="#1b4f72"/><rect x="7" y="18" width="6" height="4" fill="#ffffff" stroke="#2c3e50" stroke-width="0.5"/><rect x="8" y="19" width="4" height="2" fill="#d5dbdb"/><path d="M13,18 H26 V20 H13 Z" fill="#5dade2"/></svg>`
         },
-        pinkCottage: {
-            size: 140,
-            svg: `<svg viewBox="0 0 24 24"><path d="M2,8 H22 V20 H2 Z" fill="none"/><path d="M2,14 H22 V19 H2 Z" fill="#b33939" stroke="#2c3e50" stroke-width="0.5"/><rect x="3" y="10" width="18" height="5" fill="#f48fb1" stroke="#2c3e50" stroke-width="0.5"/><rect x="4" y="10" width="5" height="3" fill="#ffffff"/><path d="M9,12 H21 V15 H9 Z" fill="#f8bbd0"/></svg>`
+        pinkCottageBed: {
+            w: 145, h: 100, // Wide and low to the ground
+            svg: `<svg viewBox="0 0 32 20"><rect x="2" y="8" width="28" height="10" fill="#b33939" stroke="#2c3e50" stroke-width="0.5"/><rect x="3" y="4" width="26" height="6" fill="#f48fb1" stroke="#2c3e50" stroke-width="0.5"/><rect x="4" y="4" width="6" height="4" fill="#ffffff" stroke="#2c3e50" stroke-width="0.5"/><path d="M10,6 H29 V9 H10 Z" fill="#f8bbd0"/><rect x="2" y="16" width="2" height="3" fill="#2c3e50"/><rect x="28" y="16" width="2" height="3" fill="#2c3e50"/></svg>`
         }
     },
     seating: {
-        tuftedSofa: {
-            size: 135,
-            svg: `<svg viewBox="0 0 24 24"><path d="M2,10 H22 V20 H2 Z" fill="none"/><path d="M2,10 H22 V17 H2 Z" fill="#b83b5e" stroke="#2c3e50" stroke-width="0.5"/><rect x="4" y="13" width="16" height="4" fill="#6a2c70" stroke="#2c3e50" stroke-width="0.5"/><circle cx="6" cy="11.5" r="0.75" fill="#f08a5d"/><circle cx="12" cy="11.5" r="0.75" fill="#f08a5d"/><circle cx="18" cy="11.5" r="0.75" fill="#f08a5d"/><rect x="2" y="17" width="2" height="2" fill="#2c3e50"/><rect x="20" y="17" width="2" height="2" fill="#2c3e50"/></svg>`
+        tuftedChesterfield: {
+            w: 165, h: 80, // Extra wide layout parameters
+            svg: `<svg viewBox="0 0 36 16"><path d="M1,2 H35 V15 H1 Z" fill="#800020" stroke="#2c3e50" stroke-width="0.5"/><rect x="3" y="6" width="30" height="7" fill="#4a0011" stroke="#2c3e50" stroke-width="0.5"/><circle cx="6" cy="4" r="0.75" fill="#e67e22"/><circle cx="12" cy="4" r="0.75" fill="#e67e22"/><circle cx="18" cy="4" r="0.75" fill="#e67e22"/><circle cx="24" cy="4" r="0.75" fill="#e67e22"/><circle cx="30" cy="4" r="0.75" fill="#e67e22"/><rect x="2" y="13" width="2" height="2" fill="#2c3e50"/><rect x="32" y="13" width="2" height="2" fill="#2c3e50"/></svg>`
         },
         wingbackChair: {
-            size: 85,
-            svg: `<svg viewBox="0 0 16 16"><path d="M2,4 H14 V14 H2 Z" fill="none"/><path d="M3,4 H13 V12 H3 Z" fill="#2c3e50" stroke="#111" stroke-width="0.5"/><rect x="4" y="6" width="8" height="6" fill="#1e3799"/><rect x="5" y="8" width="6" height="4" fill="#4a69bd"/><rect x="3" y="12" width="2" height="2" fill="#111"/><rect x="11" y="12" width="2" height="2" fill="#111"/></svg>`
+            w: 80, h: 90, // Square sitting profile
+            svg: `<svg viewBox="0 0 16 18"><rect x="2" y="2" width="12" height="13" fill="#1b3a4b" stroke="#2c3e50" stroke-width="0.5"/><rect x="3" y="5" width="10" height="7" fill="#2e6f40" stroke="#2c3e50" stroke-width="0.5"/><rect x="4" y="7" width="8" height="5" fill="#52b788"/><rect x="2" y="15" width="2" height="2" fill="#2c3e50"/><rect x="12" y="15" width="2" height="2" fill="#2c3e50"/></svg>`
         }
     },
     tables: {
-        carvedDesk: {
-            size: 115,
-            svg: `<svg viewBox="0 0 24 24"><path d="M2,6 H22 V20 H2 Z" fill="none"/><path d="M2,8 H22 V11 H2 Z" fill="#845131" stroke="#2c3e50" stroke-width="0.5"/><rect x="2" y="7" width="20" height="2" fill="#a0522d"/><rect x="4" y="11" width="3" height="7" fill="#5c3a21" stroke="#2c3e50" stroke-width="0.5"/><rect x="17" y="11" width="3" height="7" fill="#5c3a21" stroke="#2c3e50" stroke-width="0.5"/><circle cx="6" cy="10" r="0.75" fill="#f1c40f"/><circle cx="18" cy="10" r="0.75" fill="#f1c40f"/></svg>`
+        executiveDesk: {
+            w: 140, h: 85, // Long flat study layout
+            svg: `<svg viewBox="0 0 28 16"><rect x="1" y="2" width="26" height="5" fill="#a0522d" stroke="#2c3e50" stroke-width="0.5"/><rect x="1" y="1" width="26" height="1" fill="#deb887"/><rect x="3" y="7" width="4" height="8" fill="#5c3a21" stroke="#2c3e50" stroke-width="0.5"/><rect x="21" y="7" width="4" height="8" fill="#5c3a21" stroke="#2c3e50" stroke-width="0.5"/><circle cx="5" cy="5" r="0.5" fill="#f1c40f"/><circle cx="23" cy="5" r="0.5" fill="#f1c40f"/></svg>`
         },
-        coffeeTable: {
-            size: 95,
-            svg: `<svg viewBox="0 0 16 16"><path d="M1,7 H15 V13 H1 Z" fill="none"/><rect x="1" y="8" width="14" height="2" fill="#ba7a54" stroke="#2c3e50" stroke-width="0.5"/><rect x="1" y="7" width="14" height="1" fill="#df9f77"/><rect x="2" y="10" width="2" height="3" fill="#5c3a21"/><rect x="12" y="10" width="2" height="3" fill="#5c3a21"/></svg>`
+        lowCoffeeTable: {
+            w: 110, h: 45, // Slim horizontal lowboy style
+            svg: `<svg viewBox="0 0 24 10"><rect x="1" y="2" width="22" height="3" fill="#ba7a54" stroke="#2c3e50" stroke-width="0.5"/><rect x="1" y="1" width="22" height="1" fill="#df9f77"/><rect x="3" y="5" width="2" height="4" fill="#5c3a21"/><rect x="19" y="5" width="2" height="4" fill="#5c3a21"/></svg>`
         }
     },
     electronics: {
-        workstation: {
-            size: 100,
-            svg: `<svg viewBox="0 0 24 24"><path d="M2,4 H22 V20 H2 Z" fill="none"/><rect x="5" y="6" width="14" height="9" fill="#1c1e22" stroke="#2c3e50" stroke-width="0.75"/><rect x="6" y="7" width="12" height="7" fill="#2b2e33"/><rect x="7" y="8" width="10" height="5" fill="#00d2d3" opacity="0.8"/><rect x="10" y="15" width="4" height="3" fill="#57606f"/><rect x="8" y="18" width="8" height="1" fill="#2c3e50"/></svg>`
+        monitorStation: {
+            w: 95, h: 80,
+            svg: `<svg viewBox="0 0 20 16"><rect x="2" y="2" width="16" height="10" fill="#1c1e22" stroke="#2c3e50" stroke-width="0.75"/><rect x="3" y="3" width="14" height="8" fill="#2b2e33"/><rect x="4" y="4" width="12" height="6" fill="#00d2d3" opacity="0.85"/><rect x="8" y="12" width="4" height="3" fill="#57606f"/><rect x="6" y="15" width="8" height="1" fill="#2c3e50"/></svg>`
         },
-        vintageGramophone: {
-            size: 65,
-            svg: `<svg viewBox="0 0 16 16"><path d="M2,2 H14 V14 H2 Z" fill="none"/><rect x="4" y="9" width="8" height="5" fill="#845131" stroke="#2c3e50" stroke-width="0.5"/><path d="M6,9 Q6,4 11,3 Q12,5 9,7 Z" fill="#f1c40f" stroke="#2c3e50" stroke-width="0.5"/><circle cx="10" cy="4" r="1" fill="#fff" opacity="0.6"/></svg>`
+        gramophone: {
+            w: 60, h: 70, // Intentionally compact profile
+            svg: `<svg viewBox="0 0 12 14"><rect x="2" y="8" width="8" height="5" fill="#845131" stroke="#2c3e50" stroke-width="0.5"/><path d="M4,8 Q4,3 9,2 Q10,4 7,6 Z" fill="#f1c40f" stroke="#2c3e50" stroke-width="0.5"/><circle cx="8" cy="3" r="0.5" fill="#fff" opacity="0.7"/></svg>`
         }
     },
     plants: {
-        tieredBonsai: {
-            size: 60,
-            svg: `<svg viewBox="0 0 16 16"><path d="M1,1 H15 V15 H1 Z" fill="none"/><path d="M8,6 Q6,4 5,5 M8,9 Q11,7 10,6" stroke="#5c3a21" stroke-width="1.5" stroke-linecap="round"/><circle cx="4" cy="4" r="2.5" fill="#1b4d3e" stroke="#112412" stroke-width="0.5"/><circle cx="11" cy="5" r="2" fill="#27ae60" stroke="#112412" stroke-width="0.5"/><rect x="3" y="11" width="10" height="3" fill="#b5651d" stroke="#2c3e50" stroke-width="1"/><rect x="4" y="12" width="8" height="1" fill="#d2b48c"/></svg>`
+        pottedBonsai: {
+            w: 65, h: 75,
+            svg: `<svg viewBox="0 0 12 14"><path d="M6,6 Q4,3 3,4 M6,9 Q9,6 8,5" stroke="#5c3a21" stroke-width="1.5" stroke-linecap="round"/><circle cx="3" cy="3" r="2" fill="#1b4d3e" stroke="#112412" stroke-width="0.5"/><circle cx="9" cy="4" r="1.5" fill="#27ae60" stroke="#112412" stroke-width="0.5"/><rect x="2" y="10" width="8" height="3" fill="#b5651d" stroke="#2c3e50" stroke-width="1"/><rect x="3" y="11" width="6" height="1" fill="#d2b48c"/></svg>`
         },
-        monsteraJar: {
-            size: 55,
-            svg: `<svg viewBox="0 0 16 16"><path d="M3,2 Q5,5 3,8 M8,1 Q9,4 8,8 M13,2 Q11,5 13,8" fill="none" stroke="#2ecc71" stroke-width="1.5" stroke-linecap="round"/><rect x="5" y="9" width="6" height="5" fill="#a5d6a7" opacity="0.6" stroke="#2c3e50" stroke-width="0.75"/><line x1="5" y1="11" x2="11" y2="11" stroke="#fff" opacity="0.5"/></svg>`
+        hangingFern: {
+            w: 55, h: 85, // Tall vertical string accents
+            svg: `<svg viewBox="0 0 10 16"><line x1="5" y1="1" x2="5" y2="8" stroke="#2c3e50"/><circle cx="5" cy="9" r="2.5" fill="#27ae60" stroke="#2c3e50" stroke-width="0.5"/><path d="M3,11 Q1,15 2,16 M7,11 Q9,15 8,16" fill="none" stroke="#2ecc71" stroke-width="1"/></svg>`
         }
     },
     plush: {
-        royalBear: {
-            size: 55,
-            svg: `<svg viewBox="0 0 16 16"><path d="M3,3 H13 V13 H3 Z" fill="none"/><circle cx="4" cy="5" r="2" fill="#b33939"/><circle cx="12" cy="5" r="2" fill="#b33939"/><rect x="4" y="6" width="8" height="7" fill="#d63031" stroke="#2c3e50" stroke-width="0.75"/><rect x="6" y="4" width="4" height="2" fill="#f1c40f"/><circle cx="8" cy="9" r="1.5" fill="#ffffff"/></svg>`
-        },
-        bubbleSlime: {
-            size: 45,
-            svg: `<svg viewBox="0 0 16 16"><path d="M2,10 Q2,4 8,4 Q14,4 14,10 Z" fill="#00d2d3" stroke="#2c3e50" stroke-width="0.75"/><circle cx="6" cy="7.5" r="1" fill="#fff"/><circle cx="5" cy="9" r="0.75" fill="#2c3e50"/><circle cx="11" cy="9" r="0.75" fill="#2c3e50"/></svg>`
+        teddyBear: {
+            w: 50, h: 55, // Extra small detail accent dimensions
+            svg: `<svg viewBox="0 0 12 12"><circle cx="3" cy="4" r="1.5" fill="#cd6133"/><circle cx="9" cy="4" r="1.5" fill="#cd6133"/><rect x="2" y="5" width="8" height="6" fill="#de7d31" stroke="#2c3e50" stroke-width="0.75"/><circle cx="6" cy="8" r="1" fill="#ffffff"/></svg>`
         }
     }
 };
@@ -69,35 +65,35 @@ function buildStudioCatalog() {
         const targetNode = document.getElementById(`grid-${catKey}`);
         
         Object.keys(blueprints[catKey]).forEach(itemKey => {
-            const itemData = blueprints[catKey][itemKey];
+            const dataObj = blueprints[catKey][itemKey];
             const block = document.createElement('div');
             block.className = 'thumb';
-            block.innerHTML = itemData.svg;
+            block.innerHTML = dataObj.svg;
             
-            // Passes both the art and its realistic base scale bound
-            block.onclick = () => spawnAsset(itemData.svg, itemData.size);
+            // NEW FIXED LOGIC: Passes raw widths and heights down to the workspace script
+            block.onclick = () => spawnAsset(dataObj.svg, dataObj.w, dataObj.h);
             targetNode.appendChild(block);
         });
     });
 }
 
-function spawnAsset(rawSVG, baseSize) {
+function spawnAsset(rawSVG, itemW, itemH) {
     const desk = document.getElementById('canvas');
     const envelope = document.createElement('div');
     envelope.classList.add('wrapper');
     
-    // NEW MECHANIC: Automatically maps properties directly to realistic dimensions instantly
-    envelope.style.setProperty('--w', `${baseSize}px`);
-    envelope.style.setProperty('--h', `${baseSize}px`);
+    // Binds the exact target aspect coordinates directly to the template shell layout variables
+    envelope.style.setProperty('--w', `${itemW}px`);
+    envelope.style.setProperty('--h', `${itemH}px`);
     
-    envelope.style.left = "50%"; 
-    envelope.style.top = "45%";
+    // Automatically aligns objects cleanly near the floor grid line instead of forcing random floating paths
+    envelope.style.left = "45%"; 
+    envelope.style.top = "60%";
 
-    // Injects standard custom controls overlay tracking data sizes
     envelope.innerHTML = `
         <div class="scale-box">
-            <button class="scale-btn" onclick="event.stopPropagation(); scaleFactor(this, 15, ${baseSize})">+</button>
-            <button class="scale-btn" onclick="event.stopPropagation(); scaleFactor(this, -15, ${baseSize})">-</button>
+            <button class="scale-btn" onclick="event.stopPropagation(); scaleFactor(this, 15, -1)">+</button>
+            <button class="scale-btn" onclick="event.stopPropagation(); scaleFactor(this, -15, -1)">-</button>
         </div>
         ${rawSVG}
     `;
@@ -112,11 +108,13 @@ function spawnAsset(rawSVG, baseSize) {
     document.addEventListener('mousemove', (e) => {
         if (!isDragging) return;
         const boundary = desk.getBoundingClientRect();
-        let x = e.clientX - boundary.left;
-        let y = e.clientY - boundary.top;
         
-        if(x >= 0 && x <= boundary.width) envelope.style.left = `${x}px`;
-        if(y >= 0 && y <= boundary.height) envelope.style.top = `${y}px`;
+        // Offset tracking alignments to smooth movement
+        let x = e.clientX - boundary.left - (itemW / 2);
+        let y = e.clientY - boundary.top - (itemH / 2);
+        
+        if(x >= 0 && x <= boundary.width - itemW) envelope.style.left = `${x}px`;
+        if(y >= 0 && y <= boundary.height - itemH) envelope.style.top = `${y}px`;
     });
 
     document.addEventListener('mouseup', () => isDragging = false);
@@ -125,15 +123,22 @@ function spawnAsset(rawSVG, baseSize) {
     desk.appendChild(envelope);
 }
 
-function scaleFactor(btn, shift, defaultBase) {
+// Uniformly increments both dimensions to prevent square stretching distortion patterns
+function scaleFactor(btn, shift) {
     const innerWrap = btn.closest('.wrapper');
-    let currentW = parseInt(innerWrap.style.getPropertyValue('--w')) || defaultBase;
+    let currentW = parseInt(innerWrap.style.getPropertyValue('--w'));
+    let currentH = parseInt(innerWrap.style.getPropertyValue('--h'));
     
-    // Bounds check to keep adjustments relative to item profiles
-    let finalTarget = Math.max(defaultBase - 45, Math.min(defaultBase + 75, currentW + shift));
+    // Formulates aspect ratio modifier step calculations safely
+    let scalingFactor = (currentW + shift) / currentW;
     
-    innerWrap.style.setProperty('--w', `${finalTarget}px`);
-    innerWrap.style.setProperty('--h', `${finalTarget}px`);
+    let targetW = currentW + shift;
+    let targetH = Math.round(currentH * scalingFactor);
+    
+    if(targetW > 35 && targetW < 250) {
+        innerWrap.style.setProperty('--w', `${targetW}px`);
+        innerWrap.style.setProperty('--h', `${targetH}px`);
+    }
 }
 
 buildStudioCatalog();
