@@ -3,91 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Boba Tea Fluid Simulator</title>
+    <title>Google Doodle Boba Mixer</title>
     <style>
-        :root { --boba: #a06040; --dark: #2f3640; }
-        * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; }
-        body { background: #f5f6fa; color: var(--dark); padding: 20px; display: flex; flex-direction: column; align-items: center; }
-        .box { background: white; padding: 25px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); max-width: 500px; width: 100%; text-align: center; }
-        .back-btn { background: #718093; color: white; border: none; padding: 10px 15px; border-radius: 6px; font-weight: bold; cursor: pointer; float: left; }
+        :root { --boba-earth: #f39c12; --boba-cup: #34495e; }
+        * { box-sizing: border-box; font-family: 'Century Gothic', sans-serif; margin: 0; padding: 0; }
+        body { background: #ffeaa7; color: #2d3436; padding: 20px; display: flex; flex-direction: column; align-items: center; }
         
-        /* Order Receipt interface overlays */
-        .order-ticket { background: #ffeaa7; padding: 10px; border-radius: 8px; font-weight: bold; border-left: 5px solid #f1c40f; margin: 20px 0 15px 0; text-align: left; clear: both;}
+        .game-frame { background: #ffffff; border: 6px solid var(--boba-cup); border-radius: 28px; padding: 25px; max-width: 460px; width: 100%; text-align: center; box-shadow: 0 10px 0px rgba(0,0,0,0.05); }
+        .back-btn { background: #718093; color: white; border: none; padding: 8px 12px; border-radius: 8px; font-weight: bold; cursor: pointer; float: left; }
         
-        /* Boba Cup Fluid Simulation Containers */
-        .cup-container { display: flex; justify-content: center; margin: 25px 0; }
-        .cup { width: 140px; height: 220px; border: 4px solid #2f3640; border-top: none; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; position: relative; overflow: hidden; background: rgba(255,255,255,0.5); display: flex; flex-direction: column-reverse; }
+        .customer-card { background: #f9f9f9; padding: 12px; border-radius: 12px; border: 3px solid #dfe6e9; font-weight: bold; margin: 20px 0; font-size: 1.1rem; }
         
-        .fluid-layer { width: 100%; transition: height 0.2s ease; display: flex; flex-wrap: wrap; align-content: flex-start; justify-content: center; }
-        .layer-pearls { background: #2d3436; height: 0%; color: white; font-size: 0.6rem; overflow: hidden; }
-        .layer-tea { background: #f0d59e; height: 0%; }
-        .layer-milk { background: #fffdf0; height: 0%; }
+        /* Accurate Fluid Hydrometer Display Core */
+        .glass-zone { display: flex; justify-content: center; position: relative; margin: 30px 0; }
+        .glass { width: 150px; height: 260px; border: 5px solid var(--boba-cup); border-top: none; border-bottom-left-radius: 25px; border-bottom-right-radius: 25px; position: relative; overflow: hidden; background: #fff; display: flex; flex-direction: column-reverse; }
         
-        .pour-btn { border: none; padding: 12px; color: white; font-weight: bold; border-radius: 8px; cursor: pointer; width: 100%; margin: 4px 0; }
+        .fluid-mass { width: 100%; height: 0%; transition: height 0.05s linear; }
+        #fill-pearls { background: #2d3436; background-image: radial-gradient(#636e72 20%, transparent 20%); background-size: 12px 12px; }
+        #fill-tea { background: #ccae78; }
+        #fill-milk { background: #fbf6ec; }
+        
+        /* Calibration Precision Line Markers */
+        .target-marker { position: absolute; left: 130px; width: 180px; border-top: 4px dashed #ff7675; z-index: 10; font-size: 0.8rem; font-weight: bold; color: #ff7675; text-align: right; padding-right: 5px; pointer-events: none; }
+        #marker-1 { bottom: calc(260px * 0.25); } /* 25% Line */
+        #marker-2 { bottom: calc(260px * 0.75); } /* 75% Line */
+        
+        .pump-deck { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; }
+        .valve-btn { background: #6c5ce7; color: white; border: 3px solid var(--boba-cup); padding: 12px; border-radius: 16px; font-weight: bold; cursor: pointer; font-size: 0.9rem; box-shadow: 0 4px 0 var(--boba-cup); }
+        .valve-btn:active { transform: translateY(4px); box-shadow: none; }
     </style>
 </head>
 <body>
 
-    <div class="box">
-        <button class="back-btn" onclick="location.href='../../index.html'">⬅ Hub Menu</button>
-        <h2 style="color: var(--boba);">🧋 Boba Mixer Simulation</h2>
-        <p>Follow customer layout guides precisely to mix the ultimate formula beverage!</p>
+    <div class="game-frame">
+        <button class="back-btn" onclick="location.href='../../index.html'">⬅ Hub</button>
+        <h2 style="font-size:1.8rem; clear:both; margin-top:10px;">🧋 Bubble Tea Creator</h2>
+        <p style="font-size:0.85rem; color:#7f8c8d;">Hold buttons down to open the valves and fill the cup precisely to the target lines!</p>
 
-        <div class="order-ticket">
-            📋 Incoming Request:<br>
-            <span id="ticket-msg">Pearls: 20% | Tea Base: 50% | Milk Splash: 30%</span>
+        <div class="customer-card">
+            🎯 Order Guide Lines:<br>
+            <span style="color:#2d3436">Fill Pearls to Line 1 ➔ Fill Tea to Line 2 ➔ Fill Milk to Top</span>
         </div>
 
-        <div class="cup-container">
-            <div class="cup">
-                <!-- Layers compile backwards matching bottom up fluid hydraulics -->
-                <div class="fluid-layer layer-milk" id="l-milk"></div>
-                <div class="fluid-layer layer-tea" id="l-tea"></div>
-                <div class="fluid-layer layer-pearls" id="l-pearls">•••••••••••••</div>
+        <div class="glass-zone">
+            <!-- Target Alignment Lines -->
+            <div class="target-marker" id="marker-1">── Line 1 (Pearls)</div>
+            <div class="target-marker" id="marker-2">── Line 2 (Tea)</div>
+            
+            <div class="glass">
+                <div class="fluid-mass" id="fill-milk"></div>
+                <div class="fluid-mass" id="fill-tea"></div>
+                <div class="fluid-mass" id="fill-pearls"></div>
             </div>
         </div>
 
-        <div style="font-weight:bold; margin-bottom:10px;">Total Volume capacity: <span id="vol-txt">0</span>%</div>
+        <div style="font-weight: bold;">Current Volume Fill: <span id="monitor">0</span>%</div>
 
-        <button class="pour-btn" style="background:#2d3436;" onclick="pour('pearls')">⚫ Add Tapioca Pearls (+10%)</button>
-        <button class="pour-btn" style="background:#eccc68; color:#2f3640;" onclick="pour('tea')">🍵 Fill Brewed Tea (+10%)</button>
-        <button class="pour-btn" style="background:#f1f2f6; color:#2f3640;" onclick="pour('milk')">🥛 Top Milk Foam (+10%)</button>
-        
-        <button class="pour-btn" style="background:#2ecc71; margin-top:15px;" onclick="serveDrink()">🛎️ Serve Order to Customer</button>
+        <!-- hold down triggers continuous volumetric pump additions -->
+        <div class="pump-deck">
+            <button class="valve-btn" style="background:#2d3436;" onmousedown="startPour('pearls')" onmouseup="stopPour()" onmouseleave="stopPour()">⚫ Pearls</button>
+            <button class="valve-btn" style="background:#eccc68; color:#2f3640;" onmousedown="startPour('tea')" onmouseup="stopPour()" onmouseleave="stopPour()">🍵 Tea Base</button>
+            <button class="valve-btn" style="background:#f1f2f6; color:#2f3640;" onmousedown="startPour('milk')" onmouseup="stopPour()" onmouseleave="stopPour()">🥛 Milk</button>
+        </div>
+
+        <button onclick="gradeMix()" style="width:100%; margin-top:15px; padding:12px; background:#2ecc71; border:3px solid var(--boba-cup); border-radius:16px; font-weight:bold; font-size:1.1rem; cursor:pointer; color:white; box-shadow:0 4px 0 var(--boba-cup);">🛎️ Check Recipe Grade</button>
     </div>
 
     <script>
-        let currentDrink = { pearls: 0, tea: 0, milk: 0 };
-        let target = { pearls: 20, tea: 50, milk: 30 };
+        let recipe = { pearls: 0, tea: 0, milk: 0 };
+        let pourEngine = null;
 
-        function pour(type) {
-            let total = currentDrink.pearls + currentDrink.tea + currentDrink.milk;
-            if(total >= 100) { alert("The glass is spilling over!"); return; }
-            
-            currentDrink[type] += 10;
-            document.getElementById(`l-${type}`).style.height = currentDrink[type] + "%";
-            document.getElementById('vol-txt').innerText = total + 10;
+        function startPour(type) {
+            if(pourEngine) clearInterval(pourEngine);
+            pourEngine = setInterval(() => {
+                let total = recipe.pearls + recipe.tea + recipe.milk;
+                if(total >= 100) { stopPour(); return; }
+                
+                recipe[type] += 1;
+                document.getElementById(`fill-${type}`).style.height = recipe[type] + "%";
+                document.getElementById('monitor').innerText = total + 1;
+            }, 30); // Dynamic line fill scale updates
         }
 
-        function serveDrink() {
-            let error = Math.abs(currentDrink.pearls - target.pearls) + 
-                        Math.abs(currentDrink.tea - target.tea) + 
-                        Math.abs(currentDrink.milk - target.milk);
+        function stopPour() {
+            clearInterval(pourEngine);
+            pourEngine = null;
+        }
 
-            if(error === 0) {
-                alert("🎉 Absolute Flawless Masterpiece! 3 Stars scored!");
-            } else if (error <= 20) {
-                alert("👍 Really Great blending precision. Good Job!");
+        function gradeMix() {
+            stopPour();
+            // Google Doodle targets: 25% Pearls, 50% Tea (totaling 75%), 25% Milk (totaling 100%)
+            let error1 = Math.abs(recipe.pearls - 25);
+            let error2 = Math.abs((recipe.pearls + recipe.tea) - 75);
+            let totalError = error1 + error2;
+
+            if(recipe.pearls + recipe.tea + recipe.milk < 90) {
+                alert("⭐ Cup is too empty! Keep filling to serve a full glass.");
+            } else if(totalError <= 6) {
+                alert("🌟 Perfect 3-Star Match! You poured directly on the lines!");
+            } else if(totalError <= 15) {
+                alert("⭐ Good 2-Star Mix! Very close to the lines.");
             } else {
-                alert("😢 The recipe layers are off balance! Practice your pouring lines.");
+                alert("❌ 1-Star. Your layers missed the target lines. Resetting cup to try again!");
             }
             
-            // Flush systems and reset mixing layers 
-            currentDrink = { pearls: 0, tea: 0, milk: 0 };
-            document.getElementById('l-pearls').style.height = "0%";
-            document.getElementById('l-tea').style.height = "0%";
-            document.getElementById('l-milk').style.height = "0%";
-            document.getElementById('vol-txt').innerText = 0;
+            // Wipe slate clean
+            recipe = { pearls: 0, tea: 0, milk: 0 };
+            document.getElementById('fill-pearls').style.height = "0%";
+            document.getElementById('fill-tea').style.height = "0%";
+            document.getElementById('fill-milk').style.height = "0%";
+            document.getElementById('monitor').innerText = 0;
         }
     </script>
 </body>
