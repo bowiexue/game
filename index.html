@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arcade Dashboard</title>
+    <style>
+        :root {
+            --bg-color: #f0f4f8;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --accent-color: #6c5ce7;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            margin: 0 0 10px 0;
+            font-size: 2.5rem;
+            color: var(--accent-color);
+        }
+
+        .stats-bar {
+            background: var(--card-bg);
+            padding: 10px 20px;
+            border-radius: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            max-width: 1000px;
+            width: 100%;
+        }
+
+        .game-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        .game-icon {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        .game-card h3 {
+            margin: 10px 0;
+            font-size: 1.4rem;
+        }
+
+        .game-card p {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 20px;
+            flex-grow: 1;
+        }
+
+        .launch-btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .launch-btn:hover {
+            background-color: #5b4bc4;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>🎮 Game Universe Dashboard</h1>
+        <p>Select a game to start playing and earning tokens!</p>
+    </header>
+
+    <div class="stats-bar">
+        🌟 Global Wallet: <span id="token-count">0</span> Tokens
+    </div>
+
+    <main class="dashboard-grid">
+        <!-- Game 1 -->
+        <div class="game-card">
+            <div>
+                <div class="game-icon">🎨</div>
+                <h3>Scrapbooking Canvas</h3>
+                <p>Notability style canvas with custom templates, highlighters, and cute stickers.</p>
+            </div>
+            <button class="launch-btn" onclick="launchGame('scrapbook')">Launch Game</button>
+        </div>
+
+        <!-- Game 2 -->
+        <div class="game-card">
+            <div>
+                <div class="game-icon">🌱</div>
+                <h3>Gardening Tycoon</h3>
+                <p>Plant seeds, water them in real-time, and grow your dream aesthetic garden.</p>
+            </div>
+            <button class="launch-btn" onclick="launchGame('gardening')">Launch Game</button>
+        </div>
+
+        <!-- Game 3 -->
+        <div class="game-card">
+            <div>
+                <div class="game-icon">🐾</div>
+                <h3>Shiba Dog Cafe</h3>
+                <p>Toca Boca & Maple Hospital vibes! Customize your avatar and serve adorable Shiba guests.</p>
+            </div>
+            <button class="launch-btn" onclick="launchGame('shiba-cafe')">Launch Game</button>
+        </div>
+
+        <!-- Game 4 -->
+        <div class="game-card">
+            <div>
+                <div class="game-icon">👾</div>
+                <h3>Tamagotchi Virtual Pet</h3>
+                <p>Raise your digital buddy, keep them happy, and use tokens to buy cool accessories.</p>
+            </div>
+            <button class="launch-btn" onclick="launchGame('tamagotchi')">Launch Game</button>
+        </div>
+
+        <!-- Game 5 -->
+        <div class="game-card">
+            <div>
+                <div class="game-icon">⭐</div>
+                <h3>Star Catcher</h3>
+                <p>Catch falling stars into your visual upgrade jar. Spend stars for epic performance boosts!</p>
+            </div>
+            <button class="launch-btn" onclick="launchGame('star-catcher')">Launch Game</button>
+        </div>
+
+        <!-- Game 6 -->
+        <div class="game-card">
+            <div>
+                <div class="game-icon">🧋</div>
+                <h3>Boba Simulation</h3>
+                <p>Google Doodle style precision tea mixing. Perfect your layers to get 3 stars.</p>
+            </div>
+            <button class="launch-btn" onclick="launchGame('boba-mixer')">Launch Game</button>
+        </div>
+    </main>
+
+    <script>
+        // Global system initialized with 100 starting tokens or pulled from saved memory
+        let globalTokens = localStorage.getItem('globalTokens') ? parseInt(localStorage.getItem('globalTokens')) : 100;
+        document.getElementById('token-count').innerText = globalTokens;
+
+        function launchGame(gamePath) {
+            // This assumes your project folders will be organized by game name
+            window.location.href = `./games/${gamePath}/index.html`;
+        }
+    </script>
+</body>
+</html>
