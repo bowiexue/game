@@ -3,52 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Toca Shiba Universe Cafe</title>
+    <title>Toca Shiba Cafe Pro</title>
     <style>
         * { box-sizing: border-box; font-family: 'Comic Sans MS', sans-serif; margin: 0; padding: 0; }
         body { background: #ffeaa7; color: #2d3436; padding: 20px; display: flex; flex-direction: column; align-items: center; }
-        
-        .game-window { background: #ffffff; border: 6px solid #2d3436; border-radius: 32px; width: 100%; max-width: 850px; padding: 25px; overflow: hidden; box-shadow: 0 12px 0 #2d3436; }
+        .game-window { background: #ffffff; border: 6px solid #2d3436; border-radius: 32px; width: 100%; max-width: 850px; padding: 25px; box-shadow: 0 12px 0 #2d3436; }
         .nav-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .btn-ui { background: #ff7675; color: white; border: 3px solid #2d3436; padding: 8px 16px; border-radius: 16px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 0 #2d3436; }
         .btn-ui:active { transform: translateY(2px); box-shadow: 0 2px 0 #2d3436; }
-
-        .screen-view { display: none; width: 100%; animation: fadeIn 0.3s ease; }
+        .screen-view { display: none; width: 100%; }
         .screen-view.active { display: block; }
 
-        /* ROOM 1: CHARACTER CREATION */
+        /* Pixel-Locked Fitting Room */
         .creator-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         .avatar-pod { background: #74b9ff; border: 4px solid #2d3436; border-radius: 24px; height: 320px; position: relative; display: flex; align-items: center; justify-content: center; }
-        .dog-base { font-size: 8rem; position: relative; user-select: none; }
-        .dog-hat { position: absolute; top: 60px; font-size: 3.5rem; z-index: 10; pointer-events: none; }
-        .dog-face { position: absolute; top: 120px; font-size: 2.2rem; z-index: 8; pointer-events: none; }
-        .dog-cloth { position: absolute; bottom: 50px; font-size: 4rem; z-index: 5; pointer-events: none; }
+        .dog-anchor { position: relative; width: 150px; height: 150px; font-size: 8rem; line-height: 1; display: flex; align-items: center; justify-content: center; }
         
-        .closet-panel { background: #f1f2f6; border: 4px solid #2d3436; border-radius: 24px; padding: 15px; }
+        /* Fixed Coordinates to stop item floating */
+        .dog-hat { position: absolute; top: -45px; left: 45px; font-size: 3.5rem; z-index: 10; }
+        .dog-face { position: absolute; top: 15px; left: -10px; font-size: 2.2rem; z-index: 8; }
+        .dog-cloth { position: absolute; bottom: -30px; left: 25px; font-size: 4.5rem; z-index: 5; }
+        
+        .closet-panel { background: #f1f2f6; border: 4px solid #2d3436; border-radius: 24px; padding: 15px; height: 320px; overflow-y: auto; }
         .closet-title { font-size: 1rem; font-weight: bold; margin: 8px 0; background: #55efc4; display: inline-block; padding: 2px 10px; border-radius: 10px; border: 2px solid #2d3436; }
         .item-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
-        .item-node { background: white; border: 2px solid #2d3436; border-radius: 12px; padding: 8px; text-align: center; font-size: 1.8rem; cursor: pointer; box-shadow: 0 3px 0 #2d3436; user-select: none; }
-        .item-node:active { transform: translateY(2px); box-shadow: none; }
+        .item-node { background: white; border: 2px solid #2d3436; border-radius: 12px; padding: 8px; text-align: center; font-size: 1.8rem; cursor: pointer; box-shadow: 0 3px 0 #2d3436; }
 
-        /* ROOM 2: DINING ROOM */
-        .dining-canvas { background: #fab1a0; border: 4px solid #2d3436; border-radius: 24px; height: 320px; position: relative; }
-        .my-avatar-token { position: absolute; bottom: 30px; left: 40px; display: flex; align-items: center; justify-content: center; font-size: 5rem; width: 100px; height: 100px; }
-        .customer-token { position: absolute; bottom: 30px; right: 180px; font-size: 5.5rem; }
-        .table-prop { position: absolute; bottom: 0; right: 40px; width: 150px; height: 90px; background: #d4a373; border: 4px solid #2d3436; border-top-left-radius: 16px; border-top-right-radius: 16px; display: flex; align-items: center; justify-content: center; }
-        #plate-slot { font-size: 3rem; cursor: pointer; min-width: 60px; text-align: center; }
+        /* Detailed Dining Room Sandbox */
+        .dining-canvas { background: #fab1a0; border: 4px solid #2d3436; border-radius: 24px; height: 350px; position: relative; background-image: linear-gradient(90deg, transparent 50%, rgba(255,255,255,0.07) 50%); background-size: 40px 40px; }
+        .window-decor { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); width: 200px; height: 100px; background: #81ecec; border: 4px solid #2d3436; border-radius: 12px; overflow: hidden; }
+        .window-sun { width: 40px; height: 40px; background: #f1c40f; border-radius: 50%; position: absolute; right: 10px; top: 10px; }
+        .my-avatar-token { position: absolute; bottom: 70px; left: 60px; width: 150px; height: 150px; font-size: 7rem; }
+        .customer-token { position: absolute; bottom: 70px; right: 240px; font-size: 7.5rem; }
+        .table-prop { position: absolute; bottom: 0; right: 40px; width: 180px; height: 120px; background: #d4a373; border: 4px solid #2d3436; border-top-left-radius: 24px; border-top-right-radius: 24px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .chair-prop { position: absolute; bottom: 0; right: 230px; width: 80px; height: 80px; background: #e17055; border: 4px solid #2d3436; border-top-left-radius: 12px; border-top-right-radius: 12px; }
+        #plate-slot { font-size: 3.5rem; }
 
-        /* ROOM 3: KITCHEN PREP */
-        .kitchen-canvas { background: #dfe6e9; border: 4px solid #2d3436; border-radius: 24px; height: 320px; padding: 20px; text-align: center; }
-        .oven-station { background: #74b9ff; border: 4px solid #2d3436; border-radius: 24px; max-width: 300px; margin: 20px auto; padding: 20px; }
-        #oven-display { font-size: 4rem; margin: 15px 0; height: 80px; }
-
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        /* Pro Kitchen Layout Split */
+        .kitchen-canvas { background: #dfe6e9; border: 4px solid #2d3436; border-radius: 24px; height: 350px; padding: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .appliances { background: white; border: 4px solid #2d3436; border-radius: 16px; padding: 15px; display: flex; flex-direction: column; justify-content: space-around; }
+        .cooking-hub { background: #b2bec3; border: 4px solid #2d3436; border-radius: 16px; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .device-btn { background: #74b9ff; color: white; border: 2px solid #2d3436; padding: 8px; font-weight: bold; border-radius: 8px; cursor: pointer; margin-bottom: 5px; }
     </style>
 </head>
 <body>
-
     <div class="game-window">
-        <!-- TOP CONTROLS HUB -->
         <div class="nav-header">
             <button class="btn-ui" style="background:#b2bec3" onclick="location.href='../../index.html'">⬅ Map</button>
             <h2 id="room-title">🏡 Avatar Designer</h2>
@@ -56,80 +55,67 @@
             <button class="btn-ui" id="dining-teleport-btn" style="background:#55efc4; display:none;" onclick="teleport('dining-room')">Return to Diner 🍽️</button>
         </div>
 
-        <!-- 1. CREATOR ROOM VIEW -->
+        <!-- 1. CREATOR VIEW -->
         <div id="creator-room" class="screen-view active">
             <div class="creator-container">
                 <div class="avatar-pod">
-                    <div class="dog-base">🐕</div>
-                    <div class="dog-hat" id="c-hat"></div>
-                    <div class="dog-face" id="c-face"></div>
-                    <div class="dog-cloth" id="c-cloth"></div>
+                    <div class="dog-anchor">
+                        🐕
+                        <div class="dog-hat" id="c-hat"></div>
+                        <div class="dog-face" id="c-face"></div>
+                        <div class="dog-cloth" id="c-cloth"></div>
+                    </div>
                 </div>
                 <div class="closet-panel">
                     <div class="closet-title">🎩 Headwear</div>
-                    <div class="item-grid">
-                        <div class="item-node" onclick="equipItem('hat', '👑')">👑</div>
-                        <div class="item-node" onclick="equipItem('hat', '🎀')">🎀</div>
-                        <div class="item-node" onclick="equipItem('hat', '🎩')">🎩</div>
-                        <div class="item-node" onclick="equipItem('hat', '')">❌</div>
-                    </div>
-                    
-                    <div class="closet-title">👓 Expressions</div>
-                    <div class="item-grid">
-                        <div class="item-node" onclick="equipItem('face', '🕶️')">🕶️</div>
-                        <div class="item-node" onclick="equipItem('face', '🤓')">🤓</div>
-                        <div class="item-node" onclick="equipItem('face', '😭')">😭</div>
-                        <div class="item-node" onclick="equipItem('face', '')">❌</div>
-                    </div>
-
-                    <div class="closet-title">👗 Clothing Items</div>
-                    <div class="item-grid">
-                        <div class="item-node" onclick="equipItem('cloth', '👔')">👔</div>
-                        <div class="item-node" onclick="equipItem('cloth', '👗')">👗</div>
-                        <div class="item-node" onclick="equipItem('cloth', '🎒')">🎒</div>
-                        <div class="item-node" onclick="equipItem('cloth', '')">❌</div>
-                    </div>
-                    <button class="btn-ui" style="background:#2ecc71; width:100%; margin-top:20px; font-size:1.1rem; padding:12px;" onclick="saveAvatarAndStart()">Done! Enter Cafe ✨</button>
+                    <div class="item-grid"><div class="item-node" onclick="equipItem('hat', '👑')">👑</div><div class="item-node" onclick="equipItem('hat', '🎀')">🎀</div><div class="item-node" onclick="equipItem('hat', '🎩')">🎩</div><div class="item-node" onclick="equipItem('hat', '')">❌</div></div>
+                    <div class="closet-title">眼镜 Eyes</div>
+                    <div class="item-grid"><div class="item-node" onclick="equipItem('face', '🕶️')">🕶️</div><div class="item-node" onclick="equipItem('face', '🤓')">🤓</div><div class="item-node" onclick="equipItem('face', '😭')">😭</div><div class="item-node" onclick="equipItem('face', '')">❌</div></div>
+                    <div class="closet-title">👗 Clothing</div>
+                    <div class="item-grid"><div class="item-node" onclick="equipItem('cloth', '👔')">👔</div><div class="item-node" onclick="equipItem('cloth', '👗')">👗</div><div class="item-node" onclick="equipItem('cloth', '🎒')">🎒</div><div class="item-node" onclick="equipItem('cloth', '')">❌</div></div>
+                    <button class="btn-ui" style="background:#2ecc71; width:100%; margin-top:20px;" onclick="saveAvatarAndStart()">Done! Enter Cafe ✨</button>
                 </div>
             </div>
         </div>
 
-        <!-- 2. DINING ROOM VIEW -->
+        <!-- 2. DETAILED DINING ROOM -->
         <div id="dining-room" class="screen-view">
             <div class="dining-canvas">
+                <div class="window-decor"><div class="window-sun"></div></div>
                 <div class="my-avatar-token">
-                    <span>🐕</span>
-                    <span id="d-hat" style="position:absolute; top:10px; font-size:2.2rem; z-index: 10;"></span>
-                    <span id="d-face" style="position:absolute; top:45px; font-size:1.4rem; z-index: 8;"></span>
-                    <span id="d-cloth" style="position:absolute; bottom:5px; font-size:2.5rem; z-index: 5;"></span>
+                    <div class="dog-anchor" style="font-size:7rem;">
+                        🐕
+                        <div class="dog-hat" id="d-hat" style="top:-35px; left:40px; font-size:3rem;"></div>
+                        <div class="dog-face" id="d-face" style="top:15px; left:-10px; font-size:2rem;"></div>
+                        <div class="dog-cloth" id="d-cloth" style="bottom:-20px; left:20px; font-size:4rem;"></div>
+                    </div>
                 </div>
+                <div class="chair-prop"></div>
                 <div class="customer-token">🦊</div>
-                <div class="table-prop">
-                    <div id="plate-slot">🍽️</div>
-                </div>
+                <div class="table-prop"><div style="font-size:0.8rem; font-weight:bold; color:white; margin-bottom:5px;">SERVE HERE</div><div id="plate-slot">🍽️</div></div>
             </div>
         </div>
 
-        <!-- 3. KITCHEN ROOM VIEW -->
+        <!-- 3. SPLIT APPLIANCE KITCHEN -->
         <div id="kitchen-room" class="screen-view">
             <div class="kitchen-canvas">
-                <h3>Select a Recipe to Cook:</h3>
-                <div class="item-grid" style="max-width:400px; margin:15px auto;">
-                    <button class="btn-ui" style="background:white; color:black; font-size:1.5rem;" onclick="startBake('🥞')">🥞</button>
-                    <button class="btn-ui" style="background:white; color:black; font-size:1.5rem;" onclick="startBake('🍰')">🍰</button>
-                    <button class="btn-ui" style="background:white; color:black; font-size:1.5rem;" onclick="startBake('🍦')">🍦</button>
-                    <button class="btn-ui" style="background:white; color:black; font-size:1.5rem;" onclick="startBake('🍔')">🍔</button>
+                <div class="appliances">
+                    <div>
+                        <div class="closet-title" style="background:#ff7675">Bake Oven Station</div>
+                        <div style="display:flex; gap:5px;"><button class="device-btn" onclick="prepareFood('🥞','oven')">🥞 Hotcake</button><button class="device-btn" onclick="prepareFood('🍰','oven')">🍰 Cake</button><button class="device-btn" onclick="prepareFood('🍔','oven')">🍔 Burger</button></div>
+                    </div>
+                    <div>
+                        <div class="closet-title" style="background:#74b9ff">Ice Soft-Serve Machine</div>
+                        <div style="display:flex; gap:5px;"><button class="device-btn" style="background:#a29bfe" onclick="prepareFood('🍦','ice')">🍦 Vanilla</button><button class="device-btn" style="background:#fd79a8" onclick="prepareFood('🍧','ice')">🍧 Berry Sundae</button></div>
+                    </div>
                 </div>
-                <div class="oven-station">
-                    <div id="oven-status">Oven Idle</div>
-                    <div id="oven-display">💨</div>
+                <div class="cooking-hub">
+                    <h3 id="kitchen-status">Kitchen Equipment Idle</h3>
+                    <div id="kitchen-display" style="font-size:5rem; margin-top:10px;">💨</div>
                 </div>
             </div>
         </div>
-
     </div>
-
-    <!-- SCRIPT LOADER CONNECTION -->
     <script src="script.js"></script>
 </body>
 </html>
