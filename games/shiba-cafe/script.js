@@ -1,60 +1,55 @@
+let basket = [];
+let currentRole = "🧑‍✈️";
+let incomeInterval = null;
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Capybara Onsen Spa</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <button class="back-btn" onclick="location.href='../../index.html'">← Return to Studio Hub</button>
-    
-    <header>
-        <h1>♨️ Capybara Onsen Spa</h1>
-        <p>Customize your spa host profile and tap the steaming water to invite cozy bathhouse guests!</p>
-    </header>
+function setLayer(layer, emoji) {
+    document.getElementById(`layer-${layer}`).innerText = emoji;
+    triggerActivityTrigger();
+}
 
-    <div class="game-container">
-        <!-- Sidebar Customizer Panel -->
-        <aside class="panel">
-            <h2>Avatar Customizer</h2>
-            <div class="avatar-preview" id="avatar-char">🧑‍✈️</div>
+function addToBasket(item) {
+    if(!basket.includes(item)) {
+        basket.push(item);
+        updateBasketUI();
+    }
+}
+
+function clearBasket() {
+    basket = [];
+    updateBasketUI();
+    triggerActivityTrigger();
+}
+
+function updateBasketUI() {
+    const el = document.getElementById('basket-view');
+    el.innerText = basket.length > 0 ? basket.join(', ') : 'Empty Basket';
+}
+
+// FIX: Spawns the passive continuous token harvesting cycle engine mechanics
+function triggerActivityTrigger() {
+    if (basket.length >= 2) {
+        if (incomeInterval) clearInterval(incomeInterval);
+        alert("♨️ Spa Treatment Commenced! You are now harvesting passive income tokens!");
+        
+        incomeInterval = setInterval(() => {
+            let currentTokens = parseInt(localStorage.getItem('hub_tokens') || 100);
+            let updatedVal = currentTokens + 5;
+            localStorage.setItem('hub_tokens', updatedVal);
             
-            <div class="customizer-group">
-                <label for="role-select">Select Manager Species</label>
-                <select id="role-select">
-                    <option value="🐕">Shiba Inu</option>
-                    <option value="🐱">Calico Cat</option>
-                    <option value="🧑‍✈️">Human Attendant</option>
-                    <option value="🐰">Bunny Host</option>
-                </select>
-            </div>
-
-            <div class="customizer-group">
-                <label for="accessory-select">Equip Head Accessory</label>
-                <select id="accessory-select">
-                    <option value="">None</option>
-                    <option value="👑">Royal Crown</option>
-                    <option value="🎀">Cozy Ribbon</option>
-                    <option value="🎩">Top Hat</option>
-                    <option value="🌸">Cherry Blossom</option>
-                </select>
-            </div>
-            
-            <p style="font-size: 0.8rem; color: #7f8c8d; margin-top: 10px;">💡 Tip: Right-click any animal in the pool to release them back into nature!</p>
-        </aside>
-
-        <!-- Main Onsen Hot Springs Bath Layout Map Area -->
-        <main class="onsen-area">
-            <div class="pool-wrapper">
-                <div class="water-pool" id="water-pool">
-                    <div class="steam-overlay"></div>
-                </div>
-            </div>
-        </main>
-    </div>
-
-    <script src="script.js"></script>
-</body>
-</html>
+            // Render indicator text float elements
+            const pop = document.createElement('div');
+            pop.style.position = 'absolute';
+            pop.style.color = '#2ecc71';
+            pop.style.fontWeight = 'bold';
+            pop.style.top = '20px';
+            pop.innerText = '+5 🪙';
+            document.getElementById('basket-view').appendChild(pop);
+            setTimeout(() => pop.remove(), 1200);
+        }, 3000);
+    } else {
+        if(incomeInterval) {
+            clearInterval(incomeInterval);
+            incomeInterval = null;
+        }
+    }
+}
