@@ -16,27 +16,28 @@
         .screen-view { display: none; width: 100%; animation: fadeIn 0.3s ease; }
         .screen-view.active { display: block; }
 
-        /* CHARACTER CREATION ROOM */
+        /* ROOM 1: CHARACTER CREATION */
         .creator-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .avatar-pod { background: #74b9ff; border: 4px solid #2d3436; border-radius: 24px; height: 300px; position: relative; display: flex; align-items: center; justify-content: center; }
-        .dog-base { font-size: 8rem; position: relative; }
-        .dog-hat { position: absolute; top: 50px; font-size: 3.5rem; z-index: 10; }
-        .dog-cloth { position: absolute; bottom: 50px; font-size: 4rem; z-index: 5; }
+        .avatar-pod { background: #74b9ff; border: 4px solid #2d3436; border-radius: 24px; height: 320px; position: relative; display: flex; align-items: center; justify-content: center; }
+        .dog-base { font-size: 8rem; position: relative; user-select: none; }
+        .dog-hat { position: absolute; top: 60px; font-size: 3.5rem; z-index: 10; pointer-events: none; }
+        .dog-face { position: absolute; top: 120px; font-size: 2.2rem; z-index: 8; pointer-events: none; }
+        .dog-cloth { position: absolute; bottom: 50px; font-size: 4rem; z-index: 5; pointer-events: none; }
         
         .closet-panel { background: #f1f2f6; border: 4px solid #2d3436; border-radius: 24px; padding: 15px; }
         .closet-title { font-size: 1rem; font-weight: bold; margin: 8px 0; background: #55efc4; display: inline-block; padding: 2px 10px; border-radius: 10px; border: 2px solid #2d3436; }
         .item-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
-        .item-node { background: white; border: 2px solid #2d3436; border-radius: 12px; padding: 8px; text-align: center; font-size: 1.8rem; cursor: pointer; box-shadow: 0 3px 0 #2d3436; }
+        .item-node { background: white; border: 2px solid #2d3436; border-radius: 12px; padding: 8px; text-align: center; font-size: 1.8rem; cursor: pointer; box-shadow: 0 3px 0 #2d3436; user-select: none; }
         .item-node:active { transform: translateY(2px); box-shadow: none; }
 
-        /* DINING ROOM */
+        /* ROOM 2: DINING ROOM */
         .dining-canvas { background: #fab1a0; border: 4px solid #2d3436; border-radius: 24px; height: 320px; position: relative; }
         .my-avatar-token { position: absolute; bottom: 30px; left: 40px; display: flex; align-items: center; justify-content: center; font-size: 5rem; width: 100px; height: 100px; }
         .customer-token { position: absolute; bottom: 30px; right: 180px; font-size: 5.5rem; }
         .table-prop { position: absolute; bottom: 0; right: 40px; width: 150px; height: 90px; background: #d4a373; border: 4px solid #2d3436; border-top-left-radius: 16px; border-top-right-radius: 16px; display: flex; align-items: center; justify-content: center; }
         #plate-slot { font-size: 3rem; cursor: pointer; min-width: 60px; text-align: center; }
 
-        /* KITCHEN TELEPORT ROOM */
+        /* ROOM 3: KITCHEN PREP */
         .kitchen-canvas { background: #dfe6e9; border: 4px solid #2d3436; border-radius: 24px; height: 320px; padding: 20px; text-align: center; }
         .oven-station { background: #74b9ff; border: 4px solid #2d3436; border-radius: 24px; max-width: 300px; margin: 20px auto; padding: 20px; }
         #oven-display { font-size: 4rem; margin: 15px 0; height: 80px; }
@@ -47,11 +48,12 @@
 <body>
 
     <div class="game-window">
+        <!-- TOP CONTROLS HUB -->
         <div class="nav-header">
-            <button class="btn-ui" style="background:#b2bec3" onclick="location.href='../../index.html'">⬅ Map</button>
+            <button class="btn-ui" style="background:#b2bec3" id="map-btn">⬅ Map</button>
             <h2 id="room-title">🏡 Avatar Designer</h2>
-            <button class="btn-ui" id="kitchen-teleport-btn" style="background:#fdcb6e; display:none;" onclick="teleport('kitchen-room')">Go to Kitchen 🍳</button>
-            <button class="btn-ui" id="dining-teleport-btn" style="background:#55efc4; display:none;" onclick="teleport('dining-room')">Return to Diner 🍽️</button>
+            <button class="btn-ui" id="kitchen-teleport-btn" style="background:#fdcb6e; display:none;">Go to Kitchen 🍳</button>
+            <button class="btn-ui" id="dining-teleport-btn" style="background:#55efc4; display:none;">Return to Diner 🍽️</button>
         </div>
 
         <!-- 1. CREATOR ROOM VIEW -->
@@ -60,18 +62,34 @@
                 <div class="avatar-pod">
                     <div class="dog-base">🐕</div>
                     <div class="dog-hat" id="c-hat"></div>
+                    <div class="dog-face" id="c-face"></div>
                     <div class="dog-cloth" id="c-cloth"></div>
                 </div>
                 <div class="closet-panel">
                     <div class="closet-title">🎩 Headwear</div>
-                    <div class="item-grid" onclick="preview('hat', event)">
-                        <div class="item-node">👑</div><div class="item-node">🎀</div><div class="item-node">🎩</div><div class="item-node">❌</div>
+                    <div class="item-grid" id="hat-grid">
+                        <div class="item-node" data-emoji="👑">👑</div>
+                        <div class="item-node" data-emoji="🎀">🎀</div>
+                        <div class="item-node" data-emoji="🎩">🎩</div>
+                        <div class="item-node" data-emoji="">❌</div>
                     </div>
+                    
+                    <div class="closet-title">👓 Expressions</div>
+                    <div class="item-grid" id="face-grid">
+                        <div class="item-node" data-emoji="🕶️">🕶️</div>
+                        <div class="item-node" data-emoji="🤓">🤓</div>
+                        <div class="item-node" data-emoji="😭">😭</div>
+                        <div class="item-node" data-emoji="">❌</div>
+                    </div>
+
                     <div class="closet-title">👗 Clothing Items</div>
-                    <div class="item-grid" onclick="preview('cloth', event)">
-                        <div class="item-node">👔</div><div class="item-node">👗</div><div class="item-node">🎒</div><div class="item-node">❌</div>
+                    <div class="item-grid" id="cloth-grid">
+                        <div class="item-node" data-emoji="👔">👔</div>
+                        <div class="item-node" data-emoji="👗">👗</div>
+                        <div class="item-node" data-emoji="🎒">🎒</div>
+                        <div class="item-node" data-emoji="">❌</div>
                     </div>
-                    <button class="btn-ui" style="background:#2ecc71; width:100%; margin-top:20px; font-size:1.1rem; padding:12px;" onclick="saveAvatarAndStart()">Done! Enter Cafe ✨</button>
+                    <button class="btn-ui" id="done-btn" style="background:#2ecc71; width:100%; margin-top:20px; font-size:1.1rem; padding:12px;">Done! Enter Cafe ✨</button>
                 </div>
             </div>
         </div>
@@ -81,8 +99,9 @@
             <div class="dining-canvas">
                 <div class="my-avatar-token">
                     <span>🐕</span>
-                    <span id="d-hat" style="position:absolute; top:-10px; font-size:2.2rem;"></span>
-                    <span id="d-cloth" style="position:absolute; bottom:5px; font-size:2.5rem;"></span>
+                    <span id="d-hat" style="position:absolute; top:10px; font-size:2.2rem; z-index: 10;"></span>
+                    <span id="d-face" style="position:absolute; top:45px; font-size:1.4rem; z-index: 8;"></span>
+                    <span id="d-cloth" style="position:absolute; bottom:5px; font-size:2.5rem; z-index: 5;"></span>
                 </div>
                 <div class="customer-token">🦊</div>
                 <div class="table-prop">
@@ -95,11 +114,11 @@
         <div id="kitchen-room" class="screen-view">
             <div class="kitchen-canvas">
                 <h3>Select a Recipe to Cook:</h3>
-                <div class="item-grid" style="max-width:400px; margin:15px auto;">
-                    <button class="btn-ui" style="background:white; color:black; font-size:1.5rem;" onclick="startBake('🥞')">🥞</button>
-                    <button class="btn-ui" style="background:white; color:black; font-size:1.5rem;" onclick="startBake('🍰')">🍰</button>
-                    <button class="btn-ui" style="background:white; color:black; font-size:1.5rem;" onclick="startBake('🍦')">🍦</button>
-                    <button class="btn-ui" style="background:white; color:black; font-size:1.5rem;" onclick="startBake('🍔')">🍔</button>
+                <div class="item-grid" style="max-width:400px; margin:15px auto;" id="recipe-grid">
+                    <button class="btn-ui recipe-btn" style="background:white; color:black; font-size:1.5rem;" data-food="🥞">🥞</button>
+                    <button class="btn-ui recipe-btn" style="background:white; color:black; font-size:1.5rem;" data-food="🍰">🍰</button>
+                    <button class="btn-ui recipe-btn" style="background:white; color:black; font-size:1.5rem;" data-food="🍦">🍦</button>
+                    <button class="btn-ui recipe-btn" style="background:white; color:black; font-size:1.5rem;" data-food="🍔">🍔</button>
                 </div>
                 <div class="oven-station">
                     <div id="oven-status">Oven Idle</div>
@@ -110,57 +129,7 @@
 
     </div>
 
-    <script>
-        let character = { hat: '', cloth: '' };
-        let currentHeldFood = '';
-
-        function preview(type, e) {
-            if(!e.target.classList.contains('item-node')) return;
-            let choice = e.target.innerText;
-            character[type] = (choice === '❌') ? '' : choice;
-            document.getElementById(`c-${type}`).innerText = character[type];
-        }
-
-        function saveAvatarAndStart() {
-            document.getElementById('d-hat').innerText = character.hat;
-            document.getElementById('d-cloth').innerText = character.cloth;
-            teleport('dining-room');
-        }
-
-        function teleport(roomID) {
-            document.querySelectorAll('.screen-view').forEach(view => view.classList.remove('active'));
-            document.getElementById(roomID).classList.add('active');
-            
-            if(roomID === 'creator-room') {
-                document.getElementById('room-title').innerText = "🏡 Avatar Designer";
-                document.getElementById('kitchen-teleport-btn').style.display = 'none';
-                document.getElementById('dining-teleport-btn').style.display = 'none';
-            } else if(roomID === 'dining-room') {
-                document.getElementById('room-title').innerText = "🍽️ Diner Floor";
-                document.getElementById('kitchen-teleport-btn').style.display = 'block';
-                document.getElementById('dining-teleport-btn').style.display = 'none';
-                
-                if(currentHeldFood) {
-                    document.getElementById('plate-slot').innerText = currentHeldFood;
-                    setTimeout(() => {
-                        alert("The guest ate the delicious food you brought from the kitchen! 🦊✨");
-                        document.getElementById('plate-slot').innerText = '🍽️';
-                        currentHeldFood = '';
-                    }, 1200);
-                }
-            } else if(roomID === 'kitchen-room') {
-                document.getElementById('room-title').innerText = "🍳 Preparation Kitchen";
-                document.getElementById('kitchen-teleport-btn').style.display = 'none';
-                document.getElementById('dining-teleport-btn').style.display = 'block';
-            }
-        }
-
-        function startBake(foodItem) {
-            document.getElementById('oven-status').innerText = "Baking treats... ⏱️";
-            document.getElementById('oven-display').innerText = '🔥';
-            setTimeout(() => {
-                currentHeldFood = foodItem;
-                document.getElementById('oven-status').innerText = "Finished! Click 'Return to Diner' to serve!";
-                document.getElementById('oven-display').innerText = foodItem;
-            }, 1500);
-        }
+    <!-- SCRIPT LOADER CONNECTION -->
+    <script src="script.js"></script>
+</body>
+</html>
