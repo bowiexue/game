@@ -13,9 +13,14 @@ function equipItem(type, emoji) {
 
 // LOCKS CHARACTER IN PROFILE ENGINE
 function saveAvatarAndStart() {
-    document.getElementById('d-hat').innerText = character.hat;
-    document.getElementById('d-face').innerText = character.face;
-    document.getElementById('d-cloth').innerText = character.cloth;
+    const dHat = document.getElementById('d-hat');
+    const dFace = document.getElementById('d-face');
+    const dCloth = document.getElementById('d-cloth');
+    
+    if (dHat) dHat.innerText = character.hat;
+    if (dFace) dFace.innerText = character.face;
+    if (dCloth) dCloth.innerText = character.cloth;
+    
     teleport('dining-room');
 }
 
@@ -33,14 +38,14 @@ function teleport(roomID) {
     const diningBtn = document.getElementById('dining-teleport-btn');
 
     if (roomID === 'creator-room') {
-        roomTitle.innerText = "🏡 Avatar Designer";
-        kitchenBtn.style.display = 'none';
-        diningBtn.style.display = 'none';
+        if (roomTitle) roomTitle.innerText = "🏡 Avatar Designer";
+        if (kitchenBtn) kitchenBtn.style.display = 'none';
+        if (diningBtn) diningBtn.style.display = 'none';
     } 
     else if (roomID === 'dining-room') {
-        roomTitle.innerText = "🍽️ Diner Floor";
-        kitchenBtn.style.display = 'block';
-        diningBtn.style.display = 'none';
+        if (roomTitle) roomTitle.innerText = "🍽️ Diner Floor";
+        if (kitchenBtn) kitchenBtn.style.display = 'block';
+        if (diningBtn) diningBtn.style.display = 'none';
         
         // Serve food instantly upon teleport arrival
         if (currentHeldFood) {
@@ -55,20 +60,23 @@ function teleport(roomID) {
         }
     } 
     else if (roomID === 'kitchen-room') {
-        roomTitle.innerText = "🍳 Preparation Kitchen";
-        kitchenBtn.style.display = 'none';
-        diningBtn.style.display = 'block';
+        if (roomTitle) roomTitle.innerText = "🍳 Preparation Kitchen";
+        if (kitchenBtn) kitchenBtn.style.display = 'none';
+        if (diningBtn) diningBtn.style.display = 'block';
     }
 }
 
 // KITCHEN MICROWAVE OVEN TICKERS
 function startBake(foodItem) {
-    document.getElementById('oven-status').innerText = "Baking treats... ⏱️";
-    document.getElementById('oven-display').innerText = '🔥';
+    const ovenStatus = document.getElementById('oven-status');
+    const ovenDisplay = document.getElementById('oven-display');
+
+    if (ovenStatus) ovenStatus.innerText = "Baking treats... ⏱️";
+    if (ovenDisplay) ovenDisplay.innerText = '🔥';
     
     setTimeout(() => {
         currentHeldFood = foodItem;
-        document.getElementById('oven-status').innerText = "Finished! Click 'Return to Diner' to serve!";
-        document.getElementById('oven-display').innerText = foodItem;
+        if (ovenStatus) ovenStatus.innerText = "Finished! Click 'Return to Diner' to serve!";
+        if (ovenDisplay) ovenDisplay.innerText = foodItem;
     }, 1500);
 }
