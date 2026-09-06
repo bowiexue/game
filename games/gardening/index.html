@@ -3,82 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gardening Tycoon</title>
+    <title>Bonsai & Plant Sanctuary</title>
     <style>
         :root {
-            --primary: #2ecc71;
-            --dark: #2f3640;
-            --soil: #8c7ae6;
+            --bg: #f4f7f4;
+            --dark: #2c3e50;
+            --leaf: #6b8e23;
+            --shelf: #d4a373;
         }
         * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; }
-        body { background: #f5f6fa; color: var(--dark); padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        body { background: var(--bg); color: var(--dark); padding: 25px; display: flex; flex-direction: column; align-items: center; transition: background 0.5s; }
+        body.rainy { background: #b0bec5; }
         
-        .garden-box { background: white; padding: 25px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); max-width: 750px; width: 100%; text-align: center; }
-        .back-btn { background: #718093; color: white; border: none; padding: 10px 15px; border-radius: 6px; font-weight: bold; cursor: pointer; float: left; }
+        .sanctuary-box { background: white; padding: 25px; border-radius: 28px; box-shadow: 0 8px 24px rgba(0,0,0,0.05); max-width: 700px; width: 100%; text-align: center; border: 4px solid #b8d8b8; }
+        .back-btn { background: #718093; color: white; border: none; padding: 8px 14px; border-radius: 8px; font-weight: bold; cursor: pointer; float: left; }
         
-        .wallet-display { font-weight: bold; font-size: 1.2rem; margin: 20px 0 10px 0; clear: both; }
-        
-        /* Nursery Shop Overlay Interface */
-        .shop-banner { background: #f1f2f6; padding: 15px; border-radius: 10px; margin-bottom: 20px; display: flex; justify-content: space-around; align-items: center; }
-        .buy-btn { background: var(--primary); color: white; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; }
-        .buy-btn:hover { opacity: 0.9; }
+        .header-row { display: flex; justify-content: space-between; align-items: center; margin: 20px 0; clear: both; }
+        .rain-btn { background: #4a69bd; color: white; border: none; padding: 10px 16px; border-radius: 12px; font-weight: bold; cursor: pointer; }
 
-        /* Soil Plot Grid Layout Matrix */
-        .plot-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-top: 15px; }
-        .plot-card { background: #efe5d9; border: 3px solid #d4a373; border-radius: 12px; padding: 15px; display: flex; flex-direction: column; align-items: center; min-height: 200px; justify-content: space-between; }
+        /* Plant Shelf Grid Matrix */
+        .shelf-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; background: #efe5d9; padding: 20px; border-radius: 16px; border-bottom: 12px solid var(--shelf); }
+        .pot-node { background: rgba(255,255,255,0.7); border: 3px dashed #bdc3c7; border-radius: 16px; padding: 15px; min-height: 160px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; }
         
-        .stage-icon { font-size: 3rem; height: 60px; line-height: 60px; transition: transform 0.2s; }
+        .plant-look { font-size: 3.5rem; cursor: pointer; user-select: none; transition: transform 0.2s; }
+        .plant-look:hover { transform: scale(1.1); }
         
-        /* Progress Management Meters */
-        .meter { background: #e0e0e0; width: 100%; height: 12px; border-radius: 6px; overflow: hidden; margin: 8px 0; position: relative; }
-        .progress { height: 100%; width: 0%; transition: width 0.1s linear; }
-        .water-fill { background: #3498db; }
-        .grow-fill { background: #2ecc71; }
-        
-        .action-btn { width: 100%; padding: 6px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; color: white; margin-top: 4px; }
-        .action-btn.water { background: #3498db; }
-        .action-btn.harvest { background: #f1c40f; color: #2f3640; }
-        .action-btn.plant { background: #8e44ad; }
+        .water-btn { background: #29b6f6; color: white; border: none; padding: 6px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 5px; }
     </style>
 </head>
 <body>
 
-    <div class="garden-box">
-        <button class="back-btn" onclick="location.href='../../index.html'">⬅ Hub Menu</button>
-        <h2 style="color: var(--primary);">🌱 Gardening Tycoon</h2>
-        <p>Buy seeds, care for your crops, and scale your automated organic greenhouse farm!</p>
-
-        <div class="wallet-display">Your Wallet: 🪙 <span id="token-ui">0</span> Tokens</div>
-
-        <!-- SEED MERCHANDISE SHOP -->
-        <div class="shop-banner">
-            <div><strong>📦 Seed Inventory:</strong> <span id="seed-ui">0</span> Carrots</div>
-            <button class="buy-btn" id="buy-seed-btn">Buy Carrot Seed (Cost: 15🪙)</button>
+    <div class="sanctuary-box">
+        <button class="back-btn" onclick="location.href='../../index.html'">⬅ Map</button>
+        <h2 style="color: var(--leaf);">🪴 Bonsai Propagation Sanctuary</h2>
+        
+        <div class="header-row">
+            <span style="font-weight: bold; color: #7f8c8d;">Tap an empty pot to propagate a shoot.</span>
+            <button class="rain-btn" onclick="toggleRain()">🌧️ Rainy Day Mode</button>
         </div>
 
-        <!-- HARVESTING PLOT BED MATRIX -->
-        <div class="plot-grid">
-            <div class="plot-card" data-plot-id="0">
-                <div class="stage-icon">🟫</div>
-                <div style="font-size: 0.9rem; font-weight: bold;" class="status-txt">Empty Soil Patch</div>
-                <div class="meter"><div class="progress" id="bar-0"></div></div>
-                <button class="action-btn plant">Plant Crop</button>
+        <div class="shelf-grid">
+            <div class="pot-node" id="pot-0">
+                <div class="plant-look" onclick="plantSeed(0)">🏺</div>
+                <div style="font-size:0.85rem; font-weight:bold;" id="label-0">Empty Pot</div>
+                <button class="water-btn" onclick="waterPlant(0)">💧 Water</button>
             </div>
-            <div class="plot-card" data-plot-id="1">
-                <div class="stage-icon">🟫</div>
-                <div style="font-size: 0.9rem; font-weight: bold;" class="status-txt">Empty Soil Patch</div>
-                <div class="meter"><div class="progress" id="bar-1"></div></div>
-                <button class="action-btn plant">Plant Crop</button>
+            <div class="pot-node" id="pot-1">
+                <div class="plant-look" onclick="plantSeed(1)">🏺</div>
+                <div style="font-size:0.85rem; font-weight:bold;" id="label-1">Empty Pot</div>
+                <button class="water-btn" onclick="waterPlant(1)">💧 Water</button>
             </div>
-            <div class="plot-card" data-plot-id="2">
-                <div class="stage-icon">🟫</div>
-                <div style="font-size: 0.9rem; font-weight: bold;" class="status-txt">Empty Soil Patch</div>
-                <div class="meter"><div class="progress" id="bar-2"></div></div>
-                <button class="action-btn plant">Plant Crop</button>
+            <div class="pot-node" id="pot-2">
+                <div class="plant-look" onclick="plantSeed(2)">🏺</div>
+                <div style="font-size:0.85rem; font-weight:bold;" id="label-2">Empty Pot</div>
+                <button class="water-btn" onclick="waterPlant(2)">💧 Water</button>
             </div>
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        // BROWSER STORAGE SYNCHRONIZATION 
+        let garden = [
+            { stage: 0, wateredTime: Date.now() },
+            { stage: 0, wateredTime: Date.now() },
+            { stage: 0, wateredTime: Date.now() }
+        ];
+
+        if(localStorage.getItem('cozy_bonsai_save')) {
+            garden = JSON.parse(localStorage.getItem('cozy_bonsai_save'));
+            
+            // Checks if real time has passed since last opening to simulate automated background growth
+            garden.forEach(p => {
+                if(p.stage > 0 && p.stage < 3) {
+                    p.stage++; // Grow automatically upon returning the next day!
+                }
+            });
+        }
+
+        function saveGame() {
+            localStorage.setItem('cozy_bonsai_save', JSON.stringify(garden));
+            render();
+        }
+
+        const assets_icons = ['🏺', '🌱', '🌿', '🪴'];
+        const assets_labels = ['Empty Clay Pot', 'Tiny Seed Sprout', 'Growing Bonsai', 'Mature Masterpiece!'];
+
+        function render() {
+            garden.forEach((p, index) => {
+                document.querySelector(`#pot-${index} .plant-look`).innerText = assets_icons[p.stage];
+                document.getElementById(`label-${index}`).innerText = assets_labels[p.stage];
+            });
+        }
+
+        function plantSeed(index) {
+            if(garden[index].stage === 0) {
+                garden[index].stage = 1;
+                garden[index].wateredTime = Date.now();
+                saveGame();
+            }
+        }
+
+        function waterPlant(index) {
+            if(garden[index].stage > 0 && garden[index].stage < 3) {
+                garden[index].stage++;
+                garden[index].wateredTime = Date.now();
+                saveGame();
+                alert("The leaves look crisp and healthy after watering! 🍃");
+            }
+        }
+
+        function toggleRain() {
+            document.body.classList.toggle('rainy');
+        }
+
+        render();
+    </script>
 </body>
 </html>
