@@ -3,149 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cozy Tea Brewing Simulator</title>
+    <title>Boba Tea Simulation</title>
     <style>
-        :root {
-            --pastel-green: #e8f5e9;
-            --pastel-pink: #fce4ec;
-            --cozy-dark: #4a4a4a;
-            --wood: #d7ccc8;
-        }
-        * { box-sizing: border-box; font-family: 'Century Gothic', sans-serif; margin: 0; padding: 0; }
-        body { background: #fdf6ec; color: var(--cozy-dark); padding: 20px; display: flex; flex-direction: column; align-items: center; }
-        
-        .cafe-box { background: white; border: 4px solid var(--cozy-dark); border-radius: 28px; padding: 25px; max-width: 480px; width: 100%; text-align: center; box-shadow: 0 10px 0 var(--cozy-dark); }
-        .back-btn { background: #ff7675; color: white; border: 2px solid var(--cozy-dark); padding: 8px 12px; border-radius: 12px; font-weight: bold; cursor: pointer; float: left; box-shadow: 0 3px 0 var(--cozy-dark); }
-        .back-btn:active { transform: translateY(2px); box-shadow: none; }
-        
-        .ticket-order { background: var(--pastel-green); padding: 15px; border: 3px solid var(--cozy-dark); border-radius: 16px; font-weight: bold; margin: 20px 0; text-align: left; clear: both; }
-        
-        /* Mug Stage & Animated Steam */
-        .counter-stage { background: var(--wood); border: 3px solid var(--cozy-dark); border-radius: 16px; padding: 30px; position: relative; margin: 20px 0; min-height: 200px; display: flex; align-items: center; justify-content: center; }
-        
-        .mug-wrap { position: relative; display: flex; flex-direction: column; align-items: center; }
-        .mug { width: 100px; height: 100px; border: 5px solid var(--cozy-dark); border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; background: #fff; overflow: hidden; display: flex; flex-direction: column-reverse; z-index: 2; }
-        .mug-handle { position: absolute; right: -25px; top: 25px; width: 30px; height: 50px; border: 5px solid var(--cozy-dark); border-left: none; border-radius: 0 20px 20px 0; z-index: 1; }
-        
-        .liquid-fill { width: 100%; height: 0%; transition: height 0.3s ease; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
-        
-        /* Cozy Steam Wave Animations */
-        .steam-container { position: absolute; top: -40px; display: flex; gap: 8px; justify-content: center; width: 60px; z-index: 3; }
-        .steam-puff { width: 6px; height: 35px; background: rgba(162, 155, 254, 0.25); border-radius: 4px; animation: floatSteam 2s infinite ease-in-out; opacity: 0; }
-        .steam-puff:nth-child(2) { animation-delay: 0.4s; }
-        .steam-puff:nth-child(3) { animation-delay: 0.8s; }
-
-        @keyframes floatSteam {
-            0% { transform: translateY(10px) scaleX(1); opacity: 0; }
-            50% { opacity: 0.6; transform: translateY(-5px) scaleX(1.3); }
-            100% { transform: translateY(-20px) scaleX(0.8); opacity: 0; }
-        }
-
-        .menu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 15px; }
-        .menu-title { font-size: 0.85rem; font-weight: bold; background: #ffeaa7; padding: 2px 8px; border-radius: 8px; border: 2px solid var(--cozy-dark); grid-column: span 3; text-align: left; margin-top: 5px; }
-        .brew-btn { background: white; border: 2px solid var(--cozy-dark); padding: 8px; border-radius: 12px; font-weight: bold; cursor: pointer; box-shadow: 0 3px 0 var(--cozy-dark); font-size: 0.85rem; }
-        .brew-btn:active { transform: translateY(2px); box-shadow: none; }
+        body { background: #fdf6ec; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; padding: 30px; }
+        .game-box { background: white; border: 2px solid #e6d0b7; border-radius: 16px; padding: 25px; width: 100%; max-width: 450px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); text-align: center; }
+        .order-ticket { background: #fff9e6; border: 2px dashed #f39c12; border-radius: 8px; padding: 15px; margin-bottom: 20px; font-weight: bold; }
+        .cup-container { width: 140px; height: 200px; border: 4px solid #4a3728; border-top: none; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; margin: 20px auto; position: relative; background: #fff; overflow: hidden; }
+        .liquid { position: absolute; bottom: 0; left: 0; width: 100%; height: 0%; transition: height 0.4s, background-color 0.4s; }
+        .boba-pearls { position: absolute; bottom: 5px; left: 0; width: 100%; display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; font-size: 14px; }
+        .ingredients-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+        .ing-btn { background: #f8f9fa; border: 2px solid #dee2e6; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .ing-btn:hover { background: #e8ecef; }
+        .action-bar { margin-top: 20px; display: flex; gap: 10px; }
+        .action-bar button { flex: 1; padding: 12px; font-weight: bold; border-radius: 8px; border: none; cursor: pointer; }
     </style>
 </head>
 <body>
 
-    <div class="cafe-box">
-        <button class="back-btn" onclick="location.href='../../index.html'">⬅ Counter</button>
-        <h2 style="clear:both; padding-top:10px; font-size: 1.6rem;">🍵 Cozy Tea Brewer</h2>
-        
-        <div class="ticket-order">
-            💬 Customer Request:<br>
-            <span id="order-text" style="color: #6c5ce7;">Loading cozy order...</span>
+    <div class="game-box">
+        <h1 style="color: #8c6239; font-size: 1.6rem; margin-bottom: 15px;">🍵 Boba Alchemy Lab</h1>
+        <div class="order-ticket" id="order-box">Loading customer order...</div>
+
+        <div class="cup-container">
+            <div id="liquid-layer" class="liquid"></div>
+            <div id="pearls-layer" class="boba-pearls"></div>
         </div>
 
-        <div class="counter-stage">
-            <div class="mug-wrap">
-                <!-- Steam element puffs active over hot beverages -->
-                <div class="steam-container" id="steam-layer" style="display:none;">
-                    <div class="steam-puff"></div><div class="steam-puff"></div><div class="steam-puff"></div>
-                </div>
-                <div class="mug">
-                    <div class="liquid-fill" id="mug-content"></div>
-                </div>
-                <div class="mug-handle"></div>
-            </div>
+        <div class="ingredients-grid">
+            <button class="ing-btn" onclick="addBase('Matcha', '#85a970')">🍵 Matcha Base</button>
+            <button class="ing-btn" onclick="addBase('Taro Milk', '#d1b9dc')">🍠 Taro Base</button>
+            <button class="ing-btn" onclick="addBase('Brown Sugar', '#b08d5c')">🧋 Classic Base</button>
+            <button class="ing-btn" onclick="addBase('Thai Tea', '#f39c12')">🍂 Thai Base</button>
+            <button class="ing-btn" onclick="addTopping('Tapioca')">⚫ Tapioca Pearls</button>
+            <button class="ing-btn" onclick="addTopping('Popping Boba')">💥 Bursting Boba</button>
+            <button class="ing-btn" onclick="addTopping('Lychee Jelly')">⬜ Lychee Jelly</button>
+            <button class="ing-btn" onclick="addTopping('Red Bean')">🫘 Red Bean</button>
         </div>
 
-        <div class="menu-grid">
-            <div class="menu-title">Base Liquid</div>
-            <button class="brew-btn" onclick="addIngredient('base', '🍵 Matcha Base', '#badc58')">🍵 Matcha</button>
-            <button class="brew-btn" onclick="addIngredient('base', '🧋 Black Tea Base', '#eccc68')">🧋 Black Tea</button>
-            <button class="brew-btn" onclick="addIngredient('base', '🌸 Herbal Infusion', '#ff867c')">🌸 Herbal Rose</button>
-
-            <div class="menu-title">Steamed Milks</div>
-            <button class="brew-btn" onclick="addIngredient('milk', '🥛 Oat Milk Splash', '#f5f6fa')">🌾 Oat Milk</button>
-            <button class="brew-btn" onclick="addIngredient('milk', '🥛 Whole Milk Cream', '#fffdf0')">🥛 Whole Milk</button>
-            <button class="brew-btn" onclick="addIngredient('milk', '🥛 Soy Froth Layer', '#f7f1e3')">🌱 Soy Milk</button>
-
-            <div class="menu-title">Sweet Syrups & Toppings</div>
-            <button class="brew-btn" onclick="addIngredient('syrup', '💜 Lavender Drop', '#a29bfe')">🍇 Lavender</button>
-            <button class="brew-btn" onclick="addIngredient('syrup', '🍯 Honey Drizzle', '#f1c40f')">🍯 Pure Honey</button>
-            <button class="brew-btn" onclick="addIngredient('syrup', '🍂 Vanilla Extract', '#f39c12')">🍂 Vanilla</button>
+        <div class="action-bar">
+            <button style="background: #e74c3c; color: white;" onclick="resetCup()">Reset 🗑️</button>
+            <button style="background: #2ecc71; color: white;" onclick="serveDrink()">Serve Drink ✔️</button>
         </div>
-
-        <button onclick="serveDrink()" style="width:100%; margin-top:20px; padding:12px; background:#55efc4; border:3px solid var(--cozy-dark); border-radius:16px; font-weight:bold; font-size:1.1rem; cursor:pointer; box-shadow:0 4px 0 var(--cozy-dark);">🛎️ Serve Finished Mug</button>
     </div>
 
     <script>
-        let currentDrink = { base: '', milk: '', syrup: '' };
-        let currentTarget = {};
+        // Database arrays containing ingredients to dynamically form over 20+ drink mutations
+        const bases = [{name: 'Matcha', color:'#85a970'}, {name: 'Taro Milk', color:'#d1b9dc'}, {name: 'Brown Sugar', color:'#b08d5c'}, {name: 'Thai Tea', color:'#f39c12'}];
+        const toppings = ['Tapioca', 'Popping Boba', 'Lychee Jelly', 'Red Bean'];
+        const sweetnessLevels = ['30% Sweet', '50% Sweet', '70% Sweet', '100% Sweet'];
 
-        const ordersPool = [
-            { text: "Matcha latte with oat milk and lavender syrup", base: "🍵 Matcha Base", milk: "🥛 Oat Milk Splash", syrup: "💜 Lavender Drop" },
-            { text: "Classic black milk tea with whole milk sweetened with honey", base: "🧋 Black Tea Base", milk: "🥛 Whole Milk Cream", syrup: "🍯 Honey Drizzle" },
-            { text: "Herbal rose tea mixed with soy milk and a dash of vanilla", base: "🌸 Herbal Infusion", milk: "🥛 Soy Froth Layer", syrup: "🍂 Vanilla Extract" }
-        ];
+        let currentOrder = {};
+        let playerBase = "", playerTopping = "";
 
-        function generateNewOrder() {
-            currentTarget = ordersPool[Math.floor(Math.random() * ordersPool.length)];
-            document.getElementById('order-text').innerText = currentTarget.text;
-            // Clear prior mug states completely
-            currentDrink = { base: '', milk: '', syrup: '' };
-            const content = document.getElementById('mug-content');
-            content.style.height = "0%";
-            content.innerText = '';
-            document.getElementById('steam-layer').style.display = 'none';
+        function generateRandomOrder() {
+            const randBase = bases[Math.floor(Math.random() * bases.length)];
+            const randTopping = toppings[Math.floor(Math.random() * toppings.length)];
+            const randSweet = sweetnessLevels[Math.floor(Math.random() * sweetnessLevels.length)];
+            
+            currentOrder = { base: randBase.name, topping: randTopping, sweetness: randSweet };
+            document.getElementById('order-box').innerHTML = `
+                <div style='font-size:0.85rem; color:#7f8c8d;'>CURRENT REQUEST:</div>
+                ${currentOrder.base} with ${currentOrder.topping} (${currentOrder.sweetness})
+            `;
         }
 
-        function addIngredient(category, name, hexColor) {
-            currentDrink[category] = name;
-            const content = document.getElementById('mug-content');
-            
-            // Incrementally fill visual fluid columns
-            let filledCount = Object.values(currentDrink).filter(x => x !== '').length;
-            content.style.height = (filledCount * 33.3) + "%";
-            content.style.backgroundColor = hexColor;
-            content.innerText = '✨';
+        function addBase(name, color) {
+            playerBase = name;
+            const liq = document.getElementById('liquid-layer');
+            liq.style.height = "75%";
+            liq.style.backgroundColor = color;
+        }
 
-            if(category === 'milk') {
-                // Steaming milk toggles pleasant vapor animations over the mug element
-                document.getElementById('steam-layer').style.display = 'flex';
-            }
+        function addTopping(name) {
+            playerTopping = name;
+            const layer = document.getElementById('pearls-layer');
+            layer.innerHTML = "";
+            let symbol = name === 'Tapioca' ? '⚫' : name === 'Red Bean' ? '🫘' : '⚪';
+            for(let i=0; i<8; i++) { layer.innerHTML += `<span>${symbol}</span>`; }
+        }
+
+        function resetCup() {
+            playerBase = ""; playerTopping = "";
+            document.getElementById('liquid-layer').style.height = "0%";
+            document.getElementById('pearls-layer').innerHTML = "";
         }
 
         function serveDrink() {
-            if(!currentDrink.base || !currentDrink.milk || !currentDrink.syrup) {
-                alert("The drink isn't finished yet! Make sure to add a liquid base, milk, and syrup first.");
-                return;
-            }
-
-            if(currentDrink.base === currentTarget.base && 
-               currentDrink.milk === currentTarget.milk && 
-               currentDrink.syrup === currentTarget.syrup) {
-                alert("🌸 Perfect! The customer cradles the hot mug and takes a sip. They absolutely love it!");
+            if (playerBase === currentOrder.base && playerTopping === currentOrder.topping) {
+                alert("✨ Perfect Match! +20 Tokens earned!");
+                let tokens = parseInt(localStorage.getItem('hub_tokens') || 100) + 20;
+                localStorage.setItem('hub_tokens', tokens);
             } else {
-                alert("✨ Cozy Mistake! It wasn't exactly what they asked for, but they thank you warmly for the hot drink anyway.");
+                alert("❌ Wrong order recipe! Try again.");
             }
-            generateNewOrder();
+            resetCup();
+            generateRandomOrder();
         }
 
-        // Run primary startup loops
-        generateNewOrder();
+        generateRandomOrder();
     </script>
 </body>
 </html>
