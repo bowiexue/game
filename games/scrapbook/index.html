@@ -3,67 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pixel Room Decorator</title>
-    <style>
-        :root { --bg: #f5eae0; --frame: #2c3e50; }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Courier New', Courier, monospace; }
-        body { background: var(--bg); color: var(--frame); padding: 20px; display: flex; flex-direction: column; align-items: center; }
-        .container { display: grid; grid-template-columns: 280px 1fr; gap: 20px; max-width: 1000px; width: 100%; }
-        .sidebar { background: white; border: 4px solid var(--frame); border-radius: 8px; padding: 15px; height: 560px; }
-        .item-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 10px 0; }
-        .thumb { background: #faf5f0; border: 3px solid var(--frame); border-radius: 4px; padding: 4px; cursor: pointer; height: 60px; display: flex; align-items: center; justify-content: center; }
-        .thumb:hover { background: #ebdccb; }
-        .thumb svg { width: 100%; height: 100%; image-rendering: pixelated; }
-        .canvas { background: #dfcaa7; border: 5px solid var(--frame); border-radius: 8px; height: 560px; position: relative; overflow: hidden; }
-        .floor { position: absolute; bottom: 0; width: 100%; height: 25%; background: #b58f6d; border-top: 4px solid var(--frame); }
-        .wrapper { position: absolute; transform: translate(-50%, -50%); cursor: move; user-select: none; z-index: 10; }
-        .wrapper svg { display: block; image-rendering: pixelated; width: var(--w, 64px); height: var(--h, 64px); }
-        .scale-box { position: absolute; top: -22px; left: 50%; transform: translateX(-50%); display: none; gap: 4px; background: var(--frame); padding: 2px; border-radius: 4px; }
-        .wrapper:hover .scale-box { display: flex; }
-        .scale-btn { background: white; border: none; font-weight: bold; padding: 1px 5px; font-size: 0.7rem; cursor: pointer; }
-    </style>
+    <title>Pixel Room Studio</title>
+    <!-- SECTION 1 INTERACTION HOOK -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div style="width:100%; max-width:1000px; margin-bottom:10px;"><button onclick="location.href='../../index.html'" style="background:var(--frame); color:white; border:none; padding:8px 14px; font-weight:bold; cursor:pointer; border-radius:4px;">◀ MAP HUB</button></div>
-    <div class="container">
-        <aside class="sidebar">
-            <h3 style="text-align:center;">FURNITURE</h3>
-            <div class="item-grid">
-                <div class="thumb" onclick="spawn('couch')"><svg viewBox="0 0 16 16"><path d="M1,6 H15 V11 H1 Z" fill="#c0392b" stroke="#2c3e50" stroke-width="1"/><rect x="3" y="8" width="10" height="3" fill="#e74c3c"/></svg></div>
-                <div class="thumb" onclick="spawn('table')"><svg viewBox="0 0 16 16"><path d="M1,6 H15 V8 H1 Z M3,8 H5 V13 H3 Z M11,8 H13 V13 H11 Z" fill="#d35400" stroke="#2c3e50" stroke-width="1"/></svg></div>
-                <div class="thumb" onclick="spawn('window')"><svg viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" fill="#3498db" stroke="#2c3e50" stroke-width="1"/><line x1="2" y1="8" x2="14" y2="8" stroke="#2c3e50"/><line x1="8" y1="2" x2="8" y2="14" stroke="#2c3e50"/></svg></div>
-            </div>
-        </aside>
-        <main class="canvas" id="canvas"><div class="floor"></div></main>
+
+    <div class="nav-row">
+        <button class="back-btn" onclick="location.href='../../index.html'">◀ RETURN TO MAP HUB</button>
+        <span style="font-weight: bold;">🪙 SHOP WALLET: <span id="local-tokens">100</span></span>
     </div>
-    <script>
-        const blueprints = {
-            couch: `<svg viewBox="0 0 16 16"><path d="M1,6 H15 V11 H1 Z" fill="#c0392b" stroke="#2c3e50" stroke-width="1"/><rect x="3" y="8" width="10" height="3" fill="#e74c3c"/></svg>`,
-            table: `<svg viewBox="0 0 16 16"><path d="M1,6 H15 V8 H1 Z M3,8 H5 V13 H3 Z M11,8 H13 V13 H11 Z" fill="#d35400" stroke="#2c3e50" stroke-width="1"/></svg>`,
-            window: `<svg viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" fill="#3498db" stroke="#2c3e50" stroke-width="1"/><line x1="2" y1="8" x2="14" y2="8" stroke="#2c3e50"/><line x1="8" y1="2" x2="8" y2="14" stroke="#2c3e50"/></svg>`
-        };
-        function spawn(t) {
-            const wrap = document.createElement('div'); wrap.classList.add('wrapper');
-            let sz = 64; wrap.style.setProperty('--w', `${sz}px`); wrap.style.setProperty('--h', `${sz}px`);
-            wrap.style.left = "50%"; wrap.style.top = "45%";
-            wrap.innerHTML = `<div class="scale-box"><button class="scale-btn" onclick="event.stopPropagation(); resize(this,15)">+</button><button class="scale-btn" onclick="event.stopPropagation(); resize(this,-15)">-</button></div>${blueprints[t]}`;
-            
-            let isDrag = false;
-            wrap.addEventListener('mousedown', (e) => { if(!e.target.classList.contains('scale-btn')) isDrag = true; });
-            document.addEventListener('mousemove', (e) => {
-                if(!isDrag) return; const b = document.getElementById('canvas').getBoundingClientRect();
-                let x = e.clientX - b.left, y = e.clientY - b.top;
-                if(x >= 0 && x <= b.width) wrap.style.left = `${x}px`;
-                if(y >= 0 && y <= b.height) wrap.style.top = `${y}px`;
-            });
-            document.addEventListener('mouseup', () => isDrag = false);
-            wrap.addEventListener('dblclick', () => wrap.remove());
-            document.getElementById('canvas').appendChild(wrap);
-        }
-        function resize(btn, amt) {
-            const w = btn.closest('.wrapper'); let size = parseInt(w.style.getPropertyValue('--w')) || 64;
-            let n = Math.max(32, Math.min(160, size + amt)); w.style.setProperty('--w', `${n}px`); w.style.setProperty('--h', `${n}px`);
-        }
-    </script>
+
+    <!-- The 2 Side-by-Side Sections Layout Container -->
+    <div class="main-workspace-grid">
+        <!-- LEFT COLUMN SECTION -->
+        <aside class="section-sidebar">
+            <h3>🗄️ FURNITURE DESK</h3>
+            <div class="cat-title">🛏️ Beds & Mats</div><div class="item-grid" id="grid-beds"></div>
+            <div class="cat-title">🛋️ Living Seating</div><div class="item-grid" id="grid-seating"></div>
+            <div class="cat-title">🪑 Framework Tables</div><div class="item-grid" id="grid-tables"></div>
+            <div class="cat-title">🖥️ Tech & Lamps</div><div class="item-grid" id="grid-electronics"></div>
+            <div class="cat-title">🪴 Custom Foliage</div><div class="item-grid" id="grid-plants"></div>
+            <div class="cat-title">🧸 Companion Plush</div><div class="item-grid" id="grid-plush"></div>
+        </aside>
+        <!-- RIGHT COLUMN SECTION -->
+        <main class="section-canvas" id="canvas"><div class="floor"></div></main>
+    </div>
+
+    <div class="tips-bar">[ DRAG ASSETS TO PLACE IN CANVAS • HOVER TO SCALE OBJECTS VIA + / - CONTROLS • DBLCLICK TO DELETE ]</div>
+
+    <!-- SECTION 2 INTERACTION HOOK -->
+    <script src="script.js"></script>
 </body>
 </html>
