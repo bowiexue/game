@@ -3,120 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bonsai & Plant Sanctuary</title>
+    <title>Bonsai Zen Sanctuary</title>
     <style>
-        :root {
-            --bg: #f4f7f4;
-            --dark: #2c3e50;
-            --leaf: #6b8e23;
-            --shelf: #d4a373;
-        }
-        * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; }
-        body { background: var(--bg); color: var(--dark); padding: 25px; display: flex; flex-direction: column; align-items: center; transition: background 0.5s; }
-        body.rainy { background: #b0bec5; }
-        
-        .sanctuary-box { background: white; padding: 25px; border-radius: 28px; box-shadow: 0 8px 24px rgba(0,0,0,0.05); max-width: 700px; width: 100%; text-align: center; border: 4px solid #b8d8b8; }
-        .back-btn { background: #718093; color: white; border: none; padding: 8px 14px; border-radius: 8px; font-weight: bold; cursor: pointer; float: left; }
-        
-        .header-row { display: flex; justify-content: space-between; align-items: center; margin: 20px 0; clear: both; }
-        .rain-btn { background: #4a69bd; color: white; border: none; padding: 10px 16px; border-radius: 12px; font-weight: bold; cursor: pointer; }
-
-        /* Plant Shelf Grid Matrix */
-        .shelf-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; background: #efe5d9; padding: 20px; border-radius: 16px; border-bottom: 12px solid var(--shelf); }
-        .pot-node { background: rgba(255,255,255,0.7); border: 3px dashed #bdc3c7; border-radius: 16px; padding: 15px; min-height: 160px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; }
-        
-        .plant-look { font-size: 3.5rem; cursor: pointer; user-select: none; transition: transform 0.2s; }
-        .plant-look:hover { transform: scale(1.1); }
-        
-        .water-btn { background: #29b6f6; color: white; border: none; padding: 6px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 5px; }
+        body { background: #f5f6fa; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; padding: 30px; color: #2f3640; }
+        .nav-row { width: 100%; max-width: 450px; margin-bottom: 15px; }
+        .back-btn { background: #7f8c8d; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        .bonsai-box { background: white; border: 2px solid #ced6e0; border-radius: 20px; padding: 30px; width: 100%; max-width: 450px; box-shadow: 0 8px 20px rgba(0,0,0,0.04); text-align: center; }
+        .tree-stage { font-size: 6rem; height: 130px; display: flex; align-items: center; justify-content: center; margin: 20px 0; transition: transform 0.2s; }
+        .stat-bar { background: #f1f2f6; border-radius: 12px; height: 20px; margin: 10px 0; position: relative; overflow: hidden; border: 1px solid #dcdde1; }
+        .fill { height: 100%; width: 0%; transition: width 0.3s; }
+        .btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+        .tool-btn { padding: 12px; font-weight: bold; border: none; border-radius: 8px; cursor: pointer; color: white; }
     </style>
 </head>
 <body>
 
-    <div class="sanctuary-box">
-        <button class="back-btn" onclick="location.href='../../index.html'">⬅ Map</button>
-        <h2 style="color: var(--leaf);">🪴 Bonsai Propagation Sanctuary</h2>
-        
-        <div class="header-row">
-            <span style="font-weight: bold; color: #7f8c8d;">Tap an empty pot to propagate a shoot.</span>
-            <button class="rain-btn" onclick="toggleRain()">🌧️ Rainy Day Mode</button>
-        </div>
+    <div class="nav-row">
+        <button class="back-btn" onclick="location.href='../../index.html'">⬅ Return to Map</button>
+    </div>
 
-        <div class="shelf-grid">
-            <div class="pot-node" id="pot-0">
-                <div class="plant-look" onclick="plantSeed(0)">🏺</div>
-                <div style="font-size:0.85rem; font-weight:bold;" id="label-0">Empty Pot</div>
-                <button class="water-btn" onclick="waterPlant(0)">💧 Water</button>
-            </div>
-            <div class="pot-node" id="pot-1">
-                <div class="plant-look" onclick="plantSeed(1)">🏺</div>
-                <div style="font-size:0.85rem; font-weight:bold;" id="label-1">Empty Pot</div>
-                <button class="water-btn" onclick="waterPlant(1)">💧 Water</button>
-            </div>
-            <div class="pot-node" id="pot-2">
-                <div class="plant-look" onclick="plantSeed(2)">🏺</div>
-                <div style="font-size:0.85rem; font-weight:bold;" id="label-2">Empty Pot</div>
-                <button class="water-btn" onclick="waterPlant(2)">💧 Water</button>
-            </div>
+    <div class="bonsai-box">
+        <h2>🪴 Bonsai Zen Nursery</h2>
+        <select id="genome-select" onchange="plantNewSeed()" style="margin-top:10px; padding:6px; border-radius:6px;">
+            <option value="Juniper">🌲 Japanese Juniper Wood</option>
+            <option value="Sakura">🌸 Cherry Blossom Sakura</option>
+            <option value="Bamboo">🎋 Zen Stalk Bamboo</option>
+        </select>
+
+        <div class="tree-stage" id="bonsai-avatar">🌱</div>
+        <h3 id="stage-lbl" style="color: #718093;">Sprout Phase</h3>
+
+        <div>💧 Hydration Bar</div>
+        <div class="stat-bar"><div id="water-fill" class="fill" style="background:#3498db;"></div></div>
+
+        <div>✨ Soil Nutrient Density</div>
+        <div class="stat-bar"><div id="fert-fill" class="fill" style="background:#2ecc71;"></div></div>
+
+        <div class="btn-row">
+            <button class="tool-btn" style="background:#2980b9;" onclick="actionTend('water')">Pour Water 💧</button>
+            <button class="tool-btn" style="background:#27ae60;" onclick="actionTend('fert')">Add Fertilizer 🪱</button>
         </div>
     </div>
 
     <script>
-        // BROWSER STORAGE SYNCHRONIZATION 
-        let garden = [
-            { stage: 0, wateredTime: Date.now() },
-            { stage: 0, wateredTime: Date.now() },
-            { stage: 0, wateredTime: Date.now() }
-        ];
+        const genomes = {
+            Juniper: ['🌱', '🌿', '🌲', '🌳'],
+            Sakura: ['🌱', '🌿', '🌸', '💮'],
+            Bamboo: ['🌱', '🎋', '🎍', '🎋']
+        };
+        let species = 'Juniper', water = 20, fertilizer = 20, stageIndex = 0;
 
-        if(localStorage.getItem('cozy_bonsai_save')) {
-            garden = JSON.parse(localStorage.getItem('cozy_bonsai_save'));
+        function updateNurseryUI() {
+            document.getElementById('water-fill').style.width = `${water}%`;
+            document.getElementById('fert-fill').style.width = `${fertilizer}%`;
             
-            // Checks if real time has passed since last opening to simulate automated background growth
-            garden.forEach(p => {
-                if(p.stage > 0 && p.stage < 3) {
-                    p.stage++; // Grow automatically upon returning the next day!
-                }
-            });
+            // Evaluate structural evolution thresholds
+            stageIndex = Math.min(3, Math.floor((water + fertilizer) / 50));
+            document.getElementById('bonsai-avatar').innerText = genomes[species][stageIndex];
+            
+            const labels = ['Sprout Node', 'Branching Cutting', 'Mature Nursery Core', 'Masterpiece Canopy'];
+            document.getElementById('stage-lbl').innerText = labels[stageIndex];
         }
 
-        function saveGame() {
-            localStorage.setItem('cozy_bonsai_save', JSON.stringify(garden));
-            render();
+        function plantNewSeed() {
+            species = document.getElementById('genome-select').value;
+            water = 20; fertilizer = 20;
+            updateNurseryUI();
         }
 
-        const assets_icons = ['🏺', '🌱', '🌿', '🪴'];
-        const assets_labels = ['Empty Clay Pot', 'Tiny Seed Sprout', 'Growing Bonsai', 'Mature Masterpiece!'];
-
-        function render() {
-            garden.forEach((p, index) => {
-                document.querySelector(`#pot-${index} .plant-look`).innerText = assets_icons[p.stage];
-                document.getElementById(`label-${index}`).innerText = assets_labels[p.stage];
-            });
+        function actionTend(type) {
+            if(type === 'water') water = Math.min(100, water + 15);
+            if(type === 'fert') fertilizer = Math.min(100, fertilizer + 15);
+            
+            // Add a little visual bounce animation when clicked
+            const av = document.getElementById('bonsai-avatar');
+            av.style.transform = 'scale(1.2)';
+            setTimeout(() => av.style.transform = 'scale(1)', 200);
+            
+            updateNurseryUI();
         }
 
-        function plantSeed(index) {
-            if(garden[index].stage === 0) {
-                garden[index].stage = 1;
-                garden[index].wateredTime = Date.now();
-                saveGame();
-            }
-        }
-
-        function waterPlant(index) {
-            if(garden[index].stage > 0 && garden[index].stage < 3) {
-                garden[index].stage++;
-                garden[index].wateredTime = Date.now();
-                saveGame();
-                alert("The leaves look crisp and healthy after watering! 🍃");
-            }
-        }
-
-        function toggleRain() {
-            document.body.classList.toggle('rainy');
-        }
-
-        render();
+        updateNurseryUI();
     </script>
 </body>
 </html>
