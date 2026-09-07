@@ -7,12 +7,26 @@ function toggleKitchenMode(mode) {
     const mainBtn = document.getElementById('btn-mode-main');
     const destBtn = document.getElementById('btn-mode-dessert');
     
+    const applianceFrame = document.getElementById('cooking-appliance-frame');
+    const applianceTitle = document.getElementById('appliance-title');
+    const actionBtn = document.getElementById('cook-action-btn');
+    
     if (mode === "main") {
         mainBtn.className = "mode-toggle-btn active-main";
         destBtn.className = "mode-toggle-btn";
+        
+        // Return back to stockpot settings styles
+        applianceFrame.className = "stockpot";
+        applianceTitle.innerText = "♨️ Cooking Range";
+        actionBtn.innerText = "SIMMER MIXTURE 🍳";
     } else {
         mainBtn.className = "mode-toggle-btn";
         destBtn.className = "mode-toggle-btn active-dessert";
+        
+        // Morph the appliance class layout shell directly into a Baking Oven
+        applianceFrame.className = "stockpot baking-oven-mode";
+        applianceTitle.innerText = "⌾ Baking Oven";
+        actionBtn.innerText = "BAKE CONFECTION 🍰";
     }
     
     clearStockpot();
@@ -40,36 +54,69 @@ function loadPantryShelves() {
     renderDiscoveredJournal();
 }
 
-// UPDATED: Strictly blocks duplicate ingredients from entering the pot
 function addIngredientToPot(key, label, rawSVG) {
-    // 1. HARD LIMIT: Stop if the pot is already holding 3 items
     if (activePotContents.length >= 3) {
-        alert("The stockpot is full! Simmer your 3 ingredients or discard items.");
+        alert("The container workspace is full! Clear elements or compile your recipe.");
         return;
     }
 
-    // 2. DUPLICATE CHECKER: Scans the pot array to see if this item key was already added
     const isDuplicate = activePotContents.some(item => item.key === key);
     if (isDuplicate) {
-        alert(`❌ You already added ${label} to the pot! A valid dish requires 3 completely distinct ingredients.`);
+        alert(`❌ You already added ${label}! A valid dish requires 3 completely distinct ingredients.`);
         return;
     }
 
-    // If it passes both rules, allow the item to enter the pot workspace
     activePotContents.push({ key: key, label: label, mode: currentMode });
-    
-    const layer = document.getElementById('soup-bubble-layer');
-    const bubble = document.createElement('div');
-    bubble.className = 'pixel-bubble';
-    bubble.style.background = currentMode === "main" ? "#e67e22" : "#ff7675";
-    bubble.style.left = `${Math.floor(Math.random() * 65) + 5}%`;
-    layer.appendChild(bubble);
+    triggerApplianceParticles();
+    renderTrackerPillsList();
+}
 
+// MANAGE APPLIANCE TRAIL ANIMATIONS (Boiling surface bubbles vs glass door steam)
+function triggerApplianceParticles() {
+    const layer = document.getElementById('soup-bubble-layer');
+    layer.innerHTML = ''; // Fresh clean surface slate tracking loop
+    
+    activePotContents.forEach((item, index) => {
+        const particle = document.createElement('div');
+        
+        if (currentMode === "main") {
+            particle.className = 'pixel-bubble';
+            particle.style.left = `${20 + (index * 25)}%`;
+            particle.style.background = "#e67e22";
+        } else {
+            particle.className = 'pixel-steam-trail';
+            particle.style.left = `${15 + (index * 30)}%`;
+            particle.style.animationDelay = `${index * 0.3}s`;
+        }
+        layer.appendChild(particle);
+    });
+}
+
+// RENDERS THE SIDEBAR LIST BOX ENTRIES ATTACHED WITH SINGLE DISCARD BUTTONS
+function renderTrackerPillsList() {
     const trackerList = document.getElementById('tracker-pills-list');
-    const itemRow = document.createElement('div');
-    itemRow.className = 'tracker-item-row';
-    itemRow.innerHTML = `${rawSVG}<span>${label}</span>`;
-    trackerList.appendChild(itemRow);
+    trackerList.innerHTML = '';
+
+    activePotContents.forEach((item, index) => {
+        const itemRow = document.createElement('div');
+        itemRow.className = 'tracker-item-row';
+        
+        itemRow.innerHTML = `
+            <div class="pill-core-content">
+                ${window.mainCoursePantry.proteins[item.key]?.svg || window.dessertPantry.proteins[item.key]?.svg || window.mainCoursePantry.vegetables[item.key]?.svg || window.dessertPantry.vegetables[item.key]?.svg || window.mainCoursePantry.sauces[item.key]?.svg || window.dessertPantry.sauces[item.key]?.svg || ''}
+                <span>${item.label}</span>
+            </div>
+            <button class="pill-single-remove-btn" onclick="removeSingleIngredient(${index})">🗑️</button>
+        `;
+        trackerList.appendChild(itemRow);
+    });
+}
+
+// FUNCTION: Splicing specific numerical node tracking position indexes instantly
+function removeSingleIngredient(index) {
+    activePotContents.splice(index, 1);
+    triggerApplianceParticles();
+    renderTrackerPillsList();
 }
 
 function clearStockpot() {
@@ -80,29 +127,33 @@ function clearStockpot() {
 
 function compilePotRecipe() {
     if (activePotContents.length !== 3) {
-        alert(`Your stockpot contains ${activePotContents.length} items. You must combine EXACTLY 3 ingredients to build an actual recipe!`);
+        alert(`Your workspace contains ${activePotContents.length} items. You must combine EXACTLY 3 ingredients to bake or simmer!`);
         return;
     }
 
-    // Isolate chosen keys and sort them alphabetically
     let keysArr = activePotContents.map(i => i.key).sort();
     let recipeMatchKey = keysArr.join(',');
-    
-    // FIXED: The tracking key is now completely bound to sorted keys, preventing duplicate entries!
-    let trackingStorageKey = `${currentMode}:${recipeMatchKey}`;
+    let trackingStorageKey = `recipe:${recipeMatchKey}`;
 
     let dishTitle = "";
     let dishRecipe = "";
     
-    const database = currentMode === "main" ? window.extraRecipes : window.dessertRecipes;
+    let matchedData = null;
+    let foundInMode = currentMode;
 
-    // A. DIRECT STRIKE MATCH FROM DATABASE
-    if (database && database[recipeMatchKey]) {
-        dishTitle = database[recipeMatchKey].title;
-        dishRecipe = database[recipeMatchKey].realWay;
-    } 
-    // B. DYNAMIC CLONING SUBSYSTEM
-    else {
+    if (window.extraRecipes && window.extraRecipes[recipeMatchKey]) {
+        matchedData = window.extraRecipes[recipeMatchKey];
+        foundInMode = "main";
+    } else if (window.dessertRecipes && window.dessertRecipes[recipeMatchKey]) {
+        matchedData = window.dessertRecipes[recipeMatchKey];
+        foundInMode = "dessert";
+    }
+
+    if (matchedData) {
+        dishTitle = matchedData.title;
+        dishRecipe = matchedData.realWay;
+    } else {
+        const database = currentMode === "main" ? window.extraRecipes : window.dessertRecipes;
         let closestMatchKey = null;
         let highestSharedCount = 0;
 
@@ -122,21 +173,26 @@ function compilePotRecipe() {
             dishTitle = `Improvised ${baseRecipe.title}`;
             dishRecipe = `INGREDIENTS:\n• Custom Mix: ${activeItems}\n\nCULINARY METHOD (Adapted directly from your "${baseRecipe.title}" blueprint):\n${baseRecipe.realWay}`;
         } else {
-            dishTitle = "Chef's Hand-Tossed Stir Fry";
-            dishRecipe = "INGREDIENTS:\n• 3 Selected Pantry Items\n\nSTEPS:\n1. Mince all solid components evenly.\n2. Shallow fry in butter or lard over a rolling induction flame.\n3. Deglaze with cooking liquid choices to cleanly bind the flavor notes together.";
+            dishTitle = currentMode === "main" ? "Chef's Hand-Tossed Stir Fry" : "Baker's Choice Pastry Board";
+            dishRecipe = "INGREDIENTS:\n• 3 Selected Pantry Items\n\nSTEPS:\n1. Mince components down uniformly.\n2. Apply controlled heat using the kitchen station layout configuration.\n3. Pull when edges turn crisp.";
         }
     }
 
-    // FIXED: If the unique recipe combination already exists in our collection array, do not push it again!
     if (unlockedRecipes.some(r => r.id === trackingStorageKey)) {
-        alert(`🍳 You made ${dishTitle} again! Excellent technique, but you've already noted this down in your Journal.`);
+        alert(`🍳 You created "${dishTitle}" again! You already have this in your Journal.`);
         clearStockpot();
         return;
     }
 
-    alert(`✨ NEW RECIPE UNLOCKED: ${dishTitle}!`);
+    alert(`✨ NEW RECIPE DISCOVERED: ${dishTitle}!`);
 
-    unlockedRecipes.push({ id: trackingStorageKey, title: dishTitle, text: dishRecipe });
+    unlockedRecipes.push({ 
+        id: trackingStorageKey, 
+        title: dishTitle, 
+        text: dishRecipe,
+        recipeType: foundInMode 
+    });
+    
     localStorage.setItem('discovered_recipes_v2', JSON.stringify(unlockedRecipes));
     renderDiscoveredJournal();
     clearStockpot();
@@ -155,7 +211,7 @@ function renderDiscoveredJournal() {
         const card = document.createElement('button');
         card.className = 'recipe-unlock-card';
         card.innerText = recipe.title;
-        card.style.borderColor = recipe.id.startsWith("main") ? "#e67e22" : "#9b59b6";
+        card.style.borderColor = recipe.recipeType === "main" ? "#e07a5f" : "#9a7aa0";
         card.onclick = () => openRealWorldModal(recipe.title, recipe.text);
         box.appendChild(card);
     });
