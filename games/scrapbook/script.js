@@ -36,6 +36,7 @@ function initKitchenSystem() {
     renderDiscoveredMilestones();
 }
 
+// Ingredients disappear into the pot, spawn top bubbles, and register in your layout tracker box
 function addIngredientToPot(key) {
     if (activePotContents.length >= 4) {
         alert("The stockpot is full! Cook or reset current mixture.");
@@ -43,23 +44,37 @@ function addIngredientToPot(key) {
     }
     activePotContents.push(key);
     
-    // Generates a large retro bubble right at the top rim of your pot
+    // 1. Generate the giant pixel bubbles at the rim of the pot
     const layer = document.getElementById('soup-bubble-layer');
     const bubble = document.createElement('div');
     bubble.className = 'pixel-bubble';
-    
-    // Distribute left percentage coordinates randomly (leaving room for 24px width)
     let randomSpread = Math.floor(Math.random() * 65) + 5;
     bubble.style.left = `${randomSpread}%`;
-    
     layer.appendChild(bubble);
+
+    // 2. Look up the vector data matching the selection key across category maps
+    let itemMatch = null;
+    Object.keys(pantryData).forEach(cat => {
+        if (pantryData[cat][key]) itemMatch = pantryData[cat][key];
+    });
+
+    if (itemMatch) {
+        // 3. Render a detailed graphics card inside your tracking sidebar desk panel
+        const trackerList = document.getElementById('tracker-pills-list');
+        const itemRow = document.createElement('div');
+        itemRow.className = 'tracker-item-row';
+        itemRow.innerHTML = `${itemMatch.svg}<span>${itemMatch.name}</span>`;
+        trackerList.appendChild(itemRow);
+    }
 }
 
-
+// Clears bubbles and empties the sidebar text log container cleanly
 function clearStockpot() {
     activePotContents = [];
     document.getElementById('soup-bubble-layer').innerHTML = '';
+    document.getElementById('tracker-pills-list').innerHTML = ''; // Wipes item row cards completely
 }
+
 
 function compilePotRecipe() {
     if (activePotContents.length === 0) {
