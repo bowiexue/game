@@ -44,8 +44,9 @@ function loadPantryShelves() {
 }
 
 function addIngredientToPot(key, label, rawSVG) {
-    if (activePotContents.length >= 4) {
-        alert("The stockpot is full! Simmer or discard items.");
+    // UPDATED: Limit the stockpot to exactly 3 items max instead of 4
+    if (activePotContents.length >= 3) {
+        alert("The stockpot is full! Simmer your 3 ingredients or discard items.");
         return;
     }
     activePotContents.push({ key: key, label: label, mode: currentMode });
@@ -72,33 +73,56 @@ function clearStockpot() {
     document.getElementById('tracker-pills-list').innerHTML = '';
 }
 
+// UPDATED: Rewritten combination processor targeting exactly 3 elements and real-world lookups
 function compilePotRecipe() {
-    if (activePotContents.length === 0) {
-        alert("The stockpot is empty! Drop items in first.");
+    // ENFORCED: Must be precisely 3 ingredients
+    if (activePotContents.length !== 3) {
+        alert(`Your stockpot contains ${activePotContents.length} items. You must combine EXACTLY 3 ingredients to simmer a real meal!`);
         return;
     }
 
     // Isolate component lists
     let keysArr = activePotContents.map(i => i.key).sort();
     let labelsArr = activePotContents.map(i => i.label);
-    let searchKey = `${currentMode}:${keysArr.join(',')}`;
+    
+    // Build lookup keys matching extraRecipes and dessertRecipes from your data file
+    let recipeMatchKey = keysArr.join(',');
+    let trackingStorageKey = `${currentMode}:${recipeMatchKey}`;
 
-    // Procedural Combo Generator Engine to safely scale across 200+ combinations
     let dishTitle = "";
     let dishRecipe = "";
+    let matchedData = null;
 
+    // Check against your database files loaded into your window/global scopes
     if (currentMode === "main") {
-        dishTitle = `Savory ${labelsArr[0]} & ${labelsArr[1] || "Herb"} Plate`;
-        dishRecipe = `Pan-sear your ${labelsArr[0]} in a scorching hot skillet. Toss in your chosen starch base (${labelsArr[1] || "greens"}) and glaze with savory accents until golden brown. Serve hot.`;
+        if (typeof extraRecipes !== 'undefined' && extraRecipes[recipeMatchKey]) {
+            matchedData = extraRecipes[recipeMatchKey];
+        }
     } else {
-        dishTitle = `Gourmet Glazed ${labelsArr[0]} ${labelsArr[1] || "Confection"}`;
-        dishRecipe = `Gently whisk your sugar base and ${labelsArr[0]} together in a saucepan over medium heat. Fold into your pastry base (${labelsArr[1] || "cream crust"}), chill, and cover with sweet icing toppings.`;
+        if (window.dessertRecipes && window.dessertRecipes[recipeMatchKey]) {
+            matchedData = window.dessertRecipes[recipeMatchKey];
+        }
+    }
+
+    if (matchedData) {
+        // If an explicit database item exists, extract your custom real-world recipe methods
+        dishTitle = matchedData.title;
+        dishRecipe = matchedData.realWay;
+    } else {
+        // Dynamic procedural generation using all 3 items so it doesn't look copy-and-pasted
+        if (currentMode === "main") {
+            dishTitle = `Rustic ${labelsArr[0]} & ${labelsArr[1]} Hash`;
+            dishRecipe = `Carefully prep your raw ${labelsArr[0]} and clean your ${labelsArr[1]}. Heat a splash of oil in your frying pan over a medium flame, tossing the chopped elements together. Finish by drizzling a layer of fresh ${labelsArr[2]} over the plate before serving hot.`;
+        } else {
+            dishTitle = `Deconstructed ${labelsArr[0]} & ${labelsArr[1]} Parfait`;
+            dishRecipe = `Gently chill your sweet ${labelsArr[0]} base inside a mixing bowl. Carefully crush or fold your pieces of ${labelsArr[1]} evenly into glass ramekins, layering the elements systematically. Crown the dessert with a generous accent of ${labelsArr[2]} before presenting.`;
+        }
     }
 
     alert(`✨ UNLOCKED: ${dishTitle}!`);
 
-    if (!unlockedRecipes.some(r => r.id === searchKey)) {
-        unlockedRecipes.push({ id: searchKey, title: dishTitle, text: dishRecipe });
+    if (!unlockedRecipes.some(r => r.id === trackingStorageKey)) {
+        unlockedRecipes.push({ id: trackingStorageKey, title: dishTitle, text: dishRecipe });
         localStorage.setItem('discovered_recipes_v2', JSON.stringify(unlockedRecipes));
         renderDiscoveredJournal();
     }
