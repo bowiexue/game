@@ -1,0 +1,205 @@
+/* Import a gorgeous, authentic pixel game font */
+@import url('https://googleapis.com');
+
+:root {
+    --bg: #f9f1f0;             /* Soft strawberry milk pastel pink background */
+    --ui-frame: #3d342e;        /* Deep cocoa brown for sharp outlines */
+    --text: #4a3e3d;            /* Matching dark cocoa text tone */
+    --ticket-bg: #fffbf4;       /* Creamy beige flavor card background */
+    --accent-orange: #f3a683;   /* Warm peach accents */
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'VT323', monospace; /* Applies the beautiful arcade font everywhere */
+    letter-spacing: 0.5px;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    padding: 30px 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Navigation Row Container */
+.nav-row {
+    width: 100%;
+    max-width: 480px;
+    margin-bottom: 15px;
+}
+
+.back-btn {
+    background: var(--ui-frame);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 1.3rem;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0 4px 0 #211b18;
+    transition: transform 0.1s;
+}
+.back-btn:active {
+    transform: translateY(3px);
+    box-shadow: none;
+}
+
+/* The Unified Game Console Box */
+.game-box {
+    background: white;
+    border: 4px solid var(--ui-frame);
+    border-radius: 20px;
+    padding: 24px;
+    width: 100%;
+    max-width: 480px;
+    box-shadow: 0 10px 0 rgba(61, 52, 46, 0.15);
+    text-align: center;
+}
+
+/* Beautiful Rounded Recipe Ticket */
+.order-ticket {
+    background: var(--ticket-bg);
+    border: 3px dashed var(--accent-orange);
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 25px;
+    font-size: 1.5rem;
+    text-align: left;
+    line-height: 1.3;
+    font-weight: bold;
+}
+
+/* The Boba Tea Glass Container */
+.cup-container {
+    width: 120px;
+    height: 170px;
+    border: 5px solid var(--ui-frame);
+    border-top: none;
+    border-bottom-left-radius: 24px;
+    border-bottom-right-radius: 24px;
+    margin: 0 auto 30px auto;
+    position: relative;
+    background: #fff;
+    overflow: hidden;
+    box-shadow: inset -10px 0 0 rgba(0,0,0,0.03);
+}
+
+.liquid {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 0%;
+    transition: height 0.4s ease-out, background-color 0.4s;
+    opacity: 0.9;
+    z-index: 1;
+}
+
+.boba-canvas {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+    pointer-events: none;
+}
+
+.pixel-garnish {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    transform: translate(-50%, -50%);
+}
+
+.pixel-garnish svg {
+    width: 100%;
+    height: 100%;
+    image-rendering: pixelated;
+}
+
+/* Tab Management Grid */
+.tabs {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 5px;
+    margin-bottom: 15px;
+    background: #eedfd2;
+    padding: 6px;
+    border-radius: 10px;
+    border: 3px solid var(--ui-frame);
+}
+
+.tab-btn {
+    padding: 6px 2px;
+    background: transparent;
+    border: none;
+    font-weight: bold;
+    font-size: 1.2rem;
+    cursor: pointer;
+    border-radius: 6px;
+    color: var(--ui-frame);
+}
+.tab-btn.active {
+    background: var(--ui-frame);
+    color: white;
+}
+
+/* Selection Buttons Grid Layout */
+.ingredients-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+.ing-btn {
+    background: #fbfbfb;
+    border: 3px solid var(--ui-frame);
+    padding: 10px;
+    border-radius: 10px;
+    font-size: 1.3rem;
+    font-weight: bold;
+    cursor: pointer;
+    color: var(--ui-frame);
+    box-shadow: 0 4px 0 var(--ui-frame);
+    transition: transform 0.1s, box-shadow 0.1s;
+}
+.ing-btn:hover {
+    background: #fff9f3;
+}
+.ing-btn:active {
+    transform: translateY(3px);
+    box-shadow: 0 1px 0 var(--ui-frame);
+}
+
+/* Lower Controls Alignment Row */
+.action-bar {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 15px;
+}
+
+.action-bar button {
+    padding: 14px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    border-radius: 12px;
+    border: 4px solid var(--ui-frame);
+    cursor: pointer;
+    color: white;
+    transition: transform 0.1s;
+}
+.action-bar button:active {
+    transform: translateY(4px);
+    box-shadow: none;
+}
