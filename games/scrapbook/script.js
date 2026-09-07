@@ -31,14 +31,17 @@ function addIngredientToPot(key, label) {
     const tag = document.createElement('span');
     tag.style.background = '#34495e';
     tag.style.color = 'white';
-    tag.style.padding = '4px 8px';
-    tag.style.fontSize = '0.7rem';
-    tag.style.borderRadius = '2px';
+    tag.style.padding = '4px 6px';
+    tag.style.fontSize = '10px';                 /* Small, neat font size */
+    tag.style.borderRadius = '4px';
     tag.style.border = '2px solid #2c3e50';
+    tag.style.whiteSpace = 'nowrap';             /* Stops long text from forcing two text lines */
+    tag.style.display = 'inline-block';
     tag.innerText = label;
     
     document.getElementById('pot-contents').appendChild(tag);
 }
+
 
 function clearStockpot() {
     activePotContents = [];
