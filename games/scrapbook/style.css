@@ -1,7 +1,7 @@
 :root {
     /* Cozy Pastel Wood-Fired Palette */
     --kitchen-bg: #fdfaf6;        /* Warm cream parchment background */
-    --border-dark: #3a2e2b;       /* Soft charcoal-brown outline (Never use pure #000) */
+    --border-dark: #3a2e2b;       /* Soft charcoal-brown outline */
     --panel-white: #ffffff;
     --counter-tan: #f5edd7;       /* Warm wooden cutting board tan */
     --pot-steel: #abb4b9;
@@ -17,7 +17,6 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    /* Clean, highly readable typewriter print style */
     font-family: 'Courier New', Courier, monospace; 
     font-weight: 700;
 }
@@ -68,54 +67,18 @@ body {
 .clear-btn:active { transform: translateY(4px); box-shadow: none; }
 
 /* ========================================================
-   MODE TOGGLE BUTTONS (MAIN / DESSERT)
-   ======================================================== */
-.mode-toggle-panel {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    width: 100%;
-    margin-bottom: 18px;
-}
-.mode-toggle-btn {
-    padding: 14px;
-    font-size: 0.95rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    border: 3px solid var(--border-dark);
-    border-radius: 10px;
-    cursor: pointer;
-    background: #fdfdfd;
-    color: var(--border-dark);
-    box-shadow: 0 5px 0 var(--border-dark);
-    transition: all 0.05s ease-in-out;
-}
-.mode-toggle-btn.active-main {
-    background: var(--main-orange);
-    color: #ffffff;
-    transform: translateY(3px);
-    box-shadow: 0 2px 0 var(--border-dark);
-}
-.mode-toggle-btn.active-dessert {
-    background: var(--dessert-purple);
-    color: #ffffff;
-    transform: translateY(3px);
-    box-shadow: 0 2px 0 var(--border-dark);
-}
-
-/* ========================================================
-   MAIN GAME GRID LAYOUT
+   MAIN GAME GRID LAYOUT (FIXED TO MATCH YOUR HTML)
    ======================================================== */
 .cooking-grid {
     display: grid;
-    grid-template-columns: 380px 1fr 280px; /* Added proper balance for Pot Mixture box */
+    grid-template-columns: 360px 1fr; /* Exact 2-column breakdown matching your code structure */
     gap: 25px;
     max-width: 1200px;
     width: 100%;
 }
 
 /* ========================================================
-   THE PANTRY ROW ELEMENTS
+   LEFT COLUMN: PANTRY
    ======================================================== */
 .section-pantry {
     background: var(--panel-white);
@@ -137,6 +100,38 @@ body {
     padding-bottom: 8px;
 }
 
+.mode-toggle-panel {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    width: 100%;
+    margin-bottom: 18px;
+}
+.mode-toggle-btn {
+    padding: 12px 6px;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    font-weight: bold;
+    border: 3px solid var(--border-dark);
+    border-radius: 8px;
+    cursor: pointer;
+    background: #fdfdfd;
+    color: var(--border-dark);
+    box-shadow: 0 4px 0 var(--border-dark);
+}
+.mode-toggle-btn.active-main {
+    background: var(--main-orange);
+    color: #ffffff;
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 var(--border-dark);
+}
+.mode-toggle-btn.active-dessert {
+    background: var(--dessert-purple);
+    color: #ffffff;
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 var(--border-dark);
+}
+
 .shelf-title {
     font-size: 0.8rem;
     letter-spacing: 0.5px;
@@ -151,7 +146,7 @@ body {
 .ingredient-shelf {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
+    gap: 10px;
     margin: 12px 0;
 }
 
@@ -159,32 +154,27 @@ body {
     background: #fdfbf7;
     border: 3px solid var(--border-dark);
     border-radius: 8px;
-    padding: 8px;
+    padding: 6px;
     cursor: pointer;
-    height: 85px;
+    height: 80px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    font-size: 0.72rem;
-    box-shadow: 0 4px 0 rgba(58, 46, 43, 0.15);
-    transition: transform 0.1s, background-color 0.1s;
+    font-size: 0.68rem;
+    box-shadow: 0 3px 0 rgba(58, 46, 43, 0.15);
 }
 .ing-node:hover { 
     background: #f6ebd4; 
-    transform: translateY(-2px);
-}
-.ing-node:active {
-    transform: translateY(2px);
 }
 .ing-node svg { 
-    width: 36px; 
-    height: 36px; 
-    margin-bottom: 6px; 
+    width: 32px; 
+    height: 32px; 
+    margin-bottom: 4px; 
 }
 
 /* ========================================================
-   STOVE STATIONS & CONTROLS
+   RIGHT COLUMN: STOVE, TRACKER & JOURNAL CONTEXT
    ======================================================== */
 .section-kitchen {
     display: flex;
@@ -192,23 +182,23 @@ body {
     gap: 25px;
 }
 
+.stove-and-tracker-row {
+    display: grid;
+    grid-template-columns: 1fr 240px; /* Splitting Workspace and Pot List beautifully side by side */
+    gap: 20px;
+    width: 100%;
+}
+
 .stove-station {
     background: var(--counter-tan);
     border: 4px solid var(--border-dark);
     border-radius: 12px;
-    height: 390px;
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     box-shadow: inset 0 -8px 0 rgba(0,0,0,0.05);
-}
-
-.stove-station h3 {
-    font-size: 1rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 25px;
 }
 
 .stockpot {
@@ -221,6 +211,7 @@ body {
     border-bottom-right-radius: 30px;
     position: relative;
     box-shadow: inset -20px 0 0 rgba(0,0,0,0.08);
+    margin-top: 30px; /* Clearance for header title text */
 }
 .stockpot::before, .stockpot::after {
     content: ''; position: absolute; top: 18px; width: 22px; height: 10px;
@@ -229,33 +220,29 @@ body {
 .stockpot::before { left: -26px; border-radius: 6px 0 0 6px; }
 .stockpot::after { right: -26px; border-radius: 0 6px 6px 0; }
 
+.pot-contents {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
 .cook-btn {
-    margin-top: 30px;
+    margin-top: 20px;
     background: var(--success-green);
     color: #ffffff;
     border: 3px solid var(--border-dark);
-    padding: 14px 36px;
-    font-size: 1rem;
+    padding: 12px 30px;
+    font-size: 0.95rem;
     text-transform: uppercase;
     letter-spacing: 1px;
     cursor: pointer;
     border-radius: 10px;
     box-shadow: 0 5px 0 #5f8d75;
-    transition: transform 0.1s;
 }
 .cook-btn:active { transform: translateY(5px); box-shadow: none; }
 
-.discard-link {
-    margin-top: 12px;
-    font-size: 0.8rem;
-    color: #a87663;
-    text-decoration: underline;
-    cursor: pointer;
-}
-.discard-link:hover { color: var(--danger-red); }
-
 /* ========================================================
-   RIGHT PANEL: TRACKER / POT CONTENTS BOX
+   TRACKER PANEL (POT CONTENTS LIST BOX)
    ======================================================== */
 .added-ingredients-tracker {
     background: var(--panel-white);
@@ -264,7 +251,7 @@ body {
     padding: 16px;
     display: flex;
     flex-direction: column;
-    height: 390px;
+    height: 380px;
     box-shadow: inset -4px -4px 0 rgba(0,0,0,0.02);
 }
 .added-ingredients-tracker h4 {
@@ -279,32 +266,75 @@ body {
 .tracker-pills-list {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
     overflow-y: auto;
 }
 .tracker-item-row {
     background: #fdfcf9;
     border: 3px solid var(--border-dark);
     border-radius: 6px;
-    padding: 6px 12px;
+    padding: 6px 10px;
     display: flex;
     align-items: center;
-    gap: 10px;
-    font-size: 0.75rem;
+    gap: 8px;
+    font-size: 0.7rem;
 }
-.tracker-item-row svg { width: 24px; height: 24px; flex-shrink: 0; }
+.tracker-item-row svg { width: 22px; height: 22px; flex-shrink: 0; }
 
 /* ========================================================
-   LOWER JOURNAL HUB LAYOUT
+   BUBBLE ANIMATION GRAPHICS (BROUGHT BACK!)
+   ======================================================== */
+.soup-bubble-layer {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0; 
+    left: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.pixel-bubble {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    border: 3px solid var(--border-dark);
+    bottom: 10px; /* Positions perfectly over pot bottom bounds */
+    border-radius: 4px;
+    image-rendering: pixelated;
+    animation: bubbleFloat 1.3s infinite ease-in;
+    z-index: 20;
+}
+
+@keyframes bubbleFloat {
+    0% { 
+        transform: scale(0.2) translateY(0); 
+        opacity: 0; 
+    }
+    15% { 
+        opacity: 1; 
+        transform: scale(1) translateY(-15px); 
+    }
+    80% { 
+        opacity: 1; 
+        transform: scale(0.9) translateY(-65px); 
+    }
+    100% { 
+        transform: scale(0) translateY(-90px); 
+        opacity: 0; 
+    }
+}
+
+/* ========================================================
+   LOWER JOURNAL ROW
    ======================================================== */
 .recipe-book-panel {
     background: var(--panel-white);
     border: 4px solid var(--border-dark);
     border-radius: 12px;
     padding: 20px;
-    min-height: 260px;
+    min-height: 275px;
     width: 100%;
-    grid-column: span 3; /* Forces container to span full width layout neatly */
 }
 .recipe-book-panel h4 {
     font-size: 0.95rem;
@@ -317,22 +347,21 @@ body {
 .saved-recipe-grid {
     display: flex;
     flex-wrap: wrap;
-    gap: 12px;
+    gap: 10px;
 }
 .recipe-unlock-card {
     background: #f1faf6;
     border: 3px solid var(--border-dark);
-    padding: 10px 18px;
-    font-size: 0.82rem;
+    padding: 10px 16px;
+    font-size: 0.8rem;
     cursor: pointer;
     border-radius: 8px;
     box-shadow: 0 4px 0 var(--border-dark);
-    transition: transform 0.05s;
 }
 .recipe-unlock-card:active { transform: translateY(4px); box-shadow: none; }
 
 /* ========================================================
-   RECIPE CARD OVERLAY MODAL DISPLAY WINDOW
+   MODAL WINDOW BOX OVERLAYS
    ======================================================== */
 .popup-modal {
     position: fixed;
@@ -355,67 +384,25 @@ body {
     margin-bottom: 14px;
     border-bottom: 3px solid var(--border-dark);
     padding-bottom: 6px;
-}
-#modal-text {
+    }
+    #modal-text {
     font-size: 0.85rem;
     line-height: 1.5;
-    white-space: pre-line; /* IMPORTANT: Keeps multi-line step loops structured */
+    white-space: pre-line; 
+    /* Enforces clean multi-line recipe text structure breaks */
     color: #4e3f3b;
     background: #fbf6ec;
     padding: 14px;
     border-radius: 8px;
     border: 2px dashed var(--border-dark);
-}
-
+    }
 .close-modal-btn {
-    background: var(--danger-red); 
-    color: white; 
+    background: var(--danger-red);
+    color: white;
     border: 3px solid var(--border-dark);
     padding: 6px 14px;
     cursor: pointer;
     border-radius: 6px;
     float: right;
     margin-top: -12px;
-}
-/* ========================================================
-   BUBBLE PARTICLES STYLING
-   ======================================================== */
-.soup-bubble-layer {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0; 
-    left: 0;
-    overflow: hidden;
-    pointer-events: none; /* Keeps bubbles from blocking button clicks */
-}
-
-.pixel-bubble {
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    border: 3px solid var(--border-dark);
-    bottom: 20px; /* Starts inside the pot soup line */
-    border-radius: 4px;
-    image-rendering: pixelated;
-    animation: bubbleFloat 1.2s infinite ease-in;
-}
-
-@keyframes bubbleFloat {
-    0% { 
-        transform: scale(0.3) translateY(0); 
-        opacity: 0; 
-    }
-    20% { 
-        opacity: 1; 
-        transform: scale(1) translateY(-20px); 
-    }
-    80% { 
-        opacity: 1; 
-        transform: scale(0.9) translateY(-70px); 
-    }
-    100% { 
-        transform: scale(0) translateY(-100px); 
-        opacity: 0; 
-    }
 }
