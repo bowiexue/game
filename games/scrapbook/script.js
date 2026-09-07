@@ -40,11 +40,22 @@ function loadPantryShelves() {
     renderDiscoveredJournal();
 }
 
+// UPDATED: Strictly blocks duplicate ingredients from entering the pot
 function addIngredientToPot(key, label, rawSVG) {
+    // 1. HARD LIMIT: Stop if the pot is already holding 3 items
     if (activePotContents.length >= 3) {
         alert("The stockpot is full! Simmer your 3 ingredients or discard items.");
         return;
     }
+
+    // 2. DUPLICATE CHECKER: Scans the pot array to see if this item key was already added
+    const isDuplicate = activePotContents.some(item => item.key === key);
+    if (isDuplicate) {
+        alert(`❌ You already added ${label} to the pot! A valid dish requires 3 completely distinct ingredients.`);
+        return;
+    }
+
+    // If it passes both rules, allow the item to enter the pot workspace
     activePotContents.push({ key: key, label: label, mode: currentMode });
     
     const layer = document.getElementById('soup-bubble-layer');
