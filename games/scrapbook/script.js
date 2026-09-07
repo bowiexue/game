@@ -65,14 +65,11 @@ function compilePotRecipe() {
         return;
     }
     
+    // Sort items alphabetically to match the lookup keys precisely
     let searchKey = activePotContents.sort().join(',');
     let match = window.recipeBook[searchKey];
 
-    if (!match && window.components) {
-        let simpleKey = activePotContents.filter(i => Object.values(window.components).some(arr => arr.includes(i))).sort().join(',');
-        match = window.recipeBook[simpleKey];
-    }
-
+    // FIX: If it matches a verified handwritten recipe, unlock it!
     if (match) {
         alert(`✨ SUCCESS: Unlocked ${match.title}!`);
         if (!unlockedRecipes.includes(searchKey)) {
@@ -81,10 +78,12 @@ function compilePotRecipe() {
             renderDiscoveredMilestones();
         }
     } else {
-        alert("💥 The mix burned! No distinct meal combination identified. Try matching a protein, starch, and sauce!");
+        // If it doesn't match, give a funny cooking fail notice instead of an ugly copy-paste string
+        alert("💥 The mix burned! No distinct meal recipe identified. Look closely at the available components in your tabs!");
     }
     clearStockpot();
 }
+
 
 function renderDiscoveredMilestones() {
     const box = document.getElementById('saved-recipe-grid');
