@@ -126,7 +126,7 @@ body {
     justify-content: center;
 }
 
-/* The Mixing Stockpot */
+/* The Mixing Stockpot Container */
 .stockpot {
     width: 140px;
     height: 120px;
@@ -145,16 +145,22 @@ body {
 .stockpot::before { left: -24px; border-radius: 4px 0 0 4px; }
 .stockpot::after { right: -24px; border-radius: 0 4px 4px 0; }
 
+/* FIX: Forces items to align horizontally in small blocks rather than long wide bars */
 .pot-contents {
     position: absolute;
-    bottom: 10px;
+    bottom: 12px;
+    left: 0;
     width: 100%;
+    height: auto;
     display: flex;
-    justify-content: center;
-    gap: 4px;
-    flex-wrap: wrap;
-    padding: 0 10px;
+    flex-direction: row;      /* Arranges ingredients side-by-side */
+    flex-wrap: wrap;          /* Rows wrap down naturally if you add more items */
+    justify-content: center;  /* Centers them in the pot bottom */
+    align-items: flex-end;
+    gap: 6px;                 /* Keeps a clean tiny gap between icons */
+    padding: 0 12px;          /* Stops them from touching the outer walls */
 }
+
 
 .cook-btn {
     margin-top: 25px;
