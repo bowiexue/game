@@ -43,16 +43,18 @@ function addIngredientToPot(key) {
     }
     activePotContents.push(key);
     
-    // Generate a beautiful procedural pixel bubble inside the hot soup water layer
+    // Generates a large retro bubble right at the top rim of your pot
     const layer = document.getElementById('soup-bubble-layer');
     const bubble = document.createElement('div');
     bubble.className = 'pixel-bubble';
     
-    let randomSpread = Math.floor(Math.random() * 70) + 15;
+    // Distribute left percentage coordinates randomly (leaving room for 24px width)
+    let randomSpread = Math.floor(Math.random() * 65) + 5;
     bubble.style.left = `${randomSpread}%`;
     
     layer.appendChild(bubble);
 }
+
 
 function clearStockpot() {
     activePotContents = [];
