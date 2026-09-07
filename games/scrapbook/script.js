@@ -73,49 +73,56 @@ function clearStockpot() {
     document.getElementById('tracker-pills-list').innerHTML = '';
 }
 
-// UPDATED: Rewritten combination processor targeting exactly 3 elements and real-world lookups
+// UPDATED: Completely enforces exactly 3 ingredients and builds dynamic custom text strings
+// UPDATED: Strictly requires 3 ingredients and actively pulls from your script-data-2 database
 function compilePotRecipe() {
-    // ENFORCED: Must be precisely 3 ingredients
+    // 1. HARD LIMIT: Stop execution immediately if it's not EXACTLY 3 ingredients
     if (activePotContents.length !== 3) {
-        alert(`Your stockpot contains ${activePotContents.length} items. You must combine EXACTLY 3 ingredients to simmer a real meal!`);
+        alert(`The stockpot contains ${activePotContents.length} items. You must combine EXACTLY 3 ingredients to cook a meal!`);
         return;
     }
 
-    // Isolate component lists
+    // Isolate chosen keys and alphabetical strings
     let keysArr = activePotContents.map(i => i.key).sort();
-    let labelsArr = activePotContents.map(i => i.label);
-    
-    // Build lookup keys matching extraRecipes and dessertRecipes from your data file
     let recipeMatchKey = keysArr.join(',');
     let trackingStorageKey = `${currentMode}:${recipeMatchKey}`;
 
     let dishTitle = "";
     let dishRecipe = "";
-    let matchedData = null;
+    
+    // Target the correct dictionary from your database file (script-data-2.js)
+    const database = currentMode === "main" ? extraRecipes : window.dessertRecipes;
 
-    // Check against your database files loaded into your window/global scopes
-    if (currentMode === "main") {
-        if (typeof extraRecipes !== 'undefined' && extraRecipes[recipeMatchKey]) {
-            matchedData = extraRecipes[recipeMatchKey];
-        }
-    } else {
-        if (window.dessertRecipes && window.dessertRecipes[recipeMatchKey]) {
-            matchedData = window.dessertRecipes[recipeMatchKey];
-        }
-    }
+    // 2. CHECK FOR EXACT DATABASE MATCH
+    if (database && database[recipeMatchKey]) {
+        dishTitle = database[recipeMatchKey].title;
+        dishRecipe = database[recipeMatchKey].realWay;
+    } 
+    // 3. FALLBACK: Direct database adaptation (No lazy copy-and-paste sentences)
+    else {
+        // Find alternative dishes in your database that share at least 1 or 2 ingredients
+        let closestMatchKey = null;
+        let highestSharedCount = 0;
 
-    if (matchedData) {
-        // If an explicit database item exists, extract your custom real-world recipe methods
-        dishTitle = matchedData.title;
-        dishRecipe = matchedData.realWay;
-    } else {
-        // Dynamic procedural generation using all 3 items so it doesn't look copy-and-pasted
-        if (currentMode === "main") {
-            dishTitle = `Rustic ${labelsArr[0]} & ${labelsArr[1]} Hash`;
-            dishRecipe = `Carefully prep your raw ${labelsArr[0]} and clean your ${labelsArr[1]}. Heat a splash of oil in your frying pan over a medium flame, tossing the chopped elements together. Finish by drizzling a layer of fresh ${labelsArr[2]} over the plate before serving hot.`;
+        Object.keys(database).forEach(dbKey => {
+            let dbIngredients = dbKey.split(',');
+            let sharedCount = keysArr.filter(ing => dbIngredients.includes(ing)).length;
+            
+            if (sharedCount > highestSharedCount) {
+                highestSharedCount = sharedCount;
+                closestMatchKey = dbKey;
+            }
+        });
+
+        if (closestMatchKey && highestSharedCount > 0) {
+            // Pull a real real-world method from your database file to base it on
+            let baseRecipe = database[closestMatchKey];
+            dishTitle = `Improvised ${baseRecipe.title}`;
+            dishRecipe = `Inspired by your recipe for "${baseRecipe.title}". ${baseRecipe.realWay} (Adapted by swapping out missing elements with your selected pantry items).`;
         } else {
-            dishTitle = `Deconstructed ${labelsArr[0]} & ${labelsArr[1]} Parfait`;
-            dishRecipe = `Gently chill your sweet ${labelsArr[0]} base inside a mixing bowl. Carefully crush or fold your pieces of ${labelsArr[1]} evenly into glass ramekins, layering the elements systematically. Crown the dessert with a generous accent of ${labelsArr[2]} before presenting.`;
+            // Absolute last resort if the user managed to pick something completely unrelated
+            dishTitle = "Chef's Freestyle Platter";
+            dishRecipe = "A unique culinary experiment using elements outside of standard culinary text boundaries. Flash-cook your selected ingredients together over medium heat and season to taste.";
         }
     }
 
@@ -128,6 +135,7 @@ function compilePotRecipe() {
     }
     clearStockpot();
 }
+
 
 function renderDiscoveredJournal() {
     const box = document.getElementById('saved-recipe-grid');
