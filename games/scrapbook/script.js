@@ -1,11 +1,11 @@
 // ============================================================================
-// LIVE SYSTEM ENGINE & BROWSING MEMORY
+// LIVE SYSTEM ENGINE & PROGRESS PROTECTION
 // ============================================================================
 let activePotContents = [];
 let unlockedRecipes = JSON.parse(localStorage.getItem('discovered_recipes')) || [];
 
 function initKitchenSystem() {
-    // Build and populate Pantry shelves out of Section A's data structures
+    // Build and populate Pantry shelves out of the external script-data files
     Object.keys(pantryData).forEach(cat => {
         const platformNode = document.getElementById(`shelf-${cat}`);
         Object.keys(pantryData[cat]).forEach(itemKey => {
@@ -13,39 +13,36 @@ function initKitchenSystem() {
             const cell = document.createElement('div');
             cell.className = 'ing-node';
             cell.innerHTML = `${data.svg}<div>${data.name}</div>`;
-            cell.onclick = () => addIngredientToPot(itemKey, data.name);
+            cell.onclick = () => addIngredientToPot(itemKey);
             platformNode.appendChild(cell);
         });
     });
     renderDiscoveredMilestones();
 }
 
-function addIngredientToPot(key, label) {
+// Ingredients disappear smoothly into the pot and trigger animated pixel bubbles
+function addIngredientToPot(key) {
     if (activePotContents.length >= 4) {
         alert("The stockpot is full! Cook or reset current mixture.");
         return;
     }
     activePotContents.push(key);
     
-    // Add visual label pill to pot
-    const tag = document.createElement('span');
-    tag.style.background = '#34495e';
-    tag.style.color = 'white';
-    tag.style.padding = '4px 6px';
-    tag.style.fontSize = '10px';                 /* Small, neat font size */
-    tag.style.borderRadius = '4px';
-    tag.style.border = '2px solid #2c3e50';
-    tag.style.whiteSpace = 'nowrap';             /* Stops long text from forcing two text lines */
-    tag.style.display = 'inline-block';
-    tag.innerText = label;
+    // Generate a beautiful procedural pixel bubble inside the hot soup water layer
+    const layer = document.getElementById('soup-bubble-layer');
+    const bubble = document.createElement('div');
+    bubble.className = 'pixel-bubble';
     
-    document.getElementById('pot-contents').appendChild(tag);
+    // Assign a randomized horizontal dispersion offset across the cooking pot
+    let randomSpread = Math.floor(Math.random() * 70) + 15;
+    bubble.style.left = `${randomSpread}%`;
+    
+    layer.appendChild(bubble);
 }
-
 
 function clearStockpot() {
     activePotContents = [];
-    document.getElementById('pot-contents').innerHTML = '';
+    document.getElementById('soup-bubble-layer').innerHTML = '';
 }
 
 function compilePotRecipe() {
@@ -54,15 +51,9 @@ function compilePotRecipe() {
         return;
     }
     
-    // Sort items alphabetically to perfectly match the lookup table keys
+    // Sort items alphabetically to perfectly align with the data database keys
     let searchKey = activePotContents.sort().join(',');
     let match = recipeBook[searchKey];
-    
-    if (!match) {
-        // Fallback filter search to find key pairings
-        let simpleKey = activePotContents.filter(i => Object.values(components).some(arr => arr.includes(i))).sort().join(',');
-        match = recipeBook[simpleKey];
-    }
 
     if (match) {
         alert(`✨ SUCCESS: Unlocked ${match.title}!`);
@@ -72,7 +63,7 @@ function compilePotRecipe() {
             renderDiscoveredMilestones();
         }
     } else {
-        alert("💥 The mix burned! No distinct meal recipe identified. Try linking a Protein, Carbs, and a Sauce combination!");
+        alert("💥 The mix burned! No distinct meal combination identified. Try matching a protein, starch, and sauce!");
     }
     clearStockpot();
 }
@@ -88,10 +79,6 @@ function renderDiscoveredMilestones() {
 
     unlockedRecipes.forEach(key => {
         let lookup = recipeBook[key];
-        if (!lookup) {
-            let simpleKey = key.split(',').filter(i => Object.values(components).some(arr => arr.includes(i))).sort().join(',');
-            lookup = recipeBook[simpleKey];
-        }
         
         const card = document.createElement('button');
         card.className = 'recipe-unlock-card';
@@ -120,5 +107,5 @@ function purgeMilestoneMemory() {
     }
 }
 
-// Execute core sequence
+// Execute the kitchen layout engine routine immediately at startup
 initKitchenSystem();
