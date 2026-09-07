@@ -16,66 +16,56 @@
     </div>
 
     <!-- MAIN TWO COLUMN GAME LAYOUT SYSTEM -->
-    <div class="cooking-grid">
-        
-        <!-- SIDEBAR PANTRY PLATFORM -->
-        <aside class="section-pantry">
-            <!-- Dynamic Kitchen Mode Buttons -->
-            <div class="mode-toggle-panel">
-                <button id="btn-mode-main" class="mode-toggle-btn active-main" onclick="toggleKitchenMode('main')">🍗 MAIN COURSE</button>
-                <button id="btn-mode-dessert" class="mode-toggle-btn" onclick="toggleKitchenMode('dessert')">🍰 DESSERT MODE</button>
-            </div>
+    <!-- MAIN TWO COLUMN GAME LAYOUT SYSTEM -->
+<div class="cooking-grid">
+    <!-- SIDEBAR PANTRY PLATFORM -->
+    <aside class="section-pantry">
+        <!-- Dynamic Kitchen Mode Buttons -->
+        <div class="mode-toggle-panel">
+            <button id="btn-mode-main" class="mode-toggle-btn active-main" onclick="toggleKitchenMode('main')">🍗 MAIN COURSE</button>
+            <button id="btn-mode-dessert" class="mode-toggle-btn" onclick="toggleKitchenMode('dessert')">🍰 DESSERT MODE</button>
+        </div>
+        <h3>🗄️ PANTRY STOCKS</h3>
+        <div class="shelf-title">📦 Category Base</div>
+        <div class="ingredient-shelf" id="shelf-proteins"></div>
+        <div class="shelf-title">🌾 Dry Ingredients</div>
+        <div class="ingredient-shelf" id="shelf-vegetables"></div>
+        <div class="shelf-title">Honey Toppings & Mixers</div>
+        <div class="ingredient-shelf" id="shelf-sauces"></div>
+    </aside>
 
-            <h3>🗄️ PANTRY STOCKS</h3>
-            
-            <div class="shelf-title">📦 Category Base</div>
-            <div class="ingredient-shelf" id="shelf-proteins"></div>
-            
-            <div class="shelf-title">🌾 Dry Ingredients</div>
-            <div class="ingredient-shelf" id="shelf-vegetables"></div>
-            
-            <div class="shelf-title">🍯 Toppings & Mixers</div>
-            <div class="ingredient-shelf" id="shelf-sauces"></div>
-        </aside>
-
-        <!-- KITCHEN COUNTERTOP & LOG HUB -->
-        <div class="section-kitchen">
-            
-            <!-- SIDE-BY-SIDE CONTAINER FOR POT WORKSPACE AND TRACKER PANEL -->
-            <div class="stove-and-tracker-row">
-
-                <!-- The Left Stove Range Countertop -->
-                <main class="stove-station" style="margin: 0; height: 380px;">
-                    <h3 style="position:absolute; top:15px; text-transform:uppercase; font-size:1rem; z-index:10;">♨️ Cooking Range</h3>
-                    
-                    <div class="stockpot">
-                        <div class="pot-contents" id="pot-contents">
-                            <div class="soup-bubble-layer" id="soup-bubble-layer"></div>
-                        </div>
+    <!-- KITCHEN COUNTERTOP & LOG HUB -->
+    <div class="section-kitchen">
+        <div class="stove-and-tracker-row">
+            <!-- Left Stove/Oven Countertop Workspace -->
+            <main class="stove-station" style="margin: 0; height: 380px;">
+                <h3 id="appliance-title" style="position:absolute; top:15px; text-transform:uppercase; font-size:1rem; z-index:10;">♨️ Cooking Range</h3>
+                
+                <!-- Dynamic Appliance Display Container -->
+                <div id="cooking-appliance-frame" class="stockpot">
+                    <div class="pot-contents" id="pot-contents">
+                        <div class="soup-bubble-layer" id="soup-bubble-layer"></div>
                     </div>
+                </div>
+                
+                <button class="cook-btn" id="cook-action-btn" onclick="compilePotRecipe()">SIMMER MIXTURE 🍳</button>
+                <button style="background:none; border:none; text-decoration:underline; font-size:0.75rem; color:#7f8c8d; margin-top:10px; cursor:pointer;" onclick="clearStockpot()">Clear Entire Container</button>
+            </main>
 
-                    <button class="cook-btn" onclick="compilePotRecipe()">SIMMER MIXTURE 🍳</button>
-                    <button style="background:none; border:none; text-decoration:underline; font-size:0.75rem; color:#7f8c8d; margin-top:10px; cursor:pointer;" onclick="clearStockpot()">Discard Contents</button>
-                </main>
-
-                <!-- THE RIGHT SIDE LOG TRACKER BOX -->
-                <aside class="added-ingredients-tracker">
-                    <h4>🍲 POT MIXTURE</h4>
-                    <div class="tracker-pills-list" id="tracker-pills-list">
-                        <!-- Placed items show up here -->
-                    </div>
-                </aside>
-
-            </div>
-
-            <!-- RECIPE JOURNAL UNLOCKS INDEX -->
-            <section class="recipe-book-panel">
-                <h4>📖 UNLOCKED RECIPE JOURNAL</h4>
-                <div class="saved-recipe-grid" id="saved-recipe-grid"></div>
-            </section>
+            <!-- THE RIGHT SIDE LOG TRACKER BOX WITH INDIVIDUAL REMOVALS -->
+            <aside class="added-ingredients-tracker">
+                <h4></div>🍲 POT MIXTURE</h4>
+                <div class="tracker-pills-list" id="tracker-pills-list"></div>
+            </aside>
         </div>
 
+        <!-- RECIPE JOURNAL UNLOCKS INDEX -->
+        <section class="recipe-book-panel">
+            <h4>📖 UNLOCKED RECIPE JOURNAL</h4>
+            <div class="saved-recipe-grid" id="saved-recipe-grid"></div>
+        </section>
     </div>
+</div>
 
     <!-- FLOATING POPUP DIALOG MODULE CONTAINER -->
     <div class="popup-modal" id="recipe-modal">
