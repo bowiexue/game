@@ -3,36 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pixel Room Studio</title>
-    <!-- SECTION 1 INTERACTION HOOK -->
+    <title>Pixel Alchemy Kitchen</title>
+    <!-- Connects the modular CSS document configuration -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+    <!-- CONTROL HEADER ROW -->
     <div class="nav-row">
-        <button class="back-btn" onclick="location.href='../../index.html'">◀ RETURN TO MAP HUB</button>
-        <span style="font-weight: bold;">🪙 SHOP WALLET: <span id="local-tokens">100</span></span>
+        <button class="back-btn" onclick="location.href='../../index.html'">◀ MAP HUB</button>
+        <button class="clear-btn" onclick="purgeMilestoneMemory()">CLEAR MILESTONE PROGRESS 🗑️</button>
     </div>
 
-    <!-- The 2 Side-by-Side Sections Layout Container -->
-    <div class="main-workspace-grid">
-        <!-- LEFT COLUMN SECTION -->
-        <aside class="section-sidebar">
-            <h3>🗄️ FURNITURE DESK</h3>
-            <div class="cat-title">🛏️ Beds & Mats</div><div class="item-grid" id="grid-beds"></div>
-            <div class="cat-title">🛋️ Living Seating</div><div class="item-grid" id="grid-seating"></div>
-            <div class="cat-title">🪑 Framework Tables</div><div class="item-grid" id="grid-tables"></div>
-            <div class="cat-title">🖥️ Tech & Lamps</div><div class="item-grid" id="grid-electronics"></div>
-            <div class="cat-title">🪴 Custom Foliage</div><div class="item-grid" id="grid-plants"></div>
-            <div class="cat-title">🧸 Companion Plush</div><div class="item-grid" id="grid-plush"></div>
+    <!-- MAIN TWO COLUMN GAME LAYOUT SYSTEM -->
+    <div class="cooking-grid">
+        
+        <!-- SIDEBAR PANTRY PLATFORM -->
+        <aside class="section-pantry">
+            <h3>🗄️ PANTRY STOCKS</h3>
+            
+            <div class="shelf-title">🍖 Clean Proteins</div>
+            <div class="ingredient-shelf" id="shelf-proteins"></div>
+            
+            <div class="shelf-title">🌾 Carbs & Greens</div>
+            <div class="ingredient-shelf" id="shelf-vegetables"></div>
+            
+            <div class="shelf-title">🍯 Sauces & Fats</div>
+            <div class="ingredient-shelf" id="shelf-sauces"></div>
         </aside>
-        <!-- RIGHT COLUMN SECTION -->
-        <main class="section-canvas" id="canvas"><div class="floor"></div></main>
+
+        <!-- KITCHEN COUNTERTOP & LOG HUB -->
+        <div class="section-kitchen">
+            <main class="stove-station">
+                <h3 style="position:absolute; top:15px; text-transform:uppercase; font-size:1rem;">♨️ Cooking Range</h3>
+                
+                <!-- The Cooking Vessel Container -->
+                <div class="stockpot">
+                    <div class="pot-contents" id="pot-contents"></div>
+                </div>
+
+                <button class="cook-btn" onclick="compilePotRecipe()">SIMMER MIXTURE 🍳</button>
+                <button style="background:none; border:none; text-decoration:underline; font-size:0.75rem; color:#7f8c8d; margin-top:10px; cursor:pointer;" onclick="clearStockpot()">Discard Contents</button>
+            </main>
+
+            <!-- RECIPE JOURNAL UNLOCKS INDEX -->
+            <section class="recipe-book-panel">
+                <h4>📖 UNLOCKED RECIPE JOURNAL</h4>
+                <div class="saved-recipe-grid" id="saved-recipe-grid"></div>
+            </section>
+        </div>
+
     </div>
 
-    <div class="tips-bar">[ DRAG ASSETS TO PLACE IN CANVAS • HOVER TO SCALE OBJECTS VIA + / - CONTROLS • DBLCLICK TO DELETE ]</div>
+    <!-- FLOATING POPUP DIALOG MODULE CONTAINER -->
+    <div class="popup-modal" id="recipe-modal">
+        <button class="close-modal-btn" onclick="closeModal()">X</button>
+        <h3 id="modal-title" style="margin-bottom:12px; border-bottom:2px solid #2c3e50; padding-bottom:4px; color:#2ecc71;">Dish</h3>
+        <div style="font-weight:bold; font-size:0.75rem; color:#7f8c8d; margin-bottom:4px;">REAL WORLD METHOD:</div>
+        <p id="modal-text" style="font-size:0.9rem; line-height:1.4; color:#34495e;"></p>
+    </div>
 
-    <!-- SECTION 2 INTERACTION HOOK -->
+    <!-- CONNECTS BOTH SCRIPTS SEQUENTIALLY (DATA LOADS BEFORE LOGIC RUNS) -->
+    <script src="script-data.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
