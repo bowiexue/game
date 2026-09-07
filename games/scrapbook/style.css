@@ -259,3 +259,68 @@ body {
     background: #e74c3c; color: white; border: 3px solid var(--border-dark);
     padding: 4px 10px; font-weight: bold; cursor: pointer; float: right; margin-top: -10px;
 }
+/* Layout to hold both the stove and the new sidebar logger side-by-side */
+.stove-and-tracker-row {
+    display: grid;
+    grid-template-columns: 1fr 200px;
+    gap: 15px;
+    width: 100%;
+}
+
+/* ========================================================
+   THE NEW ADDED INGREDIENT SIDEBAR DISPLAY TRACKER
+   ======================================================== */
+.added-ingredients-tracker {
+    background: white;
+    border: 4px solid var(--border-dark);
+    border-radius: 8px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    height: 380px; /* Aligns perfectly with the stove range height */
+}
+
+.added-ingredients-tracker h4 {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid var(--border-dark);
+    padding-bottom: 4px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.tracker-pills-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    overflow-y: auto;
+    flex-grow: 1;
+}
+
+/* Individual list item nodes inside the tracker box */
+.tracker-item-row {
+    background: #faf5f0;
+    border: 2px solid var(--border-dark);
+    border-radius: 4px;
+    padding: 4px 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    animation: slideIn 0.15s ease-out;
+}
+
+/* Mini pixel canvas constraints within your log list items */
+.tracker-item-row svg {
+    width: 22px;
+    height: 22px;
+    image-rendering: pixelated;
+    flex-shrink: 0;
+}
+
+@keyframes slideIn {
+    0% { transform: translateX(10px); opacity: 0; }
+    100% { transform: translateX(0); opacity: 1; }
+}
