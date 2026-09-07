@@ -85,8 +85,9 @@
         <p id="modal-text" style="font-size:0.9rem; line-height:1.4; color:#34495e;"></p>
     </div>
 
-    <!-- SCRIPT LOADING CHAIN -->
-    <script src="script-data.js"></script>
+    <!-- THREE-PART DATA IMPORTS CHAIN RUNNING SEQUENTIALLY BEFORE MAIN CORE SCRIPT -->
+    <script src="script-data-1.js"></script>
+    <script src="script-data-2.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
