@@ -55,3 +55,9 @@ window.dessertPantry = {
         mint: { name: "Mint Syrup", svg: `<svg viewBox="0 0 16 16"><path d="M5,4 H11 V14 H5 Z" fill="#2ed573"/></svg>` }
     }
 };
+
+window.components = { 
+    proteins: ["beef", "chicken", "pork", "fish", "tofu"], 
+    grains: ["rice", "noodles", "potato"], 
+    liquids: ["soySauce", "curry", "broth", "butter", "sugar", "vinegar"] 
+};
