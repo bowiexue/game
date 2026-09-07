@@ -38,4 +38,41 @@ const extraRecipes = {
     "butter,sugar,vinegar": { title: "Tangy Butter Caramel Syrup", realWay: "Slowly melt butter, sugar, and vinegar in a small saucepan. Reduce on low heat until a thick, tangy caramel syrup forms for drizzling over cooked sides." }
 };
 
+window.dessertRecipes = {
+    // Chocolate Blueprints
+    "chocolate,flour,milk": { title: "Fudge Chocolate Brownies", realWay: "Melt your rich cocoa blocks with sweet butter. Whisk in pastry flour, sugar, and milk until glossy. Bake at 350°F until the center is rich, thick, and fudgy." },
+    "chocolate,dough,vanilla": { title: "Chocolate Lava Tart", realWay: "Press sweet pastry dough firmly into a circular tart pan. Fill the center with a decadent mixture of cocoa blocks, vanilla extract, and cream, then bake until gooey." },
+    "caramel,chocolate,marshmallow": { title: "Gourmet Campfire S'mores", realWay: "Toast mallow puffs over an open flame until melted. Sandwich between graham biscuits alongside a block of dark chocolate, and lace with thick burnt caramel syrup." },
+    "chocolate,milk,mint": { title: "Peppermint Cocoa Mousse", realWay: "Melt dark cocoa blocks into hot whole cream. Whisk vigorously over an ice bath with mint syrup until airy and light, then chill in glass cups before serving." },
+
+    // Strawberry Blueprints
+    "biscuit,creamCheese,strawberry": { title: "Strawberry New York Cheesecake", realWay: "Crush biscuit crumbs with butter to pack a tight crust layer. Whip cream cheese with vanilla until velvety, pour over crust, bake, and crown with sliced glazed strawberries." },
+    "dough,strawberry,vanilla": { title: "Cottage Strawberry Galette", realWay: "Roll out a flat sheet of pastry dough. Heap fresh glazed strawberry slices and vanilla sugar directly into the center, fold the edges over roughly, and bake until golden." },
+    "creamCheese,icing,strawberry": { title: "Strawberry Fruit Dip Fruit Board", realWay: "Beat cream cheese and sweet glaze icing together until light and fluffy. Serve in a pastel ceramic bowl surrounded by fresh strawberries for dipping." },
+
+    // Apple & Fruit Pastry Blueprints
+    "apple,dough,caramel": { title: "Salted Caramel Apple Pie", realWay: "Peel and slice fresh orchard apples, tossing thoroughly with sugar and cinnamon. Nest into a sweet dough pie crust shell, drench with hot caramel, layer a lattice top, and bake." },
+    "banana,biscuit,custard": { title: "Southern Banana Cream Pudding", realWay: "Layer sweet custard cream and sliced ripe bananas alternately inside a deep dish. Pack vanilla biscuits around the margins and let rest in the fridge for 4 hours." },
+    "apple,caramel,vanilla": { title: "Blistered Toffee Apples", realWay: "Insert skewers into whole orchard apples. Boil sugar and caramel syrup down until it hits hard-crack phase, dip the apples, dust with vanilla bean powder, and cool." },
+
+    // Specialty & Matcha Confections
+    "dough,matcha,milk": { title: "Ceremonial Matcha Crepe Cake", realWay: "Whisk flour, whole cream milk, and green matcha powder into a thin batter. Fry paper-thin crepes sequentially in a skillet, then stack 20 layers deep using sweet cream." },
+    "custard,flour,honey": { title: "Honey Egg Custard Tart", realWay: "Whisk egg custard and raw honey together until completely uniform. Pour into blind-baked pastry flour shells and bake at 320°F until the center sets perfectly." },
+    "coconut,gelatin,milk": { title: "Tropical Coconut Panna Cotta", realWay: "Bloom gelatin pods in cold water. Scald whole cream milk with shredded coconut flakes, stir in the gelatin until dissolved, strain into molds, and chill until firm." },
+
+    // Fun Candy & Topping Combos
+    "biscuit,chocolate,sprinkles": { title: "Confetti Chocolate Bark", realWay: "Melt a massive block of cocoa down. Spread thin across a baking sheet lined with crushed biscuit bits, cover completely with rainbow sprinkles, and freeze until solid." },
+    "marshmallow,sprinkles,vanilla": { title: "Rainbow Mallow Pops", realWay: "Dip your marshmallow puffs directly into warm vanilla glaze icing. Roll in rainbow sprinkles until coated, stick onto skewers, and let dry." },
+    "coconut,honey,marshmallow": { title: "Toasted Coconut Snowballs", realWay: "Warm raw honey in a saucepan. Roll your mallow puffs through the hot honey, then immediately dredge through freshly toasted shredded coconut until fuzzy and covered." },
+    "banana,chocolate,milk": { title: "Old School Banana Split", realWay: "Slice a ripe banana in half lengthwise. Scoop chocolate custard cream down the middle, drizzle with hot melted cocoa syrup, and blanket with sprinkles." },
+    "creamCheese,flour,icing": { title: "Glazed Cinnamon Roll Bun", realWay: "Roll pastry flour dough tightly with brown sugar and cinnamon. Slice into wheels and bake, then frost with a layer of cream cheese icing glaze." },
+    "custard,honey,vanilla": { title: "Classic Creme Caramel Flan", realWay: "Coat the base of ramekins with dark caramelized honey. Pour vanilla egg custard cream on top, bake in a water bath, and invert onto a plate to release the syrup." },
+    "gelatin,honey,mint": { title: "Refreshing Emerald Mint Jelly", realWay: "Dissolve gelatin pods into boiling hot mint syrup, honey, and fresh water. Pour into mini star molds and refrigerate until completely bouncy." }
+};
+
+// Procedurally generate the remaining combination pairs to guarantee 100+ total dessert possibilities
+const dProteins = ["chocolate", "strawberry", "creamCheese", "gelatin", "custard"];
+const dVegetables = ["flour", "dough", "biscuit", "apple", "banana", "matcha", "sprinkles", "coconut", "marshmallow"];
+const dSauces = ["honey", "caramel", "milk", "vanilla", "icing", "mint"];
+
 Object.assign(window.recipeBook, extraRecipes);
