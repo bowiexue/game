@@ -201,6 +201,9 @@ body {
     box-shadow: inset 0 -8px 0 rgba(0,0,0,0.05);
 }
 
+/* ========================================================
+   APPLIANCE VARIATIONS: STOCKPOT OVERRIDES
+   ======================================================== */
 .stockpot {
     width: 150px;
     height: 125px;
@@ -211,7 +214,8 @@ body {
     border-bottom-right-radius: 30px;
     position: relative;
     box-shadow: inset -20px 0 0 rgba(0,0,0,0.08);
-    margin-top: 30px; /* Clearance for header title text */
+    margin-top: 30px;
+    transition: all 0.2s ease-in-out;
 }
 .stockpot::before, .stockpot::after {
     content: ''; position: absolute; top: 18px; width: 22px; height: 10px;
@@ -219,6 +223,121 @@ body {
 }
 .stockpot::before { left: -26px; border-radius: 6px 0 0 6px; }
 .stockpot::after { right: -26px; border-radius: 0 6px 6px 0; }
+
+/* ========================================================
+   NEW OVERRIDE STYLES: DESSERT BAKING OVEN OVERLAYS
+   ======================================================== */
+.stockpot.baking-oven-mode {
+    width: 140px;
+    height: 130px;
+    background: #4a5568;
+    border: 4px solid var(--border-dark);
+    border-top: 4px solid var(--border-dark); /* Close top rim */
+    border-radius: 12px;
+    box-shadow: inset 0 -12px 0 rgba(0,0,0,0.15);
+}
+/* Mask out the traditional metal pot side handles when in baking mode */
+.stockpot.baking-oven-mode::before,
+.stockpot.baking-oven-mode::after {
+    display: none;
+}
+/* Create a vintage glass viewing window panel for the oven door */
+.stockpot.baking-oven-mode .pot-contents {
+    position: absolute;
+    width: 70%;
+    height: 50%;
+    top: 20%;
+    left: 15%;
+    background: #2d3748;
+    border: 3px solid var(--border-dark);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+/* ========================================================
+   PARTICLE SIMULATORS (BUBBLES & STEAM CONTEXT)
+   ======================================================== */
+.soup-bubble-layer {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0; 
+    left: 0;
+    pointer-events: none;
+}
+
+/* FIXED SURFACE BUBBLE LOOK: Constrained to float along top surface edge line */
+.pixel-bubble {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border: 3px solid var(--border-dark);
+    background: #e67e22;
+    border-radius: 4px;
+    /* Renders along top edge surface profile setup */
+    top: -8px; 
+    image-rendering: pixelated;
+    animation: bubblePopSurface 0.6s infinite steps(4);
+}
+
+@keyframes bubblePopSurface {
+    0% { transform: translateY(2px) scale(0.6); opacity: 0; }
+    50% { transform: translateY(-4px) scale(1.1); opacity: 1; }
+    100% { transform: translateY(-8px) scale(0); opacity: 0; }
+}
+
+/* BAKE STEAM PARTICLES: Soft drifting trails scaling upward from cooking core window */
+.pixel-steam-trail {
+    position: absolute;
+    width: 8px;
+    height: 12px;
+    background: #ffffff;
+    opacity: 0.6;
+    border-radius: 2px;
+    bottom: 0;
+    animation: steamRiseEffect 1.4s infinite linear;
+}
+
+@keyframes steamRiseEffect {
+    0% { transform: translateY(0) scaleX(1); opacity: 0; }
+    20% { opacity: 0.5; }
+    60% { transform: translateY(-40px) scaleX(1.5); opacity: 0.3; }
+    100% { transform: translateY(-70px) scaleX(0.2); opacity: 0; }
+}
+
+/* ========================================================
+   PILLS LIST WORKSPACE TRASH LAYOUT
+   ======================================================== */
+.tracker-item-row {
+    background: #fdfcf9;
+    border: 3px solid var(--border-dark);
+    border-radius: 8px;
+    padding: 6px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Creates separation layout for trash click */
+    gap: 8px;
+}
+.pill-core-content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.7rem;
+}
+.pill-single-remove-btn {
+    background: #df7a7a;
+    color: white;
+    border: 2px solid var(--border-dark);
+    border-radius: 4px;
+    padding: 1px 6px;
+    font-size: 0.65rem;
+    cursor: pointer;
+    font-weight: bold;
+}
+.pill-single-remove-btn:hover {
+    background: #c95b5b;
+}
+
 
 .pot-contents {
     position: relative;
@@ -284,7 +403,7 @@ body {
 /* ========================================================
    BUBBLE ANIMATION GRAPHICS (BROUGHT BACK!)
    ======================================================== */
-.soup-bubble-layer {
+/*.soup-bubble-layer {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -300,7 +419,7 @@ body {
     height: 16px;
     border: 3px solid var(--border-dark);
     bottom: 10px; /* Positions perfectly over pot bottom bounds */
-    border-radius: 4px;
+    /*border-radius: 4px;
     image-rendering: pixelated;
     animation: bubbleFloat 1.3s infinite ease-in;
     z-index: 20;
