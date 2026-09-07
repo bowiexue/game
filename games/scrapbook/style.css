@@ -145,20 +145,51 @@ body {
 .stockpot::before { left: -24px; border-radius: 4px 0 0 4px; }
 .stockpot::after { right: -24px; border-radius: 0 4px 4px 0; }
 
-/* FIX: Forces items to align horizontally in small blocks rather than long wide bars */
+/* Container for the animated pixel soup matrix */
 .pot-contents {
     position: absolute;
-    bottom: 12px;
+    bottom: 0;
     left: 0;
     width: 100%;
-    height: auto;
-    display: flex;
-    flex-direction: row;      /* Arranges ingredients side-by-side */
-    flex-wrap: wrap;          /* Rows wrap down naturally if you add more items */
-    justify-content: center;  /* Centers them in the pot bottom */
-    align-items: flex-end;
-    gap: 6px;                 /* Keeps a clean tiny gap between icons */
-    padding: 0 12px;          /* Stops them from touching the outer walls */
+    height: 75%; /* Fills the pot with delicious soup liquid */
+    background: #d35400; /* Warm stew orange-brown base color */
+    border-top: 4px solid var(--border-dark);
+    z-index: 5;
+    overflow: hidden;
+    display: block; /* No more grid stretch text labels! */
+}
+
+/* Layer to hold dynamic procedural pixel bubbles */
+.soup-bubble-layer {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0; left: 0;
+}
+
+/* Custom CSS pixel bubble particle formatting */
+.pixel-bubble {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: #e67e22;
+    border: 2px solid var(--border-dark);
+    bottom: -10px;
+    border-radius: 2px;
+    image-rendering: pixelated;
+    animation: bubbleUp 1.8s infinite ease-in;
+}
+
+/* Simulates shifting convection current offsets */
+.pixel-bubble:nth-child(2) { left: 30%; animation-delay: 0.4s; animation-duration: 2.2s; }
+.pixel-bubble:nth-child(3) { left: 55%; animation-delay: 0.8s; animation-duration: 1.5s; }
+.pixel-bubble:nth-child(4) { left: 75%; animation-delay: 1.2s; animation-duration: 2s; }
+
+@keyframes bubbleUp {
+    0% { transform: translateY(0) scale(0.6); opacity: 0; }
+    20% { opacity: 1; }
+    80% { transform: translateY(-70px) scale(1.1); opacity: 1; }
+    100% { transform: translateY(-85px) scale(0); opacity: 0; }
 }
 
 
