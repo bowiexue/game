@@ -377,3 +377,45 @@ body {
     float: right;
     margin-top: -12px;
 }
+/* ========================================================
+   BUBBLE PARTICLES STYLING
+   ======================================================== */
+.soup-bubble-layer {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0; 
+    left: 0;
+    overflow: hidden;
+    pointer-events: none; /* Keeps bubbles from blocking button clicks */
+}
+
+.pixel-bubble {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border: 3px solid var(--border-dark);
+    bottom: 20px; /* Starts inside the pot soup line */
+    border-radius: 4px;
+    image-rendering: pixelated;
+    animation: bubbleFloat 1.2s infinite ease-in;
+}
+
+@keyframes bubbleFloat {
+    0% { 
+        transform: scale(0.3) translateY(0); 
+        opacity: 0; 
+    }
+    20% { 
+        opacity: 1; 
+        transform: scale(1) translateY(-20px); 
+    }
+    80% { 
+        opacity: 1; 
+        transform: scale(0.9) translateY(-70px); 
+    }
+    100% { 
+        transform: scale(0) translateY(-100px); 
+        opacity: 0; 
+    }
+}
