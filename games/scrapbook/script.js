@@ -1,11 +1,9 @@
-let currentMode = "main"; // Defaults to tracking dinner recipes
+let currentMode = "main"; 
 let activePotContents = [];
 let unlockedRecipes = JSON.parse(localStorage.getItem('discovered_recipes_v2')) || [];
 
 function toggleKitchenMode(mode) {
     currentMode = mode;
-    
-    // Manage UI highlighted rows
     const mainBtn = document.getElementById('btn-mode-main');
     const destBtn = document.getElementById('btn-mode-dessert');
     
@@ -24,7 +22,6 @@ function toggleKitchenMode(mode) {
 function loadPantryShelves() {
     const activePantry = currentMode === "main" ? window.mainCoursePantry : window.dessertPantry;
     
-    // Wipe shelf targets completely
     document.getElementById('shelf-proteins').innerHTML = '';
     document.getElementById('shelf-vegetables').innerHTML = '';
     document.getElementById('shelf-sauces').innerHTML = '';
@@ -44,14 +41,13 @@ function loadPantryShelves() {
 }
 
 function addIngredientToPot(key, label, rawSVG) {
-    // UPDATED: Limit the stockpot to exactly 3 items max instead of 4
+    // HARD LIMIT: Prevents more than 3 ingredients from ever entering the array
     if (activePotContents.length >= 3) {
         alert("The stockpot is full! Simmer your 3 ingredients or discard items.");
         return;
     }
     activePotContents.push({ key: key, label: label, mode: currentMode });
     
-    // 1. Generate large bubble particle at top surface
     const layer = document.getElementById('soup-bubble-layer');
     const bubble = document.createElement('div');
     bubble.className = 'pixel-bubble';
@@ -59,7 +55,6 @@ function addIngredientToPot(key, label, rawSVG) {
     bubble.style.left = `${Math.floor(Math.random() * 65) + 5}%`;
     layer.appendChild(bubble);
 
-    // 2. Add item card into Side Tracker Box
     const trackerList = document.getElementById('tracker-pills-list');
     const itemRow = document.createElement('div');
     itemRow.className = 'tracker-item-row';
@@ -73,16 +68,13 @@ function clearStockpot() {
     document.getElementById('tracker-pills-list').innerHTML = '';
 }
 
-// UPDATED: Completely enforces exactly 3 ingredients and builds dynamic custom text strings
-// UPDATED: Strictly requires 3 ingredients and actively pulls from your script-data-2 database
 function compilePotRecipe() {
-    // 1. HARD LIMIT: Stop execution immediately if it's not EXACTLY 3 ingredients
+    // ENFORCED HARD BOUNDARY: Stops processing if it's not EXACTLY 3 elements
     if (activePotContents.length !== 3) {
-        alert(`The stockpot contains ${activePotContents.length} items. You must combine EXACTLY 3 ingredients to cook a meal!`);
+        alert(`Your stockpot contains ${activePotContents.length} items. You must combine EXACTLY 3 ingredients to build an actual recipe!`);
         return;
     }
 
-    // Isolate chosen keys and alphabetical strings
     let keysArr = activePotContents.map(i => i.key).sort();
     let recipeMatchKey = keysArr.join(',');
     let trackingStorageKey = `${currentMode}:${recipeMatchKey}`;
@@ -90,24 +82,21 @@ function compilePotRecipe() {
     let dishTitle = "";
     let dishRecipe = "";
     
-    // Target the correct dictionary from your database file (script-data-2.js)
-    const database = currentMode === "main" ? extraRecipes : window.dessertRecipes;
+    const database = currentMode === "main" ? window.extraRecipes : window.dessertRecipes;
 
-    // 2. CHECK FOR EXACT DATABASE MATCH
+    // A. EXACT MATCH FROM DATABASE (Zero generic templates used here)
     if (database && database[recipeMatchKey]) {
         dishTitle = database[recipeMatchKey].title;
         dishRecipe = database[recipeMatchKey].realWay;
     } 
-    // 3. FALLBACK: Direct database adaptation (No lazy copy-and-paste sentences)
+    // B. DYNAMIC CLONING FALLBACK: Borrows and alters the closest existing recipe layout 
     else {
-        // Find alternative dishes in your database that share at least 1 or 2 ingredients
         let closestMatchKey = null;
         let highestSharedCount = 0;
 
         Object.keys(database).forEach(dbKey => {
             let dbIngredients = dbKey.split(',');
             let sharedCount = keysArr.filter(ing => dbIngredients.includes(ing)).length;
-            
             if (sharedCount > highestSharedCount) {
                 highestSharedCount = sharedCount;
                 closestMatchKey = dbKey;
@@ -115,14 +104,14 @@ function compilePotRecipe() {
         });
 
         if (closestMatchKey && highestSharedCount > 0) {
-            // Pull a real real-world method from your database file to base it on
             let baseRecipe = database[closestMatchKey];
+            let activeItems = activePotContents.map(i => i.label).join(', ');
+            
             dishTitle = `Improvised ${baseRecipe.title}`;
-            dishRecipe = `Inspired by your recipe for "${baseRecipe.title}". ${baseRecipe.realWay} (Adapted by swapping out missing elements with your selected pantry items).`;
+            dishRecipe = `INGREDIENTS:\n• Custom Mix: ${activeItems}\n\nCULINARY METHOD (Adapted directly from your "${baseRecipe.title}" blueprint):\n${baseRecipe.realWay}`;
         } else {
-            // Absolute last resort if the user managed to pick something completely unrelated
-            dishTitle = "Chef's Freestyle Platter";
-            dishRecipe = "A unique culinary experiment using elements outside of standard culinary text boundaries. Flash-cook your selected ingredients together over medium heat and season to taste.";
+            dishTitle = "Chef's Hand-Tossed Stir Fry";
+            dishRecipe = "INGREDIENTS:\n• 3 Selected Pantry Items\n\nSTEPS:\n1. Mince all solid components evenly.\n2. Shallow fry in butter or lard over a rolling induction flame.\n3. Deglaze with cooking liquid choices to cleanly bind the flavor notes together.";
         }
     }
 
@@ -135,7 +124,6 @@ function compilePotRecipe() {
     }
     clearStockpot();
 }
-
 
 function renderDiscoveredJournal() {
     const box = document.getElementById('saved-recipe-grid');
@@ -175,5 +163,4 @@ function purgeMilestoneMemory() {
     }
 }
 
-// Initial Boot Sequence Setup
 window.addEventListener('DOMContentLoaded', () => toggleKitchenMode('main'));
