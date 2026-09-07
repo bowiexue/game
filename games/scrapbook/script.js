@@ -5,22 +5,37 @@ let activePotContents = [];
 let unlockedRecipes = JSON.parse(localStorage.getItem('discovered_recipes')) || [];
 
 function initKitchenSystem() {
+    // Safely reference globally exposed window objects
+    const dataSrc = window.pantryData;
+    const booksSrc = window.recipeBook;
+
+    if (!dataSrc) {
+        console.error("Critical Error: window.pantryData failed to load.");
+        return;
+    }
+
+    // Clear empty containers before rendering new shelf modules
+    document.getElementById('shelf-proteins').innerHTML = '';
+    document.getElementById('shelf-vegetables').innerHTML = '';
+    document.getElementById('shelf-sauces').innerHTML = '';
+
     // Build and populate Pantry shelves out of the external script-data files
-    Object.keys(pantryData).forEach(cat => {
+    Object.keys(dataSrc).forEach(cat => {
         const platformNode = document.getElementById(`shelf-${cat}`);
-        Object.keys(pantryData[cat]).forEach(itemKey => {
-            const data = pantryData[cat][itemKey];
-            const cell = document.createElement('div');
-            cell.className = 'ing-node';
-            cell.innerHTML = `${data.svg}<div>${data.name}</div>`;
-            cell.onclick = () => addIngredientToPot(itemKey);
-            platformNode.appendChild(cell);
-        });
+        if (platformNode) {
+            Object.keys(dataSrc[cat]).forEach(itemKey => {
+                const data = dataSrc[cat][itemKey];
+                const cell = document.createElement('div');
+                cell.className = 'ing-node';
+                cell.innerHTML = `${data.svg}<div>${data.name}</div>`;
+                cell.onclick = () => addIngredientToPot(itemKey);
+                platformNode.appendChild(cell);
+            });
+        }
     });
     renderDiscoveredMilestones();
 }
 
-// Ingredients disappear smoothly into the pot and trigger animated pixel bubbles
 function addIngredientToPot(key) {
     if (activePotContents.length >= 4) {
         alert("The stockpot is full! Cook or reset current mixture.");
@@ -33,7 +48,6 @@ function addIngredientToPot(key) {
     const bubble = document.createElement('div');
     bubble.className = 'pixel-bubble';
     
-    // Assign a randomized horizontal dispersion offset across the cooking pot
     let randomSpread = Math.floor(Math.random() * 70) + 15;
     bubble.style.left = `${randomSpread}%`;
     
@@ -51,9 +65,13 @@ function compilePotRecipe() {
         return;
     }
     
-    // Sort items alphabetically to perfectly align with the data database keys
     let searchKey = activePotContents.sort().join(',');
-    let match = recipeBook[searchKey];
+    let match = window.recipeBook[searchKey];
+
+    if (!match && window.components) {
+        let simpleKey = activePotContents.filter(i => Object.values(window.components).some(arr => arr.includes(i))).sort().join(',');
+        match = window.recipeBook[simpleKey];
+    }
 
     if (match) {
         alert(`✨ SUCCESS: Unlocked ${match.title}!`);
@@ -70,6 +88,7 @@ function compilePotRecipe() {
 
 function renderDiscoveredMilestones() {
     const box = document.getElementById('saved-recipe-grid');
+    if (!box) return;
     box.innerHTML = '';
     
     if (unlockedRecipes.length === 0) {
@@ -78,7 +97,7 @@ function renderDiscoveredMilestones() {
     }
 
     unlockedRecipes.forEach(key => {
-        let lookup = recipeBook[key];
+        let lookup = window.recipeBook[key];
         
         const card = document.createElement('button');
         card.className = 'recipe-unlock-card';
@@ -107,5 +126,5 @@ function purgeMilestoneMemory() {
     }
 }
 
-// Execute the kitchen layout engine routine immediately at startup
-initKitchenSystem();
+// Fire system initialization loop securely when DOM Content finishes parsing
+window.addEventListener('DOMContentLoaded', initKitchenSystem);
