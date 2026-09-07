@@ -12,7 +12,7 @@
     <!-- CONTROL HEADER ROW -->
     <div class="nav-row">
         <button class="back-btn" onclick="location.href='../../index.html'">◀ MAP HUB</button>
-        <button class="clear-btn" onclick="purgeMilestoneMemory()">CLEAR MILESTONE PROGRESS 🗑️</button>
+        <button class="clear-btn" onclick="purgeMilestoneMemory()">WIPE MILESTONES 🗑️</button>
     </div>
 
     <!-- MAIN TWO COLUMN GAME LAYOUT SYSTEM -->
@@ -20,22 +20,28 @@
         
         <!-- SIDEBAR PANTRY PLATFORM -->
         <aside class="section-pantry">
+            <!-- Dynamic Kitchen Mode Buttons -->
+            <div class="mode-toggle-panel">
+                <button id="btn-mode-main" class="mode-toggle-btn active-main" onclick="toggleKitchenMode('main')">🍗 MAIN COURSE</button>
+                <button id="btn-mode-dessert" class="mode-toggle-btn" onclick="toggleKitchenMode('dessert')">🍰 DESSERT MODE</button>
+            </div>
+
             <h3>🗄️ PANTRY STOCKS</h3>
             
-            <div class="shelf-title">🍖 Clean Proteins</div>
+            <div class="shelf-title">📦 Category Base</div>
             <div class="ingredient-shelf" id="shelf-proteins"></div>
             
-            <div class="shelf-title">🌾 Carbs & Greens</div>
+            <div class="shelf-title">🌾 Dry Ingredients</div>
             <div class="ingredient-shelf" id="shelf-vegetables"></div>
             
-            <div class="shelf-title">🍯 Sauces & Fats</div>
+            <div class="shelf-title">🍯 Toppings & Mixers</div>
             <div class="ingredient-shelf" id="shelf-sauces"></div>
         </aside>
 
         <!-- KITCHEN COUNTERTOP & LOG HUB -->
         <div class="section-kitchen">
             
-            <!-- COMBINED ROW CONTAINER LINKING THE STOVE MAP AND SEPARATE LOG PANEL SIDE-BY-SIDE -->
+            <!-- SIDE-BY-SIDE CONTAINER FOR POT WORKSPACE AND TRACKER PANEL -->
             <div class="stove-and-tracker-row">
 
                 <!-- The Left Stove Range Countertop -->
@@ -52,11 +58,11 @@
                     <button style="background:none; border:none; text-decoration:underline; font-size:0.75rem; color:#7f8c8d; margin-top:10px; cursor:pointer;" onclick="clearStockpot()">Discard Contents</button>
                 </main>
 
-                <!-- THE RIGHT CONTAINER: SEPARATE ADDED INGREDIENTS LOG SHEET PANEL -->
+                <!-- THE RIGHT SIDE LOG TRACKER BOX -->
                 <aside class="added-ingredients-tracker">
                     <h4>🍲 POT MIXTURE</h4>
                     <div class="tracker-pills-list" id="tracker-pills-list">
-                        <!-- Dynamic item rows containing pixel graphics push here via logic -->
+                        <!-- Placed items show up here -->
                     </div>
                 </aside>
 
@@ -79,9 +85,8 @@
         <p id="modal-text" style="font-size:0.9rem; line-height:1.4; color:#34495e;"></p>
     </div>
 
-    <!-- CHUNKED DATA IMPORTS SEQUENCE RUNNING BEFORE MAIN GAME ENGINE -->
-    <script src="script-data-1.js"></script>
-    <script src="script-data-2.js"></script>
+    <!-- SCRIPT LOADING CHAIN -->
+    <script src="script-data.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
