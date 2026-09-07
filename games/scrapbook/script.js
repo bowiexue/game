@@ -41,7 +41,6 @@ function loadPantryShelves() {
 }
 
 function addIngredientToPot(key, label, rawSVG) {
-    // HARD LIMIT: Prevents more than 3 ingredients from ever entering the array
     if (activePotContents.length >= 3) {
         alert("The stockpot is full! Simmer your 3 ingredients or discard items.");
         return;
@@ -69,14 +68,16 @@ function clearStockpot() {
 }
 
 function compilePotRecipe() {
-    // ENFORCED HARD BOUNDARY: Stops processing if it's not EXACTLY 3 elements
     if (activePotContents.length !== 3) {
         alert(`Your stockpot contains ${activePotContents.length} items. You must combine EXACTLY 3 ingredients to build an actual recipe!`);
         return;
     }
 
+    // Isolate chosen keys and sort them alphabetically
     let keysArr = activePotContents.map(i => i.key).sort();
     let recipeMatchKey = keysArr.join(',');
+    
+    // FIXED: The tracking key is now completely bound to sorted keys, preventing duplicate entries!
     let trackingStorageKey = `${currentMode}:${recipeMatchKey}`;
 
     let dishTitle = "";
@@ -84,12 +85,12 @@ function compilePotRecipe() {
     
     const database = currentMode === "main" ? window.extraRecipes : window.dessertRecipes;
 
-    // A. EXACT MATCH FROM DATABASE (Zero generic templates used here)
+    // A. DIRECT STRIKE MATCH FROM DATABASE
     if (database && database[recipeMatchKey]) {
         dishTitle = database[recipeMatchKey].title;
         dishRecipe = database[recipeMatchKey].realWay;
     } 
-    // B. DYNAMIC CLONING FALLBACK: Borrows and alters the closest existing recipe layout 
+    // B. DYNAMIC CLONING SUBSYSTEM
     else {
         let closestMatchKey = null;
         let highestSharedCount = 0;
@@ -115,13 +116,18 @@ function compilePotRecipe() {
         }
     }
 
-    alert(`✨ UNLOCKED: ${dishTitle}!`);
-
-    if (!unlockedRecipes.some(r => r.id === trackingStorageKey)) {
-        unlockedRecipes.push({ id: trackingStorageKey, title: dishTitle, text: dishRecipe });
-        localStorage.setItem('discovered_recipes_v2', JSON.stringify(unlockedRecipes));
-        renderDiscoveredJournal();
+    // FIXED: If the unique recipe combination already exists in our collection array, do not push it again!
+    if (unlockedRecipes.some(r => r.id === trackingStorageKey)) {
+        alert(`🍳 You made ${dishTitle} again! Excellent technique, but you've already noted this down in your Journal.`);
+        clearStockpot();
+        return;
     }
+
+    alert(`✨ NEW RECIPE UNLOCKED: ${dishTitle}!`);
+
+    unlockedRecipes.push({ id: trackingStorageKey, title: dishTitle, text: dishRecipe });
+    localStorage.setItem('discovered_recipes_v2', JSON.stringify(unlockedRecipes));
+    renderDiscoveredJournal();
     clearStockpot();
 }
 
