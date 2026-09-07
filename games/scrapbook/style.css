@@ -146,20 +146,19 @@ body {
 .stockpot::after { right: -24px; border-radius: 0 4px 4px 0; }
 
 /* Container for the animated pixel soup matrix */
+/* Container inside the pot - now completely transparent with no orange blocks! */
 .pot-contents {
     position: absolute;
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 75%; /* Fills the pot with delicious soup liquid */
-    background: #d35400; /* Warm stew orange-brown base color */
-    border-top: 4px solid var(--border-dark);
+    height: 100%;
     z-index: 5;
-    overflow: hidden;
-    display: block; /* No more grid stretch text labels! */
+    overflow: visible; /* Allows steam and bubbles to float naturally at the top */
+    display: block;
 }
 
-/* Layer to hold dynamic procedural pixel bubbles */
+/* Layer to hold dynamic floating bubbles */
 .soup-bubble-layer {
     position: absolute;
     width: 100%;
@@ -167,30 +166,33 @@ body {
     top: 0; left: 0;
 }
 
-/* Custom CSS pixel bubble particle formatting */
+/* FIX: Giant, high-contrast retro pixel bubbles floating right at the top line */
 .pixel-bubble {
     position: absolute;
-    width: 8px;
-    height: 8px;
-    background: #e67e22;
-    border: 2px solid var(--border-dark);
-    bottom: -10px;
-    border-radius: 2px;
+    width: 24px;              /* Scaled way up to look like beautiful big pixel art! */
+    height: 24px;
+    background: #e67e22;      /* Cozy cooking bubble color */
+    border: 3px solid var(--border-dark); /* Thick retro outlines */
+    box-shadow: inset -4px -4px 0 #d35400; /* Subtle internal pixel shade shadow */
+    top: 15px;                /* Sits right at the top surface line of your stockpot */
+    border-radius: 4px;
     image-rendering: pixelated;
-    animation: bubbleUp 1.8s infinite ease-in;
+    animation: bubbleFloat 1.4s infinite ease-out;
 }
 
-/* Simulates shifting convection current offsets */
-.pixel-bubble:nth-child(2) { left: 30%; animation-delay: 0.4s; animation-duration: 2.2s; }
-.pixel-bubble:nth-child(3) { left: 55%; animation-delay: 0.8s; animation-duration: 1.5s; }
-.pixel-bubble:nth-child(4) { left: 75%; animation-delay: 1.2s; animation-duration: 2s; }
+/* Random time delays so they don't pop uniformly in a straight sequence */
+.pixel-bubble:nth-child(2) { left: 25%; animation-delay: 0.3s; animation-duration: 1.8s; }
+.pixel-bubble:nth-child(3) { left: 50%; animation-delay: 0.6s; animation-duration: 1.2s; }
+.pixel-bubble:nth-child(4) { left: 70%; animation-delay: 0.9s; animation-duration: 1.5s; }
 
-@keyframes bubbleUp {
-    0% { transform: translateY(0) scale(0.6); opacity: 0; }
-    20% { opacity: 1; }
-    80% { transform: translateY(-70px) scale(1.1); opacity: 1; }
-    100% { transform: translateY(-85px) scale(0); opacity: 0; }
+/* Gentle pop scale animation effect */
+@keyframes bubbleFloat {
+    0% { transform: scale(0.3) translateY(10px); opacity: 0; }
+    30% { opacity: 1; transform: scale(1.1) translateY(0); }
+    80% { opacity: 1; transform: scale(1) translateY(-8px); }
+    100% { transform: scale(0) translateY(-14px); opacity: 0; }
 }
+
 
 
 .cook-btn {
