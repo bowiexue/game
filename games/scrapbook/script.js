@@ -1,124 +1,125 @@
-// ============================================================================
-// LIVE SYSTEM ENGINE & PROGRESS PROTECTION
-// ============================================================================
+let currentMode = "main"; // Defaults to tracking dinner recipes
 let activePotContents = [];
-let unlockedRecipes = JSON.parse(localStorage.getItem('discovered_recipes')) || [];
+let unlockedRecipes = JSON.parse(localStorage.getItem('discovered_recipes_v2')) || [];
 
-function initKitchenSystem() {
-    // Safely reference globally exposed window objects
-    const dataSrc = window.pantryData;
-    const booksSrc = window.recipeBook;
-
-    if (!dataSrc) {
-        console.error("Critical Error: window.pantryData failed to load.");
-        return;
+function toggleKitchenMode(mode) {
+    currentMode = mode;
+    
+    // Manage UI highlighted rows
+    const mainBtn = document.getElementById('btn-mode-main');
+    const destBtn = document.getElementById('btn-mode-dessert');
+    
+    if (mode === "main") {
+        mainBtn.className = "mode-toggle-btn active-main";
+        destBtn.className = "mode-toggle-btn";
+    } else {
+        mainBtn.className = "mode-toggle-btn";
+        destBtn.className = "mode-toggle-btn active-dessert";
     }
+    
+    clearStockpot();
+    loadPantryShelves();
+}
 
-    // Clear empty containers before rendering new shelf modules
+function loadPantryShelves() {
+    const activePantry = currentMode === "main" ? window.mainCoursePantry : window.dessertPantry;
+    
+    // Wipe shelf targets completely
     document.getElementById('shelf-proteins').innerHTML = '';
     document.getElementById('shelf-vegetables').innerHTML = '';
     document.getElementById('shelf-sauces').innerHTML = '';
 
-    // Build and populate Pantry shelves out of the external script-data files
-    Object.keys(dataSrc).forEach(cat => {
+    Object.keys(activePantry).forEach(cat => {
         const platformNode = document.getElementById(`shelf-${cat}`);
-        if (platformNode) {
-            Object.keys(dataSrc[cat]).forEach(itemKey => {
-                const data = dataSrc[cat][itemKey];
-                const cell = document.createElement('div');
-                cell.className = 'ing-node';
-                cell.innerHTML = `${data.svg}<div>${data.name}</div>`;
-                cell.onclick = () => addIngredientToPot(itemKey);
-                platformNode.appendChild(cell);
-            });
-        }
+        Object.keys(activePantry[cat]).forEach(itemKey => {
+            const data = activePantry[cat][itemKey];
+            const cell = document.createElement('div');
+            cell.className = 'ing-node';
+            cell.innerHTML = `${data.svg}<div>${data.name}</div>`;
+            cell.onclick = () => addIngredientToPot(itemKey, data.name, data.svg);
+            platformNode.appendChild(cell);
+        });
     });
-    renderDiscoveredMilestones();
+    renderDiscoveredJournal();
 }
 
-// Ingredients disappear into the pot, spawn top bubbles, and register in your layout tracker box
-function addIngredientToPot(key) {
+function addIngredientToPot(key, label, rawSVG) {
     if (activePotContents.length >= 4) {
-        alert("The stockpot is full! Cook or reset current mixture.");
+        alert("The stockpot is full! Simmer or discard items.");
         return;
     }
-    activePotContents.push(key);
+    activePotContents.push({ key: key, label: label, mode: currentMode });
     
-    // 1. Generate the giant pixel bubbles at the rim of the pot
+    // 1. Generate large bubble particle at top surface
     const layer = document.getElementById('soup-bubble-layer');
     const bubble = document.createElement('div');
     bubble.className = 'pixel-bubble';
-    let randomSpread = Math.floor(Math.random() * 65) + 5;
-    bubble.style.left = `${randomSpread}%`;
+    bubble.style.background = currentMode === "main" ? "#e67e22" : "#ff7675";
+    bubble.style.left = `${Math.floor(Math.random() * 65) + 5}%`;
     layer.appendChild(bubble);
 
-    // 2. Look up the vector data matching the selection key across category maps
-    let itemMatch = null;
-    Object.keys(pantryData).forEach(cat => {
-        if (pantryData[cat][key]) itemMatch = pantryData[cat][key];
-    });
-
-    if (itemMatch) {
-        // 3. Render a detailed graphics card inside your tracking sidebar desk panel
-        const trackerList = document.getElementById('tracker-pills-list');
-        const itemRow = document.createElement('div');
-        itemRow.className = 'tracker-item-row';
-        itemRow.innerHTML = `${itemMatch.svg}<span>${itemMatch.name}</span>`;
-        trackerList.appendChild(itemRow);
-    }
+    // 2. Add item card into Side Tracker Box
+    const trackerList = document.getElementById('tracker-pills-list');
+    const itemRow = document.createElement('div');
+    itemRow.className = 'tracker-item-row';
+    itemRow.innerHTML = `${rawSVG}<span>${label}</span>`;
+    trackerList.appendChild(itemRow);
 }
 
-// Clears bubbles and empties the sidebar text log container cleanly
 function clearStockpot() {
     activePotContents = [];
     document.getElementById('soup-bubble-layer').innerHTML = '';
-    document.getElementById('tracker-pills-list').innerHTML = ''; // Wipes item row cards completely
+    document.getElementById('tracker-pills-list').innerHTML = '';
 }
-
 
 function compilePotRecipe() {
     if (activePotContents.length === 0) {
-        alert("The stockpot is empty! Click pantry ingredients to add them.");
+        alert("The stockpot is empty! Drop items in first.");
         return;
     }
-    
-    // Sort items alphabetically to match the lookup keys precisely
-    let searchKey = activePotContents.sort().join(',');
-    let match = window.recipeBook[searchKey];
 
-    // FIX: If it matches a verified handwritten recipe, unlock it!
-    if (match) {
-        alert(`✨ SUCCESS: Unlocked ${match.title}!`);
-        if (!unlockedRecipes.includes(searchKey)) {
-            unlockedRecipes.push(searchKey);
-            localStorage.setItem('discovered_recipes', JSON.stringify(unlockedRecipes));
-            renderDiscoveredMilestones();
-        }
+    // Isolate component lists
+    let keysArr = activePotContents.map(i => i.key).sort();
+    let labelsArr = activePotContents.map(i => i.label);
+    let searchKey = `${currentMode}:${keysArr.join(',')}`;
+
+    // Procedural Combo Generator Engine to safely scale across 200+ combinations
+    let dishTitle = "";
+    let dishRecipe = "";
+
+    if (currentMode === "main") {
+        dishTitle = `Savory ${labelsArr[0]} & ${labelsArr[1] || "Herb"} Plate`;
+        dishRecipe = `Pan-sear your ${labelsArr[0]} in a scorching hot skillet. Toss in your chosen starch base (${labelsArr[1] || "greens"}) and glaze with savory accents until golden brown. Serve hot.`;
     } else {
-        // If it doesn't match, give a funny cooking fail notice instead of an ugly copy-paste string
-        alert("💥 The mix burned! No distinct meal recipe identified. Look closely at the available components in your tabs!");
+        dishTitle = `Gourmet Glazed ${labelsArr[0]} ${labelsArr[1] || "Confection"}`;
+        dishRecipe = `Gently whisk your sugar base and ${labelsArr[0]} together in a saucepan over medium heat. Fold into your pastry base (${labelsArr[1] || "cream crust"}), chill, and cover with sweet icing toppings.`;
+    }
+
+    alert(`✨ UNLOCKED: ${dishTitle}!`);
+
+    if (!unlockedRecipes.some(r => r.id === searchKey)) {
+        unlockedRecipes.push({ id: searchKey, title: dishTitle, text: dishRecipe });
+        localStorage.setItem('discovered_recipes_v2', JSON.stringify(unlockedRecipes));
+        renderDiscoveredJournal();
     }
     clearStockpot();
 }
 
-
-function renderDiscoveredMilestones() {
+function renderDiscoveredJournal() {
     const box = document.getElementById('saved-recipe-grid');
-    if (!box) return;
     box.innerHTML = '';
     
     if (unlockedRecipes.length === 0) {
-        box.innerHTML = `<div style="font-size:0.8rem; color:#95a5a6; font-style:italic;">Your Journal is empty. Simmer pantry items to discover meals!</div>`;
+        box.innerHTML = `<div style="font-size:0.8rem; color:#95a5a6; font-style:italic;">Your Journal is empty. Mix pantry elements to discover creations!</div>`;
         return;
     }
 
-    unlockedRecipes.forEach(key => {
-        let lookup = window.recipeBook[key];
-        
+    unlockedRecipes.forEach(recipe => {
         const card = document.createElement('button');
         card.className = 'recipe-unlock-card';
-        card.innerText = lookup ? lookup.title : "Custom Formula";
-        card.onclick = () => openRealWorldModal(lookup ? lookup.title : "Custom Formula", lookup ? lookup.realWay : "Mix elements evenly.");
+        card.innerText = recipe.title;
+        card.style.borderColor = recipe.id.startsWith("main") ? "#e67e22" : "#9b59b6";
+        card.onclick = () => openRealWorldModal(recipe.title, recipe.text);
         box.appendChild(card);
     });
 }
@@ -134,13 +135,13 @@ function closeModal() {
 }
 
 function purgeMilestoneMemory() {
-    if (confirm("⚠️ Clear Milestone Progress?\n\nThis will completely wipe your unlocked Recipe Journal from memory. This cannot be undone!")) {
-        localStorage.removeItem('discovered_recipes');
+    if (confirm("⚠️ Wipe all progress? This will delete both your Main Course and Dessert discoveries!")) {
+        localStorage.removeItem('discovered_recipes_v2');
         unlockedRecipes = [];
-        renderDiscoveredMilestones();
+        renderDiscoveredJournal();
         clearStockpot();
     }
 }
 
-// Fire system initialization loop securely when DOM Content finishes parsing
-window.addEventListener('DOMContentLoaded', initKitchenSystem);
+// Initial Boot Sequence Setup
+window.addEventListener('DOMContentLoaded', () => toggleKitchenMode('main'));
