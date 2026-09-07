@@ -6,7 +6,6 @@
     --pot-steel: #95a5a6;
 }
 
-/* Global Reset */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -23,7 +22,6 @@ body {
     align-items: center;
 }
 
-/* Navigation Row */
 .nav-row {
     width: 100%;
     max-width: 1200px;
@@ -45,7 +43,41 @@ body {
 .clear-btn { background: #e74c3c; border: 3px solid var(--border-dark); box-shadow: 0 4px 0 #c0392b; }
 .clear-btn:active { transform: translateY(4px); box-shadow: none; }
 
-/* Main Split Grid Layout */
+/* ========================================================
+   THE NEW MODE SELECTION PANEL BUTTONS
+   ======================================================== */
+.mode-toggle-panel {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    width: 100%;
+    margin-bottom: 15px;
+}
+.mode-toggle-btn {
+    padding: 12px;
+    font-size: 1rem;
+    font-weight: bold;
+    border: 4px solid var(--border-dark);
+    border-radius: 8px;
+    cursor: pointer;
+    background: #ecf0f1;
+    color: var(--border-dark);
+    box-shadow: 0 4px 0 var(--border-dark);
+    transition: all 0.1s;
+}
+.mode-toggle-btn.active-main {
+    background: #e67e22;
+    color: white;
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 var(--border-dark);
+}
+.mode-toggle-btn.active-dessert {
+    background: #9b59b6;
+    color: white;
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 var(--border-dark);
+}
+
 .cooking-grid {
     display: grid;
     grid-template-columns: 360px 1fr;
@@ -54,7 +86,6 @@ body {
     width: 100%;
 }
 
-/* LEFT COLUMN: THE SCROLLABLE PANTRY STOCKPILE */
 .section-pantry {
     background: var(--pantry-white);
     border: 4px solid var(--border-dark);
@@ -107,11 +138,17 @@ body {
 .ing-node:hover { background: #eedfcb; }
 .ing-node svg { width: 75%; height: 75%; image-rendering: pixelated; margin-bottom: 2px; }
 
-/* RIGHT COLUMN: THE INTERACTIVE KITCHEN COUNTER & STOVE */
 .section-kitchen {
     display: flex;
     flex-direction: column;
     gap: 20px;
+}
+
+.stove-and-tracker-row {
+    display: grid;
+    grid-template-columns: 1fr 200px;
+    gap: 15px;
+    width: 100%;
 }
 
 .stove-station {
@@ -126,7 +163,6 @@ body {
     justify-content: center;
 }
 
-/* The Mixing Stockpot Container */
 .stockpot {
     width: 140px;
     height: 120px;
@@ -145,8 +181,6 @@ body {
 .stockpot::before { left: -24px; border-radius: 4px 0 0 4px; }
 .stockpot::after { right: -24px; border-radius: 0 4px 4px 0; }
 
-/* Container for the animated pixel soup matrix */
-/* Container inside the pot - now completely transparent with no orange blocks! */
 .pot-contents {
     position: absolute;
     bottom: 0;
@@ -154,11 +188,10 @@ body {
     width: 100%;
     height: 100%;
     z-index: 5;
-    overflow: visible; /* Allows steam and bubbles to float naturally at the top */
+    overflow: visible;
     display: block;
 }
 
-/* Layer to hold dynamic floating bubbles */
 .soup-bubble-layer {
     position: absolute;
     width: 100%;
@@ -166,34 +199,28 @@ body {
     top: 0; left: 0;
 }
 
-/* FIX: Giant, high-contrast retro pixel bubbles floating right at the top line */
 .pixel-bubble {
     position: absolute;
-    width: 24px;              /* Scaled way up to look like beautiful big pixel art! */
+    width: 24px;
     height: 24px;
-    background: #e67e22;      /* Cozy cooking bubble color */
-    border: 3px solid var(--border-dark); /* Thick retro outlines */
-    box-shadow: inset -4px -4px 0 #d35400; /* Subtle internal pixel shade shadow */
-    top: 15px;                /* Sits right at the top surface line of your stockpot */
+    background: #e67e22;
+    border: 3px solid var(--border-dark);
+    box-shadow: inset -4px -4px 0 #d35400;
+    top: 15px;
     border-radius: 4px;
     image-rendering: pixelated;
     animation: bubbleFloat 1.4s infinite ease-out;
 }
-
-/* Random time delays so they don't pop uniformly in a straight sequence */
 .pixel-bubble:nth-child(2) { left: 25%; animation-delay: 0.3s; animation-duration: 1.8s; }
 .pixel-bubble:nth-child(3) { left: 50%; animation-delay: 0.6s; animation-duration: 1.2s; }
 .pixel-bubble:nth-child(4) { left: 70%; animation-delay: 0.9s; animation-duration: 1.5s; }
 
-/* Gentle pop scale animation effect */
 @keyframes bubbleFloat {
     0% { transform: scale(0.3) translateY(10px); opacity: 0; }
     30% { opacity: 1; transform: scale(1.1) translateY(0); }
     80% { opacity: 1; transform: scale(1) translateY(-8px); }
     100% { transform: scale(0) translateY(-14px); opacity: 0; }
 }
-
-
 
 .cook-btn {
     margin-top: 25px;
@@ -209,7 +236,43 @@ body {
 }
 .cook-btn:active { transform: translateY(5px); box-shadow: none; }
 
-/* RECIPIE BOOK MILESTONE CONTAINER */
+.added-ingredients-tracker {
+    background: white;
+    border: 4px solid var(--border-dark);
+    border-radius: 8px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    height: 380px;
+}
+.added-ingredients-tracker h4 {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    border-bottom: 2px solid var(--border-dark);
+    padding-bottom: 4px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+.tracker-pills-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    overflow-y: auto;
+    flex-grow: 1;
+}
+.tracker-item-row {
+    background: #faf5f0;
+    border: 2px solid var(--border-dark);
+    border-radius: 4px;
+    padding: 4px 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.75rem;
+    font-weight: bold;
+}
+.tracker-item-row svg { width: 22px; height: 22px; image-rendering: pixelated; flex-shrink: 0; }
+
 .recipe-book-panel {
     background: white;
     border: 4px solid var(--border-dark);
@@ -240,7 +303,6 @@ body {
 }
 .recipe-unlock-card:active { transform: translateY(4px); box-shadow: none; }
 
-/* REAL WORLD INSTRUCTION POPUP OVERLAY */
 .popup-modal {
     position: fixed;
     top: 50%; left: 50%;
@@ -258,69 +320,4 @@ body {
 .close-modal-btn {
     background: #e74c3c; color: white; border: 3px solid var(--border-dark);
     padding: 4px 10px; font-weight: bold; cursor: pointer; float: right; margin-top: -10px;
-}
-/* Layout to hold both the stove and the new sidebar logger side-by-side */
-.stove-and-tracker-row {
-    display: grid;
-    grid-template-columns: 1fr 200px;
-    gap: 15px;
-    width: 100%;
-}
-
-/* ========================================================
-   THE NEW ADDED INGREDIENT SIDEBAR DISPLAY TRACKER
-   ======================================================== */
-.added-ingredients-tracker {
-    background: white;
-    border: 4px solid var(--border-dark);
-    border-radius: 8px;
-    padding: 12px;
-    display: flex;
-    flex-direction: column;
-    height: 380px; /* Aligns perfectly with the stove range height */
-}
-
-.added-ingredients-tracker h4 {
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    border-bottom: 2px solid var(--border-dark);
-    padding-bottom: 4px;
-    margin-bottom: 10px;
-    text-align: center;
-}
-
-.tracker-pills-list {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    overflow-y: auto;
-    flex-grow: 1;
-}
-
-/* Individual list item nodes inside the tracker box */
-.tracker-item-row {
-    background: #faf5f0;
-    border: 2px solid var(--border-dark);
-    border-radius: 4px;
-    padding: 4px 8px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.75rem;
-    font-weight: bold;
-    animation: slideIn 0.15s ease-out;
-}
-
-/* Mini pixel canvas constraints within your log list items */
-.tracker-item-row svg {
-    width: 22px;
-    height: 22px;
-    image-rendering: pixelated;
-    flex-shrink: 0;
-}
-
-@keyframes slideIn {
-    0% { transform: translateX(10px); opacity: 0; }
-    100% { transform: translateX(0); opacity: 1; }
 }
