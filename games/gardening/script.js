@@ -41,15 +41,17 @@ window.BONSAI_REGISTRY = {
 };
 // Append the remaining custom species definitions cleanly to the registry object
 Object.assign(window.BONSAI_REGISTRY, {
-    "crystal": {
+        "crystal": {
         name: "Prismatic Crystal", waterRate: 2, fertRate: 6,
         stages: {
-            seedling: `<svg viewBox="0 0 32 32"><rect x="15" y="21" width="2" height="3" fill="#94A3B8"/><rect x="9" y="24" width="14" height="6" fill="#A0785C"/><rect x="10" y="30" width="12" height="1" fill="#78543C"/></svg>`,
-            sprout: `<svg viewBox="0 0 32 32"><rect x="14" y="15" width="4" height="9" fill="#38BDF8"/><rect x="9" y="24" width="14" height="6" fill="#A0785C"/><rect x="10" y="30" width="12" height="1" fill="#78543C"/></svg>`,
-            sapling: `<svg viewBox="0 0 32 32"><rect x="13" y="10" width="6" height="14" fill="#A855F7"/><rect x="11" y="14" width="10" height="4" fill="#C084FC"/><rect x="9" y="24" width="14" height="6" fill="#A0785C"/><rect x="10" y="30" width="12" height="1" fill="#78543C"/></svg>`,
-            mature: `<svg viewBox="0 0 32 32"><rect x="13" y="6" width="6" height="18" fill="#7209B7"/><rect x="7" y="11" width="18" height="6" fill="#F72585"/><rect x="10" y="7" width="4" height="4" fill="#4CC9F0"/><rect x="18" y="5" width="4" height="6" fill="#4361EE"/><rect x="9" y="24" width="14" height="6" fill="#A0785C"/><rect x="10" y="30" width="12" height="1" fill="#78543C"/></svg>`
+            seedling: `<svg width="100%" height="100%" viewBox="0 0 32 32"><rect x="15" y="21" width="2" height="3" fill="#94A3B8"/><rect x="9" y="24" width="14" height="6" fill="#A0785C"/><rect x="10" y="30" width="12" height="1" fill="#78543C"/></svg>`,
+            sprout: `<svg width="100%" height="100%" viewBox="0 0 32 32"><rect x="14" y="15" width="4" height="9" fill="#38BDF8"/><rect x="9" y="24" width="14" height="6" fill="#A0785C"/><rect x="10" y="30" width="12" height="1" fill="#78543C"/></svg>`,
+            sapling: `<svg width="100%" height="100%" viewBox="0 0 32 32"><rect x="13" y="10" width="6" height="14" fill="#A855F7"/><rect x="11" y="14" width="10" height="4" fill="#C084FC"/><rect x="9" y="24" width="14" height="6" fill="#A0785C"/><rect x="10" y="30" width="12" height="1" fill="#78543C"/></svg>`,
+            // FIXED: Added width/height percentage anchors so the colorful shards stay perfectly aligned over the pot base!
+            mature: `<svg width="100%" height="100%" viewBox="0 0 32 32"><rect x="14" y="10" width="4" height="14" fill="#7209B7"/><rect x="6" y="14" width="20" height="4" fill="#F72585"/><rect x="10" y="9" width="3" height="5" fill="#4CC9F0"/><rect x="15" y="7" width="3" height="7" fill="#7209B7"/><rect x="19" y="8" width="3" height="6" fill="#4361EE"/><rect x="9" y="24" width="14" height="6" fill="#A0785C"/><rect x="10" y="30" width="12" height="1" fill="#78543C"/></svg>`
         }
     },
+
     "cactus": {
         name: "Starburst Cactus", waterRate: 2, fertRate: 2,
         stages: {
