@@ -180,46 +180,73 @@ function fertilizePlant() {
 }
 
 function updateGardenDashboard() {
+    // UPDATED: Dynamically alters internal SVG leaf hex colors to look parched and dried out when water is 0
+function updateGardenDashboard() {
     const config = window.BONSAI_REGISTRY[activePlant.speciesKey];
     if (!config) return;
 
-    // Update Text Labels
+    // Refresh Dashboard DOM Text Labels
     const titleNode = document.getElementById('plant-title-node');
     const stageNode = document.getElementById('plant-stage-node');
     if (titleNode) titleNode.innerText = config.name;
     if (stageNode) stageNode.innerText = activePlant.currentStage.toUpperCase();
 
-    // Map Progress Indicator Bars
+    // Refresh Vitals Metric Progress Bars
     const hydraBar = document.getElementById('hydration-bar');
     const nutriBar = document.getElementById('nutrients-bar');
     if (hydraBar) hydraBar.style.width = `${activePlant.hydration}%`;
     if (nutriBar) nutriBar.style.width = `${activePlant.nutrients}%`;
 
-    // DRAW PIXEL ART OVERLAYS
+    // INJECT PIXEL ART DOME MARKUP
     const canvasSlot = document.getElementById('bonsai-core-vector');
     if (canvasSlot) {
         let svgAsset = config.stages[activePlant.currentStage];
         
-        // DRIED OUT FALLBACK STATE: Turns plant gray if indicators hit zero
+        // 1. GOLD POT UPGRADE MECHANIC: Check if player bought the premium container
+        if (playerEconomy.hasGoldPot) {
+            svgAsset = svgAsset.replaceAll('#A0785C', '#ffd166').replaceAll('#78543C', '#f5b041');
+        }
+
+        // 2. CRITICAL DRIED OUT VISUAL REPAINT SCRIPT (Ditches basic grayscale filter)
         if (activePlant.hydration <= 0 || activePlant.nutrients <= 0) {
-            canvasSlot.style.filter = "grayscale(1) brightness(0.7) translateY(3px)";
             if (stageNode) stageNode.innerText = "DRIED OUT 💀";
+            
+            // Systematically scan and swap green and neon plant colors for crunchier, dead foliage colors
+            svgAsset = svgAsset
+                // Repaint Pine & Bamboo healthy greens into crisp, parched straw tones
+                .replaceAll('#4CAF50', '#C4A482')
+                .replaceAll('#2E7D32', '#A0522D')
+                .replaceAll('#1B5E20', '#6E473B')
+                .replaceAll('#388E3C', '#8B5A2B')
+                .replaceAll('#81C784', '#D2B48C')
+                // Repaint custom winding-pine multi-shade canopy leaves into autumn decay shades
+                .replaceAll('#A8D5BA', '#D2B48C')
+                .replaceAll('#7FBA95', '#B58B63')
+                .replaceAll('#5E9A75', '#8E6242')
+                // Repaint Sakura pastel pink petals into brittle, wilted dark mulches
+                .replaceAll('#FFB7C5', '#A0522D')
+                .replaceAll('#FF8DA1', '#8B4513')
+                .replaceAll('#FBCce3', '#8E5A42')
+                .replaceAll('#F4A2C4', '#6E3728')
+                .replaceAll('#E87FA7', '#4A1D13')
+                // Repaint Lunar Moss neon blues/cyans into shriveled, dusty ashen grays
+                .replaceAll('#00f5d4', '#A0A0A0')
+                .replaceAll('#00b4d8', '#707070')
+                .replaceAll('#90e0ef', '#D0D0D0')
+                .replaceAll('#4CC9F0', '#888888');
+
+            // Add a subtle shrivel layout nudge to show it's drooped and dehydrated
+            canvasSlot.style.filter = "contrast(1.1) brightness(0.85)";
+            canvasSlot.style.transform = "translateY(4px) scaleY(0.95)";
         } else {
             canvasSlot.style.filter = "none";
-            // FIXED: Removed the dynamic scale calculations completely!
-            // The box container size is now 100% stable, let the inner pixel art rect grids grow taller organically
             canvasSlot.style.transform = "none";
         }
         
         canvasSlot.innerHTML = svgAsset;
-        // GOLD POT OVERRIDE MECHANIC: Swaps brown potter lines to true golden hex paint values!
-if (playerEconomy.hasGoldPot) {
-    svgAsset = svgAsset.replaceAll('#A0785C', '#ffd166').replaceAll('#78543C', '#f5b041');
+    }
 }
 
-    }
-    
-}
 // ========================================================
 // 4. ECONOMY & UPGRADES SHOP ENGINE SUBSYSTEM
 // ========================================================
