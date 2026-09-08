@@ -3,83 +3,173 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Capybara Onsen Designer</title>
-    <!-- Links your overhauled cozy Japanese spa stylesheet -->
-    <link rel="stylesheet" href="style.css">
+    <title>Kawaii Bakery: Bento Decorator</title>
+    <style>
+        /* ========================================================
+           KAWAII ARCADE BAKERY CABINET STYLE OVERHAUL
+           ======================================================== */
+        @import url('https://googleapis.com');
+
+        :root {
+            --cafe-bg: #fff0f5;         /* Sweet lavender-blush pastel base */
+            --ui-casing: #5c4a45;        /* Deep cocoa brown outlines */
+            --panel-ivory: #fffdf9;      /* Creamy sweet-cream dashboard plates */
+            --text-cozy: #4a3b32;        /* Earthy dark cocoa font tone */
+            --pastel-blue: #a0c4ff;      /* Sky blue scrap/clear button */
+            --pastel-green: #bdf2d5;     /* Minty green serve button */
+            --cute-success: #9bf6ff;     /* Soft pastel cyan combo highlight */
+            --cute-failure: #ffadad;     /* Soft pastel rose penalty warning */
+        }
+
+        * {
+            box-sizing: border-box; margin: 0; padding: 0;
+            font-family: 'VT323', monospace; letter-spacing: 0.5px;
+        }
+
+        body {
+            color: var(--text-cozy); padding: 20px;
+            display: flex; flex-direction: column; align-items: center;
+            min-height: 100vh; justify-content: center; image-rendering: pixelated;
+            background: 
+                linear-gradient(180deg, #dfc7c1 0px, #dfc7c1 30px, transparent 35px),
+                linear-gradient(90deg, rgba(255,182,193,0.25) 2px, transparent 2px) 0 0 / 30px 30px,
+                linear-gradient(180deg, rgba(255,182,193,0.25) 2px, transparent 2px) 0 0 / 30px 30px,
+                linear-gradient(0deg, #d3b8b1 0px, #d3b8b1 160px, #e7cfc9 160px, #e7cfc9 175px, transparent 175px),
+                var(--cafe-bg);
+        }
+
+        /* Top Pastel Strip Canopy Overhang */
+        body::before {
+            content: ''; position: absolute; top: 30px; left: 50%; transform: translateX(-50%);
+            width: 650px; height: 15px;
+            background: repeating-linear-gradient(90deg, #ffadad, #ffadad 30px, #caffbf 30px, #caffbf 60px);
+            border: 4px solid var(--ui-casing); border-radius: 8px;
+        }
+
+        .nav-row { width: 100%; max-width: 920px; margin-bottom: 20px; display: flex; justify-content: flex-start; }
+        .back-btn {
+            background: #ffb6c1; color: var(--text-cozy); border: 4px solid var(--ui-casing);
+            padding: 8px 24px; border-radius: 12px; font-size: 1.4rem; font-weight: 900;
+            cursor: pointer; box-shadow: 0 6px 0 var(--ui-casing); text-transform: uppercase;
+            transition: all 0.05s;
+        }
+        .back-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--ui-casing); }
+
+        /* THE DUAL PANEL CHASSIS HOUSING */
+        .game-box {
+            background: #ffdef2; border: 6px solid var(--ui-casing); border-radius: 28px;
+            padding: 24px; width: 100%; max-width: 920px;
+            box-shadow: 0 16px 0 rgba(92, 74, 69, 0.25), inset 0 4px 0 rgba(255,255,255,0.5);
+            display: grid; grid-template-columns: 360px 1fr; gap: 25px;
+        }
+
+        .left-screen-bay { display: flex; flex-direction: column; gap: 15px; }
+
+        .order-ticket {
+            background: var(--panel-ivory); border: 4px solid var(--ui-casing); border-radius: 16px;
+            padding: 14px; font-size: 1.6rem; box-shadow: inset -4px -4px 0 rgba(0,0,0,0.02), 0 4px 0 rgba(0,0,0,0.05);
+        }
+
+        /* DYNAMIC GRAPHICS CORE WINDOW DOME */
+        .cup-container {
+            width: 170px; height: 180px; border: 4px solid var(--ui-casing);
+            border-radius: 20px; background: #ffffff; margin: 10px auto;
+            position: relative; box-shadow: inset 10px 10px 0 rgba(0,0,0,0.02), 0 6px 0 rgba(0,0,0,0.05);
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        /* ACCURATE CAKE STACKING VECTOR CANVAS */
+        .liquid { position: relative; width: 120px; height: 120px; display: flex; align-items: center; justify-content: center; }
+        .cake-layer { position: absolute; width: 100%; height: 100%; pointer-events: none; z-index: 5; }
+        .cake-layer svg { width: 100%; height: 100%; }
+
+        #blend-status-banner {
+            font-size: 1.5rem; text-align: center; padding: 8px;
+            border-radius: 10px; border: 4px solid var(--ui-casing);
+            background: var(--panel-ivory); color: var(--text-cozy); min-height: 48px;
+        }
+        .banner-correct { background: var(--cute-success) !important; }
+        .banner-incorrect { background: var(--cute-failure) !important; }
+
+        /* RIGHT SIDE WORKSPACE MIX DRAWER */
+        .right-control-bay { display: flex; flex-direction: column; gap: 15px; }
+        .tabs { background: var(--ui-casing); padding: 6px; border-radius: 14px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+        
+        .tab-btn {
+            padding: 8px 2px; background: #735d57; border: 2px solid var(--ui-casing);
+            color: #fff; font-size: 1.4rem; cursor: pointer; border-radius: 8px; text-transform: uppercase;
+        }
+        .tab-btn.active { background: #ffb7b2; color: var(--ui-casing); border-color: #fff; }
+
+        .ingredients-grid {
+            background: var(--panel-ivory); border: 4px solid var(--ui-casing);
+            border-radius: 20px; padding: 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+            height: 230px; overflow-y: auto;
+        }
+
+        .ing-btn {
+            background: #ffffff; border: 3px solid var(--ui-casing); border-radius: 12px;
+            color: var(--text-cozy); font-size: 1.4rem; padding: 12px; cursor: pointer;
+            box-shadow: 0 5px 0 var(--ui-casing); display: flex; align-items: center; justify-content: center; gap: 6px;
+        }
+        .ing-btn:hover { background: #fff5f6; }
+        .ing-btn:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--ui-casing); }
+
+        .added-ingredients-tracker { background: var(--ui-casing); border-radius: 16px; padding: 12px; color: #fff; }
+        .tracker-item-row { background: #735d57; border: 2px solid var(--ui-casing); border-radius: 8px; padding: 6px; font-size: 1.1rem; text-align: center; margin-bottom: 4px; }
+
+        .action-bar { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .action-bar button { padding: 16px; font-size: 1.7rem; font-weight: bold; border-radius: 16px; border: 4px solid var(--ui-casing); cursor: pointer; text-transform: uppercase; }
+        .action-bar button:first-child { background: var(--pastel-blue); box-shadow: 0 6px 0 #6e9ecf; color: #fff; }
+        .action-bar button:last-child { background: var(--pastel-green); box-shadow: 0 6px 0 #9283e0; color: #fff; }
+    </style>
 </head>
 <body>
 
-    <!-- NAV HEADER ROW -->
     <div class="nav-row">
         <button class="back-btn" onclick="location.href='../../index.html'">◀ MAP HUB</button>
     </div>
 
-    <!-- MAIN TWO COLUMN ARCADE INTERFACE CABINET -->
-    <div class="game-layout">
-        
-        <!-- LEFT PANEL: CUSTOM SUITE AVATAR ASSEMBLY -->
-        <section class="card-section">
-            <h2>🦫 ONSEN DESIGNER</h2>
-            
-            <!-- STACKED ABSOLUTE COORDINATES GRAPHICS WINDOW -->
-            <div class="avatar-display-box" id="avatar-sandbox">
-                <!-- ACCESSORIES ELEMENT MESHES -->
-                <div class="overlay-layer id-head" id="layer-head"></div>
-                <div class="overlay-layer id-glass" id="layer-glass"></div>
-                
-                <div class="base-avatar">🦫</div>
+    <div class="game-box">
+        <div class="left-screen-bay">
+            <div class="order-ticket">
+                <div style="font-size:0.9rem; color:#ffb6c1; margin-bottom:4px; font-weight:900; text-align:center;">🍥 POLAROID ORDER RECIPE 🍥</div>
+                <div id="order-specs-node">Loading ticket...</div>
             </div>
 
-            <div class="item-category">
-                <div class="category-title">👒 HEADWEAR SELECT</div>
-                <div class="options-row">
-                    <button class="option-node" onclick="setLayer('head', '👑')">👑</button>
-                    <button class="option-node" onclick="setLayer('head', '🎀')">🎀</button>
-                    <button class="option-node" onclick="setLayer('head', '🎩')">🎩</button>
-                    <button class="option-node remove-btn" onclick="setLayer('head', '')">❌</button>
+            <div class="cup-container">
+                <div class="liquid">
+                    <!-- FIXED ALIGNED ABSOLUTE STACKED GRID DRAWINGS -->
+                    <div class="cake-layer" id="layer-sponge"></div>
+                    <div class="cake-layer" id="layer-cream"></div>
+                    <div class="cake-layer" id="layer-topping"></div>
                 </div>
             </div>
 
-            <div class="item-category">
-                <div class="category-title">👓 GLASSES ACCENTS</div>
-                <div class="options-row">
-                    <button class="option-node" onclick="setLayer('glass', '🕶️')">🕶️</button>
-                    <button class="option-node" onclick="setLayer('glass', '🤓')">🤓</button>
-                    <button class="option-node remove-btn" onclick="setLayer('glass', '')">❌</button>
-                </div>
-            </div>
-        </section>
+            <div id="blend-status-banner">🍬 Awaiting bakery decorator lines...</div>
+        </div>
 
-        <!-- RIGHT PANEL: DISPATCH COMFORT PACK SYSTEM -->
-        <section class="card-section">
-            <h2>🧺 COMFORT DISPATCH</h2>
-            
-            <div class="item-category">
-                <div class="category-title">📦 CHOOSE COZY ADD-ONS</div>
-                <div class="button-grid">
-                    <button class="grid-item-btn" onclick="addToBasket('🍊 Yuzu')">🍊 Yuzu</button>
-                    <button class="grid-item-btn" onclick="addToBasket('🧼 Salts')">🧼 Salts</button>
-                    <button class="grid-item-btn" onclick="addToBasket('🧣 Towel')">🧣 Towel</button>
-                    <button class="grid-item-btn" onclick="addToBasket('🍵 Tea')">🍵 Tea</button>
-                </div>
+        <div class="right-control-bay">
+            <nav class="tabs">
+                <button class="tab-btn active" onclick="toggleTabMode('frostings')">Icing</button>
+                <button class="tab-btn" onclick="toggleTabMode('decorations')">Toppings</button>
+                <button class="tab-btn" onclick="toggleTabMode('borders')">Borders</button>
+            </nav>
+
+            <div class="ingredients-grid"></div>
+
+            <div class="added-ingredients-tracker">
+                <div style="font-size: 1.1rem; border-bottom: 2px dashed #735d57; padding-bottom: 4px; margin-bottom: 6px; text-align:center; font-weight:900;">🧁 PREP CONSOLE MATRIX</div>
+                <div id="tracker-pills-list">Chamber empty...</div>
             </div>
 
-            <div class="item-category" style="margin-top:10px;">
-                <div class="category-title">📋 CURRENT SELECTIONS</div>
-                <div class="basket-status-box" id="basket-view-container">
-                    <span id="basket-view">Empty Basket</span>
-                </div>
+            <div class="action-bar">
+                <button onclick="clearMachineChamber()">Scrap 🗑️</button>
+                <button onclick="compilePotRecipe()">Deliver 🎁</button>
             </div>
-
-            <div>
-                <button class="action-btn success" onclick="compilePotRecipe()">PREPARE TREATMENT ♨</button>
-                <button class="action-btn danger" onclick="clearStockpot()">CLEAR BASKET 🗑️</button>
-            </div>
-        </section>
-
+        </div>
     </div>
 
-    <!-- Core Loop script loader -->
     <script src="script.js"></script>
 </body>
 </html>
