@@ -97,7 +97,7 @@ window.BONSAI_REGISTRY = {
 // 2. CORE GAME STATE MANAGEMENT
 let activePlant = {
     speciesKey: "pine",
-    currentStage: "seedling", // Constrained to seedling values at initialization
+    currentStage: "seedling", // Restricts plants to start as tiny seedlings
     growthPoints: 0,          // Scales up from 0 to 100
     hydration: 100,
     nutrients: 100
@@ -105,14 +105,14 @@ let activePlant = {
 
 // 3. CORE CONTROLLERS & INITIALIZATION
 window.addEventListener('DOMContentLoaded', () => {
-    // Explicit Window exposure ensures your inline HTML buttons find functions instantly
+    // Exposes methods directly to the window so your HTML onclick tags run instantly
     window.switchBonsaiSpecimen = switchBonsaiSpecimen;
     window.waterPlant = waterPlant;
     window.fertilizePlant = fertilizePlant;
 
     updateGardenDashboard();
     
-    // BACKEND CLOCK TICKER: Fades soil moisture and nutrients every 1 second
+    // SOIL DECAY INTERVAL: Fades water and nutrients every 1 second
     setInterval(() => {
         decaySoilVitals();
     }, 1000);
@@ -122,7 +122,7 @@ function switchBonsaiSpecimen(key) {
     if (!window.BONSAI_REGISTRY[key]) return;
     activePlant = {
         speciesKey: key,
-        currentStage: "seedling", // Forces selection items to start fresh as seedlings
+        currentStage: "seedling", // Reverts new selections back to seedling state
         growthPoints: 0,
         hydration: 90,
         nutrients: 90
@@ -134,15 +134,15 @@ function decaySoilVitals() {
     const config = window.BONSAI_REGISTRY[activePlant.speciesKey];
     if (!config) return;
 
-    // Steady ticking environmental consumption levels
+    // Gradual moisture and nutrient matrix depletion pools
     activePlant.hydration = Math.max(0, activePlant.hydration - config.waterRate);
     activePlant.nutrients = Math.max(0, activePlant.nutrients - config.fertRate);
 
-    // DYNAMIC ENGINE DISPATCHER: Growth points scale up ONLY if resources stay above 0%
+    // EVOLUTION CONTROLLER: Grows strictly if moisture/nutrients sit safely above 0%
     if (activePlant.hydration > 0 && activePlant.nutrients > 0 && activePlant.currentStage !== "mature") {
-        activePlant.growthPoints += 4.5;
+        activePlant.growthPoints += 4.5; // Pacing speed of the evolutionary changes
         
-        // Evolve plant assets dynamically across 4 clear milestones
+        // Morph illustrations dynamically based on point thresholds
         if (activePlant.growthPoints >= 100) {
             activePlant.currentStage = "mature";
         } else if (activePlant.growthPoints >= 65) {
@@ -169,33 +169,34 @@ function updateGardenDashboard() {
     const config = window.BONSAI_REGISTRY[activePlant.speciesKey];
     if (!config) return;
 
-    // Bind DOM Text Node targets smoothly
+    // Refresh DOM Text Nodes
     const titleNode = document.getElementById('plant-title-node');
     const stageNode = document.getElementById('plant-stage-node');
     if (titleNode) titleNode.innerText = config.name;
     if (stageNode) stageNode.innerText = activePlant.currentStage.toUpperCase();
 
-    // Refresh Meter Progress fill width scores
+    // Refresh Vitals Metric Progress Bars
     const hydraBar = document.getElementById('hydration-bar');
     const nutriBar = document.getElementById('nutrients-bar');
     if (hydraBar) hydraBar.style.width = `${activePlant.hydration}%`;
     if (nutriBar) nutriBar.style.width = `${activePlant.nutrients}%`;
 
-    // INJECT DETAILED NON-CREEPY PIXEL MARKUP
+    // INJECT PIXEL ART DOME MARKUP
     const canvasSlot = document.getElementById('bonsai-core-vector');
     if (canvasSlot) {
         let svgAsset = config.stages[activePlant.currentStage];
         
-        // DRIED OUT VITALS FALLBACK RESPONSE: Shifts canvas grey if indicators flatline
+        // DRIED OUT VISUAL ENGINE OVERRIDE
         if (activePlant.hydration <= 0 || activePlant.nutrients <= 0) {
             canvasSlot.style.filter = "grayscale(1) brightness(0.7) translateY(3px)";
             if (stageNode) stageNode.innerText = "DRIED OUT 💀";
         } else {
             canvasSlot.style.filter = "none";
-            // DYNAMIC INCREMENTAL SCALER: Scales graphic box constraints larger over time
+            // DYNAMIC HEIGHT SCALE: Physically stretches scale size bigger as growth scores build up!
             canvasSlot.style.transform = `scale(${0.6 + (activePlant.growthPoints * 0.005)})`;
         }
         
         canvasSlot.innerHTML = svgAsset;
     }
 }
+
