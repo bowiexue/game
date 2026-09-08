@@ -81,9 +81,9 @@ Object.assign(window.BONSAI_REGISTRY, {
         name: "Frost Thistle", waterRate: 3, fertRate: 3,
         stages: {
             seedling: `<svg viewBox="0 0 32 32"><rect x="15" y="22" width="2" height="2" fill="#0077b6"/><rect x="9" y="24" width="14" height="6" fill="#A0785C"/><rect x="10" y="30" width="12" height="1" fill="#78543C"/></svg>`,
-            sprout: `<svg viewBox="0 0 32 32"><rect x="15" y="16" width="2" height="8" fill="#0096c7"/><rect x="13" y="23" width="6" height="2" fill="#03045e"/><rect x="9" y="24" width="14" height="6" fill="#A0785C"/><rect x="10" y="30" width="12" height="1" fill="#78543C"/></svg>`,
+            sprout: `<svg viewBox="0 0 32 32"><rect x="15" y="16" width="2" height="8" fill="#0096c7"/><rect x="13" y="18" width="6" height="2" fill="#03045e"/><rect x="9" y="24" width="14" height="6" fill="#A0785C"/><rect x="10" y="30" width="12" height="1" fill="#78543C"/></svg>`,
             sapling: `<svg viewBox="0 0 32 32"><rect x="15" y="11" width="2" height="13" fill="#00b4d8"/><rect x="11" y="13" width="10" height="3" fill="#0077b6"/><rect x="13" y="8" width="6" height="3" fill="#90e0ef"/><rect x="9" y="24" width="14" height="6" fill="#A0785C"/><rect x="10" y="30" width="12" height="1" fill="#78543C"/></svg>`,
-            mature: `<svg viewBox="0 0 32 32"><rect x="14" y="12" width="4" height="18" fill="#03045e"/><rect x="8" y="11" width="16" height="4" fill="#0077b6"/><rect x="10" y="7" width="12" height="4" fill="#00b4d8"/><rect x="12" y="3" width="8" height="4" fill="#90e0ef" stroke="#03045e" stroke-width="1"/><rect x="9" y="24" width="14" height="6" fill="#A0785C"/><rect x="10" y="30" width="12" height="1" fill="#78543C"/></svg>`
+            mature: `<svg viewBox="0 0 32 32"><rect x="14" y="9" width="4" height="15" fill="#03045e"/><rect x="8" y="11" width="16" height="4" fill="#0077b6"/><rect x="10" y="7" width="12" height="4" fill="#00b4d8"/><rect x="12" y="3" width="8" height="4" fill="#90e0ef" stroke="#03045e" stroke-width="1"/><rect x="9" y="24" width="14" height="6" fill="#A0785C"/><rect x="10" y="30" width="12" height="1" fill="#78543C"/></svg>`
         }
     },
     "coral": {
@@ -140,15 +140,15 @@ function decaySoilVitals() {
     const config = window.BONSAI_REGISTRY[activePlant.speciesKey];
     if (!config) return;
 
-    // Steady ticking vitals depletion tracker
+    // Steady background consumption tracking
     activePlant.hydration = Math.max(0, activePlant.hydration - config.waterRate);
     activePlant.nutrients = Math.max(0, activePlant.nutrients - config.fertRate);
 
-    // EVOLUTION CONTROLLER: Grows strictly if moisture/nutrients stay safely above 0%
+    // GROWTH LOGIC: Plant grows ONLY if resource pools are safely above 0%
     if (activePlant.hydration > 0 && activePlant.nutrients > 0 && activePlant.currentStage !== "mature") {
         activePlant.growthPoints += 4.5; 
         
-        // Morph illustrations dynamically based on point thresholds
+        // Evolve plant assets as progress hits thresholds
         if (activePlant.growthPoints >= 100) {
             activePlant.currentStage = "mature";
         } else if (activePlant.growthPoints >= 65) {
@@ -166,7 +166,6 @@ function waterPlant() {
     updateGardenDashboard();
 }
 
-// Ensure your HTML button tags click for this exact function target name
 function fertilizePlant() {
     activePlant.nutrients = Math.min(100, activePlant.nutrients + 20);
     updateGardenDashboard();
@@ -176,31 +175,32 @@ function updateGardenDashboard() {
     const config = window.BONSAI_REGISTRY[activePlant.speciesKey];
     if (!config) return;
 
-    // Bind DOM Text Node targets
+    // Update Text Labels
     const titleNode = document.getElementById('plant-title-node');
     const stageNode = document.getElementById('plant-stage-node');
     if (titleNode) titleNode.innerText = config.name;
     if (stageNode) stageNode.innerText = activePlant.currentStage.toUpperCase();
 
-    // Map Progress Value Indicator Fills
+    // Map Progress Indicator Bars
     const hydraBar = document.getElementById('hydration-bar');
     const nutriBar = document.getElementById('nutrients-bar');
     if (hydraBar) hydraBar.style.width = `${activePlant.hydration}%`;
     if (nutriBar) nutriBar.style.width = `${activePlant.nutrients}%`;
 
-    // INJECT BEAUTIFUL NON-CREEPY RETRO GRID MARKUP
+    // DRAW PIXEL ART OVERLAYS
     const canvasSlot = document.getElementById('bonsai-core-vector');
     if (canvasSlot) {
         let svgAsset = config.stages[activePlant.currentStage];
         
-        // DRIED OUT VITALS ACTION RESPONDERS
+        // DRIED OUT FALLBACK STATE: Turns plant gray if indicators hit zero
         if (activePlant.hydration <= 0 || activePlant.nutrients <= 0) {
             canvasSlot.style.filter = "grayscale(1) brightness(0.7) translateY(3px)";
             if (stageNode) stageNode.innerText = "DRIED OUT 💀";
         } else {
             canvasSlot.style.filter = "none";
-            // DYNAMIC PHYSICAL SCALING SCALER: Scales graphic larger as growth score builds up!
-            canvasSlot.style.transform = `scale(${0.6 + (activePlant.growthPoints * 0.005)})`;
+            // FIXED: Removed the dynamic scale calculations completely!
+            // The box container size is now 100% stable, let the inner pixel art rect grids grow taller organically
+            canvasSlot.style.transform = "none";
         }
         
         canvasSlot.innerHTML = svgAsset;
