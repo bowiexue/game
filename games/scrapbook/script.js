@@ -92,7 +92,7 @@ function triggerApplianceParticles() {
     });
 }
 
-// RENDERS THE SIDEBAR LIST BOX ENTRIES ATTACHED WITH SINGLE DISCARD BUTTONS
+// UPDATED: Dynamically checks both main and dessert registries to pull item graphics cleanly
 function renderTrackerPillsList() {
     const trackerList = document.getElementById('tracker-pills-list');
     trackerList.innerHTML = '';
@@ -101,9 +101,21 @@ function renderTrackerPillsList() {
         const itemRow = document.createElement('div');
         itemRow.className = 'tracker-item-row';
         
+        // Comprehensive check looking through all category structures inside both files
+        const findSVG = () => {
+            const pools = [
+                window.mainCoursePantry?.proteins, window.mainCoursePantry?.vegetables, window.mainCoursePantry?.sauces,
+                window.dessertPantry?.proteins, window.dessertPantry?.vegetables, window.dessertPantry?.sauces
+            ];
+            for (let pool of pools) {
+                if (pool && pool[item.key]) return pool[item.key].svg;
+            }
+            return ''; // Empty canvas vector fallback block if unassigned
+        };
+
         itemRow.innerHTML = `
             <div class="pill-core-content">
-                ${window.mainCoursePantry.proteins[item.key]?.svg || window.dessertPantry.proteins[item.key]?.svg || window.mainCoursePantry.vegetables[item.key]?.svg || window.dessertPantry.vegetables[item.key]?.svg || window.mainCoursePantry.sauces[item.key]?.svg || window.dessertPantry.sauces[item.key]?.svg || ''}
+                ${findSVG()}
                 <span>${item.label}</span>
             </div>
             <button class="pill-single-remove-btn" onclick="removeSingleIngredient(${index})">🗑️</button>
