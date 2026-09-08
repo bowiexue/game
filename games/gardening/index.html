@@ -3,60 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pixel Bonsai</title>
-    <style>
-        :root { --frame: #2c3e50; }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Courier New', Courier, monospace; }
-        body { background: #fdfaf6; color: var(--frame); padding: 30px; display: flex; flex-direction: column; align-items: center; }
-        .bonsai-card { background: white; border: 4px solid var(--frame); border-radius: 12px; padding: 20px; width: 100%; max-width: 420px; text-align: center; }
-        .art-viewport { background: #fafafa; border: 4px solid var(--frame); border-radius: 12px; width: 220px; height: 220px; margin: 15px auto; display: flex; align-items: center; justify-content: center; }
-        .art-viewport svg { width: 90%; height: 90%; image-rendering: pixelated; }
-        .meter-bg { background: #ecf0f1; border: 3px solid var(--frame); height: 22px; border-radius: 4px; margin: 4px 0 12px 0; overflow: hidden; }
-        .meter-fill { height: 100%; width: 20%; transition: width 0.3s; }
-        .action-btn { background: white; border: 3px solid var(--frame); padding: 10px; font-weight: bold; border-radius: 6px; cursor: pointer; width: 48%; margin: 1%; }
-    </style>
+    <title>Pixel Bonsai Laboratory</title>
+    <!-- Reuses your existing cozy dashboard look -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div style="width:100%; max-width:420px; margin-bottom:10px;"><button onclick="location.href='../../index.html'" style="background:var(--frame); color:white; border:none; padding:6px 12px; border-radius:4px; font-weight:bold; cursor:pointer;">◀ BACK</button></div>
-    <div class="bonsai-card">
-        <h2>BONSAI CORE</h2>
-        <select id="specimen-select" onchange="resetSpecimen()" style="margin:10px 0; padding:6px; border:3px solid var(--frame); font-weight:bold;">
-            <option value="classic">🌲 Classic Pine</option>
-            <option value="sakura">🌸 Sakura Bloom</option>
-        </select>
-        <div class="art-viewport"><svg id="bonsai-svg" viewBox="0 0 16 16"></svg></div>
-        <h4 id="stage-tag" style="color:#7f8c8d; margin-bottom:10px;">SPROUT</h4>
-        <div style="text-align:left; font-size:0.8rem; font-weight:bold;">💧 HYDRATION</div>
-        <div class="meter-bg"><div id="w-fill" class="meter-fill" style="background:#3498db;"></div></div>
-        <div style="text-align:left; font-size:0.8rem; font-weight:bold;">🪱 NUTRIENTS</div>
-        <div class="meter-bg"><div id="f-fill" class="meter-fill" style="background:#2ecc71;"></div></div>
-        <button class="action-btn" onclick="tend('w')">💧 WATER</button>
-        <button class="action-btn" onclick="tend('f')">🪱 FERTILIZE</button>
+
+    <!-- CONTROL HEADER ROW -->
+    <div class="nav-row">
+        <button class="back-btn" onclick="location.href='../../index.html'">◀ MAP HUB</button>
+        <div style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">🪴 Greenhouse Module</div>
     </div>
-    <script>
-        const treeStages = {
-            classic: [
-                `<path d="M7,10 H9 V13 H7 Z" fill="#5c4033" stroke="#1a110b" stroke-width="0.5"/><path d="M6,8 H10 V10 H6 Z" fill="#27ae60" stroke="#1e272e" stroke-width="0.5"/>`,
-                `<path d="M7,8 H9 V13 H7 Z M6,10 H7 V11 H6 Z" fill="#5c4033" stroke="#1a110b" stroke-width="0.5"/><path d="M4,6 H12 V9 H4 Z" fill="#27ae60" stroke="#1e272e" stroke-width="0.5"/><path d="M5,7 H11 V8 H5 Z" fill="#2ecc71"/>`,
-                `<path d="M7,6 H9 V13 H7 Z M5,9 H8 V10 H5 Z" fill="#4a3319" stroke="#1a110b" stroke-width="0.5"/><path d="M3,4 H13 V7 H3 Z M5,2 H11 V4 H5 Z" fill="#1e4620" stroke="#112412" stroke-width="0.5"/><path d="M4,5 H12 V6 H4 Z M6,3 H10 V4 H6 Z" fill="#27ae60"/>`
-            ],
-            sakura: [
-                `<path d="M7,10 H9 V13 H7 Z" fill="#5c4033" stroke="#1a110b" stroke-width="0.5"/><path d="M6,8 H10 V10 H6 Z" fill="#d81b60" stroke="#1e272e" stroke-width="0.5"/>`,
-                `<path d="M7,8 H9 V13 H7 Z" fill="#5c4033" stroke="#1a110b" stroke-width="0.5"/><path d="M4,6 H12 V9 H4 Z" fill="#d81b60" stroke="#1e272e" stroke-width="0.5"/><path d="M5,7 H11 V8 H5 Z" fill="#f48fb1"/>`,
-                `<path d="M7,6 H9 V13 H7 Z M6,9 H8 V10 H6 Z" fill="#4a3319" stroke="#1a110b" stroke-width="0.5"/><path d="M3,4 H13 V7 H3 Z M5,2 H11 V4 H5 Z" fill="#ad1457" stroke="#4a001f" stroke-width="0.5"/><path d="M4,5 H12 V6 H4 Z M6,3 H10 V4 H6 Z" fill="#f06292"/>`
-            ]
-        };
-        let type = 'classic', wVal = 20, fVal = 20;
-        function refresh() {
-            document.getElementById('w-fill').style.width = `${wVal}%`; document.getElementById('f-fill').style.width = `${fVal}%`;
-            let stage = Math.min(2, Math.floor((wVal + fVal) / 55));
-            document.getElementById('stage-tag').innerText = ["SPROUT NODE", "CUTTING NODE", "ZEN MASTERPIECE"][stage];
-            const pot = `<path d="M2,12 H14 V15 H2 Z" fill="#a0522d" stroke="#2c3e50" stroke-width="0.75"/><rect x="4" y="13" width="8" height="1" fill="#d2691e"/>`;
-            document.getElementById('bonsai-svg').innerHTML = pot + treeStages[type][stage];
-        }
-        function tend(s) { if(s==='w') wVal=Math.min(100,wVal+15); else fVal=Math.min(100,fVal+15); refresh(); }
-        function resetSpecimen() { type = document.getElementById('specimen-select').value; wVal=20; fVal=20; refresh(); }
-        resetSpecimen();
-    </script>
+
+    <!-- MAIN TWO COLUMN GRID SYSTEM -->
+    <div class="cooking-grid">
+        
+        <!-- SIDEBAR MENU: 10 DISTINCT SEED SPECIMENS -->
+        <aside class="section-pantry" style="height: 520px;">
+            <h3>🌱 SEED REGISTRY</h3>
+            
+            <div class="shelf-title">Woodland Flora</div>
+            <div class="ingredient-shelf" style="grid-template-columns: 1fr;">
+                <button class="mode-toggle-btn" style="text-align:left; padding:8px 12px; margin-bottom:4px;" onclick="switchBonsaiSpecimen('pine')">🌲 Classic Pine</button>
+                <button class="mode-toggle-btn" style="text-align:left; padding:8px 12px; margin-bottom:4px;" onclick="switchBonsaiSpecimen('sakura')">🌸 Sakura Bloom</button>
+                <button class="mode-toggle-btn" style="text-align:left; padding:8px 12px; margin-bottom:4px;" onclick="switchBonsaiSpecimen('bamboo')">🎋 Jade Bamboo</button>
+                <button class="mode-toggle-btn" style="text-align:left; padding:8px 12px; margin-bottom:4px;" onclick="switchBonsaiSpecimen('shroom')">🍄 Canopy Shroom</button>
+                <button class="mode-toggle-btn" style="text-align:left; padding:8px 12px; margin-bottom:4px;" onclick="switchBonsaiSpecimen('fern')">🌿 Midnight Fern</button>
+            </div>
+
+            <div class="shelf-title" style="margin-top:15px;">Exotic & Aquatic</div>
+            <div class="ingredient-shelf" style="grid-template-columns: 1fr;">
+                <button class="mode-toggle-btn" style="text-align:left; padding:8px 12px; margin-bottom:4px;" onclick="switchBonsaiSpecimen('crystal')">💎 Prismatic Crystal</button>
+                <button class="mode-toggle-btn" style="text-align:left; padding:8px 12px; margin-bottom:4px;" onclick="switchBonsaiSpecimen('cactus')">🌵 Starburst Cactus</button>
+                <button class="mode-toggle-btn" style="text-align:left; padding:8px 12px; margin-bottom:4px;" onclick="switchBonsaiSpecimen('heliotrope')">🌻 Golden Heliotrope</button>
+                <button class="mode-toggle-btn" style="text-align:left; padding:8px 12px; margin-bottom:4px;" onclick="switchBonsaiSpecimen('thistle')">❄️ Frost Thistle</button>
+                <button class="mode-toggle-btn" style="text-align:left; padding:8px 12px; margin-bottom:4px;" onclick="switchBonsaiSpecimen('coral')">🪸 Coral Fan</button>
+            </div>
+        </aside>
+
+        <!-- MAIN GREENHOUSE COUNTERTOP WORKSPACE -->
+        <div class="section-kitchen">
+            <div class="stove-and-tracker-row" style="grid-template-columns: 1fr 260px;">
+                
+                <!-- Central Incubator Stand -->
+                <main class="stove-station" style="height: 520px; background: #f0fdf4;">
+                    <!-- Dynamically managed titles via code -->
+                    <h2 id="plant-title-node" style="position:absolute; top:20px; text-transform:uppercase; font-size:1.1rem; letter-spacing:1px;">Classic Pine Bonsai</h2>
+                    <h4 id="plant-stage-node" style="position:absolute; top:50px; font-size:0.75rem; color:#7f8c8d; letter-spacing:0.5px;">SPROUT</h4>
+
+                    <!-- Vector Output Canvas Window Slot -->
+                    <div id="bonsai-core-vector" style="width:140px; height:140px; margin-top:40px; margin-bottom:20px; transition:all 0.3s ease;">
+                        <!-- Initial asset layer dynamically built by script -->
+                    </div>
+
+                    <!-- Care Interaction Input Row -->
+                    <div style="display:flex; gap:15px; width:90%; justify-content:center; margin-top:20px;">
+                        <button class="cook-btn" style="background:#38bdf8; box-shadow:0 5px 0 #0284c7; margin:0; padding:12px 20px; font-size:0.8rem;" onclick="waterPlant()">💧 WATER SOIL</button>
+                        <button class="cook-btn" style="background:#fbbf24; box-shadow:0 5px 0 #b45309; margin:0; padding:12px 20px; font-size:0.8rem;" onclick="fertilizePlant()">🪱 FERTILIZE</button>
+                    </div>
+                </main>
+
+                <!-- RIGHT PANEL: METRIC VITALS TRACKER -->
+                <aside class="added-ingredients-tracker" style="height: 520px; padding:20px;">
+                    <h4>📊 TELEMETRY METER</h4>
+
+                    <div style="margin-top:25px;">
+                        <div style="font-size:0.7rem; margin-bottom:6px; letter-spacing:0.5px;">💧 HYDRATION LEVELS</div>
+                        <div style="width:100%; height:18px; background:#e2e8f0; border:3px solid var(--border-dark); border-radius:6px; overflow:hidden;">
+                            <div id="hydration-bar" style="width:80%; height:100%; background:#38bdf8; transition:width 0.2s ease-out;"></div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top:25px;">
+                        <div style="font-size:0.7rem; margin-bottom:6px; letter-spacing:0.5px;">🪱 NUTRIENT MATRIX</div>
+                        <div style="width:100%; height:18px; background:#e2e8f0; border:3px solid var(--border-dark); border-radius:6px; overflow:hidden;">
+                            <div id="nutrients-bar" style="width:80%; height:100%; background:#fbbf24; transition:width 0.2s ease-out;"></div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top:35px; border-top:3px dashed var(--border-dark); padding-top:25px; text-align:center;">
+                        <div style="font-size:0.65rem; line-height:1.6; color:#7f8c8d; font-style:italic;">
+                            Keep environmental vitals above 0% to fuel cell mutation. If soil dries out completely, growth pauses and your asset wilts gray.
+                        </div>
+                    </div>
+                </aside>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Core Script Boot Linkage -->
+    <script src="script.js"></script>
 </body>
 </html>
