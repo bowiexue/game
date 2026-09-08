@@ -246,7 +246,7 @@ function updateGardenDashboard() {
         canvasSlot.innerHTML = svgAsset;
     }
 }
-
+}
 // ========================================================
 // 4. ECONOMY & UPGRADES SHOP ENGINE SUBSYSTEM
 // ========================================================
