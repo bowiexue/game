@@ -257,53 +257,71 @@ body {
 /* ========================================================
    PARTICLE SIMULATORS (BUBBLES & STEAM CONTEXT)
    ======================================================== */
+/* ========================================================
+   REFACTORED HIGH-DYNAMIC RISE PARTICLE SYSTEM
+   ======================================================== */
 .soup-bubble-layer {
     position: absolute;
     width: 100%;
     height: 100%;
     top: 0; 
     left: 0;
+    overflow: hidden; /* Clips the bubbles so they vanish cleanly at the rim boundary */
     pointer-events: none;
 }
 
-/* FIXED SURFACE BUBBLE LOOK: Constrained to float along top surface edge line */
+/* FIXED RISING PHYSICS: Starts deep inside pot hull and floats strictly straight up */
 .pixel-bubble {
     position: absolute;
-    width: 14px;
-    height: 14px;
+    width: 16px;
+    height: 16px;
     border: 3px solid var(--border-dark);
     background: #e67e22;
     border-radius: 4px;
-    /* Renders along top edge surface profile setup */
-    top: -8px; 
+    bottom: -20px; /* Hidden just beneath the bottom inner baseline layer */
     image-rendering: pixelated;
-    animation: bubblePopSurface 0.6s infinite steps(4);
+    transform-origin: center;
+    animation: bubbleRiseAndPop 1.5s infinite linear;
 }
 
-@keyframes bubblePopSurface {
-    0% { transform: translateY(2px) scale(0.6); opacity: 0; }
-    50% { transform: translateY(-4px) scale(1.1); opacity: 1; }
-    100% { transform: translateY(-8px) scale(0); opacity: 0; }
+@keyframes bubbleRiseAndPop {
+    0% { 
+        transform: translateY(0) scale(0.4); 
+        opacity: 0; 
+    }
+    15% { 
+        opacity: 1; 
+        transform: translateY(-20px) scale(1); 
+    }
+    85% { 
+        opacity: 1; 
+        transform: translateY(-100px) scale(0.9); /* Fluid steady upward ascent line vector */
+    }
+    100% { 
+        transform: translateY(-115px) scale(0); /* Pops right at the fluid surface boundary line */
+        opacity: 0; 
+    }
 }
 
-/* BAKE STEAM PARTICLES: Soft drifting trails scaling upward from cooking core window */
+/* OVEN STEAM TRAIL: Evenly rises and diffuses across the glass oven window panel */
 .pixel-steam-trail {
     position: absolute;
     width: 8px;
-    height: 12px;
+    height: 14px;
     background: #ffffff;
-    opacity: 0.6;
+    opacity: 0;
     border-radius: 2px;
-    bottom: 0;
-    animation: steamRiseEffect 1.4s infinite linear;
+    bottom: -10px;
+    animation: steamRiseAndFade 1.6s infinite linear;
 }
 
-@keyframes steamRiseEffect {
+@keyframes steamRiseAndFade {
     0% { transform: translateY(0) scaleX(1); opacity: 0; }
-    20% { opacity: 0.5; }
-    60% { transform: translateY(-40px) scaleX(1.5); opacity: 0.3; }
-    100% { transform: translateY(-70px) scaleX(0.2); opacity: 0; }
+    20% { opacity: 0.6; }
+    70% { transform: translateY(-50px) scaleX(1.4); opacity: 0.3; }
+    100% { transform: translateY(-75px) scaleX(0.2); opacity: 0; }
 }
+
 
 /* ========================================================
    PILLS LIST WORKSPACE TRASH LAYOUT
