@@ -10,10 +10,19 @@
 <body>
 
     <!-- CONTROL HEADER ROW -->
-    <div class="nav-row">
-        <button class="back-btn" onclick="location.href='../../index.html'">◀ MAP HUB</button>
-        <div style="font-size: 1.5rem; text-transform: uppercase; color: #a5b1c2;">Automated Brewing Grid</div>
+    <!-- FIXED HEADER SYSTEM: Splits title and back button so nothing overlaps or disappears -->
+<div class="nav-row" style="display: flex; flex-direction: column; align-items: center; gap: 10px; max-width: 920px; width: 100%;">
+    <!-- 1. Dedicated Title Line centered at the top -->
+    <div style="font-size: 1.6rem; text-transform: uppercase; color: #5c4a45; font-weight: 900; letter-spacing: 0.5px; margin: 0; text-align: center;">
+        Automated Brewing Grid
     </div>
+    
+    <!-- 2. Dedicated Navigation Line left-aligned underneath -->
+    <div style="width: 100%; display: flex; justify-content: flex-start;">
+        <button class="back-btn" onclick="location.href='../../index.html'">◀ MAP HUB</button>
+    </div>
+</div>
+
 
     <!-- MAIN CONSOLE DUAL-PANEL CHASSIS -->
     <div class="game-box">
