@@ -4,20 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Capybara Onsen Designer</title>
+    <!-- Links your overhauled cozy Japanese spa stylesheet -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+    <!-- NAV HEADER ROW -->
     <div class="nav-row">
-        <button class="back-btn" onclick="location.href='../../index.html'">⬅ Return to Map</button>
+        <button class="back-btn" onclick="location.href='../../index.html'">◀ MAP HUB</button>
     </div>
 
+    <!-- MAIN TWO COLUMN ARCADE INTERFACE CABINET -->
     <div class="game-layout">
-        <!-- LEFT COLUMN: AVATAR STUDIO -->
+        
+        <!-- LEFT PANEL: CUSTOM SUITE AVATAR ASSEMBLY -->
         <section class="card-section">
-            <h2>🦫 Avatar Designer</h2>
+            <h2>🦫 ONSEN DESIGNER</h2>
             
+            <!-- STACKED ABSOLUTE COORDINATES GRAPHICS WINDOW -->
+            <div class="avatar-display-box" id="avatar-sandbox">
+                <!-- ACCESSORIES ELEMENT MESHES -->
+                <div class="overlay-layer id-head" id="layer-head"></div>
+                <div class="overlay-layer id-glass" id="layer-glass"></div>
+                
+                <div class="base-avatar">🦫</div>
+            </div>
+
             <div class="item-category">
-                <div class="category-title">👒 Headwear</div>
+                <div class="category-title">👒 HEADWEAR SELECT</div>
                 <div class="options-row">
                     <button class="option-node" onclick="setLayer('head', '👑')">👑</button>
                     <button class="option-node" onclick="setLayer('head', '🎀')">🎀</button>
@@ -27,62 +41,45 @@
             </div>
 
             <div class="item-category">
-                <div class="category-title">👓 Glasses</div>
+                <div class="category-title">👓 GLASSES ACCENTS</div>
                 <div class="options-row">
                     <button class="option-node" onclick="setLayer('glass', '🕶️')">🕶️</button>
                     <button class="option-node" onclick="setLayer('glass', '🤓')">🤓</button>
                     <button class="option-node remove-btn" onclick="setLayer('glass', '')">❌</button>
                 </div>
             </div>
+        </section>
 
-            <div class="avatar-display-box">
-                <div class="base-avatar">
-                    🦫
-                    <div id="layer-head" class="overlay-layer layer-head"></div>
-                    <div id="layer-glass" class="overlay-layer layer-glass"></div>
+        <!-- RIGHT PANEL: DISPATCH COMFORT PACK SYSTEM -->
+        <section class="card-section">
+            <h2>🧺 COMFORT DISPATCH</h2>
+            
+            <div class="item-category">
+                <div class="category-title">📦 CHOOSE COZY ADD-ONS</div>
+                <div class="button-grid">
+                    <button class="grid-item-btn" onclick="addToBasket('🍊 Yuzu')">🍊 Yuzu</button>
+                    <button class="grid-item-btn" onclick="addToBasket('🧼 Salts')">🧼 Salts</button>
+                    <button class="grid-item-btn" onclick="addToBasket('🧣 Towel')">🧣 Towel</button>
+                    <button class="grid-item-btn" onclick="addToBasket('🍵 Tea')">🍵 Tea</button>
                 </div>
             </div>
 
-            <button class="action-btn success">Done! Enter Onsen ♨️</button>
-        </section>
-
-        <!-- RIGHT COLUMN: SPA PREPARATION DESK -->
-        <section class="card-section">
-            <h2>🧺 Select Comfort Items</h2>
-            
-            <div class="button-grid">
-                <button class="grid-item-btn" onclick="addToBasket('🍊 Yuzu Fruit')">🍊 Yuzu Fruit</button>
-                <button class="grid-item-btn" onclick="addToBasket('🧼 Bath Salts')">🧼 Bath Salts</button>
-                <button class="grid-item-btn" onclick="addToBasket('🧣 Hot Towel')">🧣 Hot Towel</button>
-                <button class="grid-item-btn" onclick="addToBasket('🍵 Green Tea')">🍵 Green Tea</button>
+            <div class="item-category" style="margin-top:10px;">
+                <div class="category-title">📋 CURRENT SELECTIONS</div>
+                <div class="basket-status-box" id="basket-view-container">
+                    <span id="basket-view">Empty Basket</span>
+                </div>
             </div>
 
-            <button class="action-btn danger" onclick="clearBasket()">Clear Basket 🗑️</button>
-            
-            <h2 style="margin-top:20px; font-size:1.1rem;">Spa Preparation Desk</h2>
-            <div id="basket-view" class="basket-status">Empty Basket</div>
-
-            <button class="action-btn success" onclick="alert('Treatment Prepared!')">Prepare Treatment ♨️</button>
+            <div>
+                <button class="action-btn success" onclick="compilePotRecipe()">PREPARE TREATMENT ♨</button>
+                <button class="action-btn danger" onclick="clearStockpot()">CLEAR BASKET 🗑️</button>
+            </div>
         </section>
+
     </div>
 
-    <script>
-        let basket = [];
-        function setLayer(layer, emoji) {
-            document.getElementById(`layer-${layer}`).innerText = emoji;
-        }
-        function addToBasket(item) {
-            if(!basket.includes(item)) basket.push(item);
-            updateBasketUI();
-        }
-        function clearBasket() {
-            basket = [];
-            updateBasketUI();
-        }
-        function updateBasketUI() {
-            const el = document.getElementById('basket-view');
-            el.innerText = basket.length > 0 ? basket.join(', ') : 'Empty Basket';
-        }
-    </script>
+    <!-- Core Loop script loader -->
+    <script src="script.js"></script>
 </body>
 </html>
