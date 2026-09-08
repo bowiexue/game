@@ -5,37 +5,34 @@ let activeOrder = { teas: "", milks: "", syrups: "", toppings: "" };
 let activeCupContents = { teas: null, milks: null, syrups: null, toppings: null };
 let currentTabMode = "teas";
 
-// Comprehensive Ingredient Database (Colors map directly to individual fluid stacks)
+// Comprehensive Aesthetic Beverage Shop Registry Databases
 const RECIPE_DB = {
     teas: {
-        black: { name: "Black Tea", color: "#b33939" },
-        green: { name: "Green Tea", color: "#26de81" },
-        taro: { name: "Taro Extract", color: "#a55eea" },
-        matcha: { name: "Matcha Base", color: "#20bf6b" }
+        black: { name: "Assam Black Tea", color: "#b07d62" },    /* Warm soft pastel caramel amber */
+        green: { name: "Jasmine Green", color: "#caffbf" },     /* Dreamy pastel mint olive lime */
+        taro: { name: "Taro Sweet Cream", color: "#d8bbff" },   /* Rich pastel taro lavender */
+        matcha: { name: "Whisked Matcha", color: "#95d5b2" }    /* Aesthetic soft creamy jade matcha */
     },
     milks: {
-        whole: { name: "Whole Cream", color: "rgba(255, 255, 255, 0.85)" },
-        oat: { name: "Oat Milk", color: "rgba(247, 215, 148, 0.85)" },
-        coconut: { name: "Coconut Cream", color: "rgba(245, 246, 250, 0.9)" },
-        none: { name: "No Milk/Clear", color: "transparent" }
+        whole: { name: "Sweet Cream", color: "#fefae0" },       /* Warm pastel ivory cream milk */
+        oat: { name: "Oat Milk", color: "#faedcd" },           /* Toasted vanilla oat biscuit amber */
+        coconut: { name: "Coconut Milk", color: "#f8f9fa" },   /* Pure pastel snowflake white */
+        none: { name: "Clear Infusion", color: "transparent" }
     },
     syrups: {
-        brownSugar: { name: "Brown Sugar", color: "#574b90" },
-        honey: { name: "Pure Honey", color: "#f9ca24" },
-        vanilla: { name: "Vanilla Bean", color: "#f7f1e3" },
-        none: { name: "Unsweetened", color: "transparent" }
+        brownSugar: { name: "Okinawa Sugar", color: "#6c584c" }, /* Soft earthy cinnamon wood brown */
+        honey: { name: "Wild Honey", color: "#fde2e4" },         /* Warm pink soft peach flower honey */
+        vanilla: { name: "Vanilla Bean", color: "#fff0f5" },     /* Custard vanilla silk sheen */
+        none: { name: "No Sweeteners", color: "transparent" }
     },
     toppings: {
         boba: { name: "Tapioca Boba", symbol: "⚫" },
-        jelly: { name: "Coconut Jelly", symbol: "⬜" },
-        pudding: { name: "Egg Custard", symbol: "🟨" },
-        none: { name: "No Toppings", symbol: "" }
+        jelly: { name: "Lychee Jelly", symbol: "⬜" },
+        pudding: { name: "Egg Pudding", symbol: "🟨" },
+        none: { name: "No Add-ons", symbol: "" }
     }
 };
 
-// ========================================================
-// 2. INITIALIZATION & BOOT CONTROL
-// ========================================================
 window.addEventListener('DOMContentLoaded', () => {
     window.toggleTabMode = toggleTabMode;
     window.addIngredientToMachine = addIngredientToPot;
@@ -61,16 +58,13 @@ function generateRandomCustomerOrder() {
     const ticket = document.querySelector('.order-ticket');
     if (ticket) {
         ticket.innerHTML = `
-            🔹 Base: ${RECIPE_DB.teas[activeOrder.teas].name}<br>
-            🔹 Milk: ${RECIPE_DB.milks[activeOrder.milks].name}<br>
-            🔹 Sweet: ${RECIPE_DB.syrups[activeOrder.syrups].name}<br>
-            🔹 Add-on: ${RECIPE_DB.toppings[activeOrder.toppings].name}
+            💟 Base: ${RECIPE_DB.teas[activeOrder.teas].name}<br>
+            💟 Milk: ${RECIPE_DB.milks[activeOrder.milks].name}<br>
+            💟 Syrup: ${RECIPE_DB.syrups[activeOrder.syrups].name}<br>
+            💟 Topping: ${RECIPE_DB.toppings[activeOrder.toppings].name}
         `;
     }
 }
-// ========================================================
-// 3. TAB NAVIGATION & SHELF DRAWER
-// ========================================================
 function toggleTabMode(tabKey) {
     currentTabMode = tabKey;
     const buttons = document.querySelectorAll('.tab-btn');
@@ -98,7 +92,7 @@ function loadActiveIngredientShelf() {
         if (currentTabMode === 'toppings') {
             btn.innerHTML = `<span>${item.symbol}</span> ${item.name}`;
         } else {
-            btn.innerHTML = `<span style="width:12px; height:12px; background:${item.color}; border:1px solid #000; border-radius:50%; display:inline-block;"></span> ${item.name}`;
+            btn.innerHTML = `<span style="width:12px; height:12px; background:${item.color}; border:2px solid var(--ui-casing); border-radius:50%; display:inline-block; margin-right:6px;"></span> ${item.name}`;
         }
 
         btn.onclick = () => addIngredientToPot(itemKey);
@@ -106,9 +100,6 @@ function loadActiveIngredientShelf() {
     });
 }
 
-// ========================================================
-// 4. DYNAMIC LAYERED INJECTION SYSTEM
-// ========================================================
 function addIngredientToPot(key) {
     activeCupContents[currentTabMode] = key;
     renderPillsMatrixDashboard();
@@ -128,7 +119,7 @@ function updateVisualCupLayers() {
 
     const layerHeight = activeLayersCount > 0 ? (100 / activeLayersCount) : 0;
     
-    liquidContainer.style.height = "80%"; 
+    liquidContainer.style.height = "75%"; 
     liquidContainer.style.background = "transparent";
     liquidContainer.style.display = "flex";
     liquidContainer.style.flexDirection = "column-reverse"; 
@@ -147,15 +138,20 @@ function updateVisualCupLayers() {
     if (toppingsCanvas) {
         toppingsCanvas.innerHTML = '';
         if (activeCupContents.toppings && activeCupContents.toppings !== 'none') {
-            const symbol = RECIPE_DB.toppings[activeCupContents.toppings].symbol;
-            for (let i = 0; i < 5; i++) {
+            for (let i = 0; i < 12; i++) {
                 const item = document.createElement('div');
-                item.style.position = 'absolute';
-                item.style.bottom = '8px';
-                item.style.left = `${15 + (i * 22)}px`;
-                item.style.fontSize = '1.4rem';
-                item.style.zIndex = '6';
-                item.innerText = symbol;
+                item.className = 'pixel-boba-bubble';
+                
+                let rowOffset = i < 6 ? 0 : 10;
+                let columnX = i < 6 ? (14 + (i * 18)) : (22 + ((i-6) * 18));
+                
+                item.style.left = `${columnX}px`;
+                item.style.bottom = `${8 + rowOffset}px`;
+                
+                if (activeCupContents.toppings === 'pudding') item.style.background = '#ffd166';
+                else if (activeCupContents.toppings === 'jelly') item.style.background = '#f8f9fa';
+                else item.style.background = '#5c4a45';
+
                 toppingsCanvas.appendChild(item);
             }
         }
@@ -166,11 +162,8 @@ function appendFluidLayerMesh(parent, color, height) {
     const mesh = document.createElement('div');
     mesh.style.width = "100%";
     mesh.style.backgroundColor = color;
-    mesh.style.opacity = "0.95";
-    mesh.style.borderTop = "1px solid rgba(255,255,255,0.15)";
     mesh.style.height = "0%";
     mesh.style.transition = "height 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1)";
-    
     parent.appendChild(mesh);
     setTimeout(() => { mesh.style.height = `${height}%`; }, 10);
 }
@@ -187,31 +180,29 @@ function renderPillsMatrixDashboard() {
             empty = false;
             const row = document.createElement('div');
             row.className = 'tracker-item-row';
+            row.style.background = '#735d57';
+            row.style.border = '2px solid #5c4a45';
             row.innerHTML = `<span>[${cat.toUpperCase()}]</span> ${RECIPE_DB[cat][chosenKey].name}`;
             trackerList.appendChild(row);
         }
     });
-    if (empty) trackerList.innerHTML = '<div style="font-size:1.1rem; color:#a0a5ab; font-style:italic; padding:10px;">Chamber empty...</div>';
+    if (empty) trackerList.innerHTML = '<div style="font-size:1.1rem; color:#dfc7c1; font-style:italic; padding:6px; text-align:center;">No pipes routed...</div>';
 }
 
 function clearMachineChamber() {
     activeCupContents = { teas: null, milks: null, syrups: null, toppings: null };
     const liquidMesh = document.querySelector('.liquid');
-    if (liquidMesh) { liquidMesh.innerHTML = ''; liquidMesh.style.height = "0%"; }
+    if (liquidMesh) { liquidMesh.innerHTML = ''; liquidMesh.style.height = "0%"; liquidMesh.style.background = "transparent"; }
     const toppingsCanvas = document.getElementById('soup-bubble-layer');
     if (toppingsCanvas) toppingsCanvas.innerHTML = '';
     renderPillsMatrixDashboard();
 
     const statusBanner = document.getElementById('blend-status-banner');
     if (statusBanner) {
-        statusBanner.className = ''; statusBanner.innerText = 'Awaiting brew sequence...';
-        statusBanner.style.background = '#11141a'; statusBanner.style.color = '#fff';
+        statusBanner.className = ''; statusBanner.innerText = '🍬 Awaiting blending loop sequence...';
     }
 }
 
-// ========================================================
-// 5. ANIMATED CENTRIFUGAL SHAKER ENGINE
-// ========================================================
 function startMachineBrewCycle() {
     if (!activeCupContents.teas) {
         alert("🚨 ERROR: Machine engine cannot engage without a Liquid Base element loaded into the tubes!");
@@ -221,13 +212,26 @@ function startMachineBrewCycle() {
     const statusBanner = document.getElementById('blend-status-banner');
     if (cup) cup.classList.add('machine-spinning-active');
     if (statusBanner) {
-        statusBanner.innerText = "⚡ CENTRIFUGAL HOMOGENIZATION ACTIVE... ⚡";
-        statusBanner.style.background = '#fbbf24'; statusBanner.style.color = '#000';
+        statusBanner.innerText = "✨ HOMOGENIZING GRADIENT EMBEDMENT MATRIX... ✨";
     }
+    
     setTimeout(() => {
         if (cup) cup.classList.remove('machine-spinning-active');
+        fuseFluidLayersTogether();
         evaluateRecipeFormula();
     }, 1500);
+}
+
+function fuseFluidLayersTogether() {
+    const liquidContainer = document.querySelector('.liquid');
+    if (!liquidContainer) return;
+
+    const c1 = RECIPE_DB.teas[activeCupContents.teas].color;
+    const c2 = activeCupContents.milks ? RECIPE_DB.milks[activeCupContents.milks].color : c1;
+
+    liquidContainer.innerHTML = '';
+    liquidContainer.style.display = "block";
+    liquidContainer.style.background = `linear-gradient(0deg, ${c1} 20%, ${c2} 100%)`;
 }
 
 function evaluateRecipeFormula() {
@@ -239,14 +243,12 @@ function evaluateRecipeFormula() {
 
     if (matchTea && matchMilk && matchSyrup && matchTopping) {
         if (statusBanner) {
-            statusBanner.className = 'banner-correct'; statusBanner.innerText = "✔ PERFECT BLEND! CUSTOMER HAPPY!";
-            statusBanner.style.background = '#2ed573'; statusBanner.style.color = '#fff';
+            statusBanner.className = 'banner-correct'; statusBanner.innerText = "状况 PERFECT BLEND! KITCHEN SUCCESS!";
         }
         setTimeout(() => { clearMachineChamber(); generateRandomCustomerOrder(); }, 3000);
     } else {
         if (statusBanner) {
-            statusBanner.className = 'banner-incorrect'; statusBanner.innerText = "❌ WRONG BLEND! INGREDIENTS RUINED!";
-            statusBanner.style.background = '#ff4757'; statusBanner.style.color = '#fff';
+            statusBanner.className = 'banner-incorrect'; statusBanner.innerText = "💔 INCORRECT FORMULA! EXPERIMENT FAILED!";
         }
     }
 }
