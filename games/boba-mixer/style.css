@@ -194,3 +194,14 @@ body::before {
 .banner-incorrect { background: var(--cute-failure) !important; color: var(--ui-casing) !important; }
 
 h2 { display: none; }
+/* ========================================================
+   FIXES HEADER OVERLAP TEXT BUG
+   ======================================================== */
+.nav-row > div {
+    font-size: 1.4rem !important;    /* Slightly slims font constraints down */
+    font-weight: 900;                /* Extra bold arcade aesthetic look */
+    letter-spacing: -0.5px;          /* Tightens character bounds to save width */
+    margin-left: 15px;               /* Pushes text safely away from the back button edge */
+    white-space: nowrap;             /* Prevents text from splitting into two ugly rows */
+    text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.6); /* Adds a clean text lift outline */
+}
