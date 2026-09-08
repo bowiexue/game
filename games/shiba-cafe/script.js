@@ -1,194 +1,174 @@
 // ========================================================
-// 1. GAME CONSOLE STATE MANAGEMENT
+// REAL-TIME RETRO CAKE CLIMBER ARCADE PHYSICS ENGINE
 // ========================================================
-let activeOrder = { frostings: "", decorations: "", borders: "" };
-let activeCupContents = { frostings: null, decorations: null, borders: null };
-let currentTabMode = "frostings";
+let gameWidth = 0;
+let score = 0;
+let comboStreak = 0;
+let isGameOver = false;
 
-// 100% Unique Pixel Art Layer Database (No simple color swaps or creepy claws!)
-const RECIPE_DB = {
-    frostings: {
-        strawberry: { name: "Strawberry Rose Pink", color: "#ffb7b2", svg: `<svg viewBox="0 0 32 32"><rect x="4" y="16" width="24" height="10" fill="#ffb7b2" rx="4"/><rect x="4" y="24" width="24" height="4" fill="#ff9aa2"/></svg>` },
-        matcha: { name: "Matcha Mint Jade", color: "#b5f2d3", svg: `<svg viewBox="0 0 32 32"><rect x="4" y="16" width="24" height="10" fill="#b5f2d3" rx="4"/><rect x="4" y="24" width="24" height="4" fill="#95d5b2"/></svg>` },
-        taro: { name: "Taro Lavender Velvet", color: "#d8bbff", svg: `<svg viewBox="0 0 32 32"><rect x="4" y="16" width="24" height="10" fill="#d8bbff" rx="4"/><rect x="4" y="24" width="24" height="4" fill="#b39ddb"/></svg>` },
-        vanilla: { name: "Vanilla Custard Silk", color: "#fffedb", svg: `<svg viewBox="0 0 32 32"><rect x="4" y="16" width="24" height="10" fill="#fffedb" rx="4"/><rect x="4" y="24" width="24" height="4" fill="#ffe082"/></svg>` }
-    },
-    decorations: {
-        berry: { name: "Glazed Wild Berry", symbol: "🍓", svg: `<svg viewBox="0 0 32 32"><rect x="13" y="10" width="6" height="6" fill="#e63946" rx="2"/><rect x="15" y="8" width="2" height="2" fill="#2a9d8f"/></svg>` },
-        stars: { name: "Sugar Confetti Stars", symbol: "⭐", svg: `<svg viewBox="0 0 32 32"><rect x="8" y="11" width="4" height="4" fill="#ffd166"/><rect x="20" y="10" width="4" height="4" fill="#ffd166"/><rect x="14" y="12" width="4" height="4" fill="#ffd166"/></svg>` },
-        sprinkles: { name: "Rainbow Crunch", symbol: "✨", svg: `<svg viewBox="0 0 32 32"><rect x="6" y="13" width="3" height="1.5" fill="#ff4757"/><rect x="12" y="11" width="3" height="1.5" fill="#2ed573"/><rect x="18" y="13" width="3" height="1.5" fill="#1e90ff"/><rect x="23" y="11" width="3" height="1.5" fill="#ffa500"/></svg>` },
-        none: { name: "Plain Surface", symbol: "❌", svg: `<svg viewBox="0 0 32 32"></svg>` }
-    },
-    borders: {
-        piped: { name: "Piped Whipped Shells", color: "#ffffff", svg: `<svg viewBox="0 0 32 32"><circle cx="5" cy="16" r="2.5" fill="#fff"/><circle cx="10" cy="15" r="2.5" fill="#fff"/><circle cx="16" cy="15" r="2.5" fill="#fff"/><circle cx="22" cy="15" r="2.5" fill="#fff"/><circle cx="27" cy="16" r="2.5" fill="#fff"/></svg>` },
-        fudge: { name: "Chocolate Drizzle Ribbon", color: "#5c4a45", svg: `<svg viewBox="0 0 32 32"><rect x="4" y="15" width="24" height="2" fill="#5c4a45"/><rect x="6" y="17" width="2" height="3" fill="#5c4a45"/><rect x="14" y="17" width="2" height="4" fill="#5c4a45"/><rect x="22" y="17" width="2" height="3" fill="#5c4a45"/></svg>` },
-        pearls: { name: "Sugar Pearl Beads", color: "#e0f7fa", svg: `<svg viewBox="0 0 32 32"><circle cx="6" cy="16" r="1.5" fill="#e0f7fa"/><circle cx="11" cy="16" r="1.5" fill="#e0f7fa"/><circle cx="16" cy="16" r="1.5" fill="#e0f7fa"/><circle cx="21" cy="16" r="1.5" fill="#e0f7fa"/><circle cx="26" cy="16" r="1.5" fill="#e0f7fa"/></svg>` },
-        none: { name: "Raw Borders", color: "transparent", svg: `<svg viewBox="0 0 32 32"></svg>` }
-    }
-};
+// Slider properties map layout
+let activeSlice = { left: 10, width: 140, direction: 1, speed: 4 };
+let towerStack = []; // Holds objects: { left: X, width: Y, bottom: Z, color: Hex }
+
+const PASTE_PALETTE = ["#ffb7b2", "#ffdac1", "#e2f0cb", "#b5f2d3", "#a0c4ff", "#e87fa7", "#ffccd5"];
 
 window.addEventListener('DOMContentLoaded', () => {
-    window.toggleTabMode = toggleTabMode;
-    window.addIngredientToMachine = addIngredientToPot;
-    window.compilePotRecipe = startMachineBakeCycle;
-    window.clearStockpot = clearMachineChamber;
+    const view = document.getElementById('game-viewport');
+    if (view) gameWidth = view.clientWidth;
 
-    generateRandomCustomerOrder();
-    loadActiveIngredientShelf();
-    clearMachineChamber();
+    // Attach click events securely to inputs
+    document.getElementById('master-drop-trigger-btn').onclick = executeSliceDropCommand;
+    window.addEventListener('keydown', (e) => { if (e.code === "Space") { e.preventDefault(); executeSliceDropCommand(); } });
+
+    resetCakeTowerGame();
+    runRealTimeGameTicker();
 });
-function generateRandomCustomerOrder() {
-    const frostKeys = Object.keys(RECIPE_DB.frostings);
-    const decorKeys = Object.keys(RECIPE_DB.decorations);
-    const borderKeys = Object.keys(RECIPE_DB.borders);
 
-    activeOrder.frostings = frostKeys[Math.floor(Math.random() * frostKeys.length)];
-    activeOrder.decorations = decorKeys[Math.floor(Math.random() * decorKeys.length)];
-    activeOrder.borders = borderKeys[Math.floor(Math.random() * borderKeys.length)];
-
-    const ticket = document.getElementById('order-specs-node');
-    if (ticket) {
-        ticket.innerHTML = `
-            💟 ICING: ${RECIPE_DB.frostings[activeOrder.frostings].name}<br>
-            💟 TOPPING: ${RECIPE_DB.decorations[activeOrder.decorations].name}<br>
-            💟 TRIM: ${RECIPE_DB.borders[activeOrder.borders].name}
-        `;
-    }
-}
-
-function toggleTabMode(tabKey) {
-    currentTabMode = tabKey;
-    const buttons = document.querySelectorAll('.tab-btn');
-    buttons.forEach(btn => {
-        if (btn.getAttribute('onclick').includes(`'${tabKey}'`)) {
-            btn.classList.add('active');
-        } else {
-            btn.classList.remove('active');
-        }
-    });
-    loadActiveIngredientShelf();
-}
-
-function loadActiveIngredientShelf() {
-    const shelfGrid = document.querySelector('.ingredients-grid');
-    if (!shelfGrid) return;
-    shelfGrid.innerHTML = '';
-
-    const activePool = RECIPE_DB[currentTabMode];
-    Object.keys(activePool).forEach(itemKey => {
-        const item = activePool[itemKey];
-        const btn = document.createElement('button');
-        btn.className = 'ing-btn';
-        
-        if (currentTabMode === 'decorations') {
-            btn.innerHTML = `<span>${item.symbol}</span> ${item.name}`;
-        } else {
-            btn.innerHTML = `<span style="width:12px; height:12px; background:${item.color}; border:2px solid var(--ui-casing); border-radius:50%; display:inline-block; margin-right:6px;"></span> ${item.name}`;
-        }
-
-        btn.onclick = () => addIngredientToPot(itemKey);
-        shelfGrid.appendChild(btn);
-    });
-}
-
-function addIngredientToPot(key) {
-    activeCupContents[currentTabMode] = key;
-    renderPillsMatrixDashboard();
-    updateVisualCakeLayers();
-}
-
-// INJECTION MATRIX: Plugs graphic vector tags directly over sponge anchors!
-function updateVisualCakeLayers() {
-    const layerSponge = document.getElementById('layer-sponge');
-    const layerCream = document.getElementById('layer-cream');
-    const layerTopping = document.getElementById('layer-topping');
-
-    // 1. Draw Base Sponge and chosen Frosting
-    if (layerSponge && activeCupContents.frostings) {
-        layerSponge.innerHTML = RECIPE_DB.frostings[activeCupContents.frostings].svg;
-    } else if (layerSponge) {
-        // Base biscuit cake preview template before icing selection
-        layerSponge.innerHTML = `<svg viewBox="0 0 32 32"><rect x="4" y="18" width="24" height="8" fill="#d3b8b1" rx="4"/></svg>`;
-    }
-
-    // 2. Overlay Piped Trim Borders
-    if (layerCream && activeCupContents.borders) {
-        layerCream.innerHTML = RECIPE_DB.borders[activeCupContents.borders].svg;
-    } else if (layerCream) {
-        layerCream.innerHTML = '';
-    }
-
-    // 3. Overlay Core Candy Decoration Points
-    if (layerTopping && activeCupContents.decorations) {
-        layerTopping.innerHTML = RECIPE_DB.decorations[activeCupContents.decorations].svg;
-    } else if (layerTopping) {
-        layerTopping.innerHTML = '';
-    }
-}
-
-function renderPillsMatrixDashboard() {
-    const trackerList = document.getElementById('tracker-pills-list');
-    if (!trackerList) return;
-    trackerList.innerHTML = '';
-    let empty = true;
+function resetCakeTowerGame() {
+    score = 0; comboStreak = 0; isGameOver = false;
+    towerStack = [
+        { left: 40, width: 240, bottom: 0, color: "#5c4a45" } // Firm wide ground plate cake foundation
+    ];
+    activeSlice = { left: 10, width: 160, direction: 1, speed: 4.5 };
     
-    Object.keys(activeCupContents).forEach(cat => {
-        const chosenKey = activeCupContents[cat];
-        if (chosenKey) {
-            empty = false;
-            const row = document.createElement('div');
-            row.className = 'tracker-item-row';
-            row.style.background = '#735d57';
-            row.style.border = '2px solid #5c4a45';
-            row.innerHTML = `<span>[${cat.toUpperCase()}]</span> ${RECIPE_DB[cat][chosenKey].name}`;
-            trackerList.appendChild(row);
+    document.getElementById('tower-anchor-stack').innerHTML = '';
+    document.getElementById('score-val').innerText = score;
+    document.getElementById('combo-val').innerText = comboStreak;
+    document.getElementById('blend-status-banner').className = '';
+    document.getElementById('blend-status-banner').innerText = '🍬 TIMING MATTERS: PRESS SWITCH TO DROP!';
+    
+    renderEntireAnchoredTower();
+}
+
+// THE GAME TICKER LOOP: Animates the piece back and forth smoothly across the screen width
+function runRealTimeGameTicker() {
+    if (isGameOver) return;
+
+    const sliceNode = document.getElementById('active-sliding-slice');
+    if (sliceNode) {
+        // Increment horizontal coordinates
+        activeSlice.left += activeSlice.speed * activeSlice.direction;
+        
+        // Edge bounce check logic
+        if (activeSlice.left + activeSlice.width >= gameWidth - 10) {
+            activeSlice.direction = -1;
+        } else if (activeSlice.left <= 10) {
+            activeSlice.direction = 1;
         }
-    });
-    if (empty) trackerList.innerHTML = '<div style="font-size:1.1rem; color:#dfc7c1; font-style:italic; padding:6px; text-align:center;">No layout mapped...</div>';
-}
-
-function clearMachineChamber() {
-    activeCupContents = { frostings: null, decorations: null, borders: null };
-    updateVisualCakeLayers();
-    renderPillsMatrixDashboard();
-
-    const statusBanner = document.getElementById('blend-status-banner');
-    if (statusBanner) {
-        statusBanner.className = ''; statusBanner.innerText = '🍬 Awaiting bakery decorator lines...';
+        
+        sliceNode.style.left = `${activeSlice.left}px`;
+        sliceNode.style.width = `${activeSlice.width}px`;
+        sliceNode.style.background = PASTE_PALETTE[score % PASTE_PALETTE.length];
     }
+
+    requestAnimationFrame(runRealTimeGameTicker);
 }
 
-function startMachineBakeCycle() {
-    if (!activeCupContents.frostings) {
-        alert("🚨 ERROR: You can't box up an unfinished cake! Layer down an Icing flavor first.");
+function executeSliceDropCommand() {
+    if (isGameOver) { resetCakeTowerGame(); return; }
+
+    const targetBase = towerStack[towerStack.length - 1];
+    
+    // Isolate clipping coordinates boundaries
+    let sliceLeft = activeSlice.left;
+    let sliceRight = activeSlice.left + activeSlice.width;
+    let baseLeft = targetBase.left;
+    let baseRight = targetBase.left + targetBase.width;
+
+    // Calculate overlap dimensions
+    let finalLeft = Math.max(sliceLeft, baseLeft);
+    let finalRight = Math.min(sliceRight, baseRight);
+    let finalWidth = finalRight - finalLeft;
+
+    const banner = document.getElementById('blend-status-banner');
+
+    // CRITICAL MISS: Completely dropped into thin air void space!
+    if (finalWidth <= 0) {
+        triggerGameOverState();
         return;
     }
-    const dome = document.querySelector('.cup-container');
-    const statusBanner = document.getElementById('blend-status-banner');
-    
-    if (dome) dome.classList.add('machine-spinning-active');
-    if (statusBanner) statusBanner.innerText = "✨ SPINNING PIPING WHEEL / SETTING TOPPINGS... ✨";
 
-    setTimeout(() => {
-        if (dome) dome.classList.remove('machine-spinning-active');
-        evaluateCakeRecipe();
-    }, 1200);
+    // COMBO CHECK: If alignment is extremely accurate (within 6 pixels), award a PERFECT BLEND!
+    if (Math.abs(sliceLeft - baseLeft) <= 6) {
+        comboStreak++;
+        finalLeft = baseLeft; // Lock it perfectly to stack straight up
+        finalWidth = targetBase.width; // Restore piece width as a streak bonus reward!
+        if (banner) { banner.className = 'banner-correct'; banner.innerText = `✨ PERFECT BLEND! STREAK x${comboStreak}! ✨`; }
+    } else {
+        comboStreak = 0; // Breakdown chain values instantly if offset
+        if (banner) { banner.className = ''; banner.innerText = '🍰 TIER PLACED! EDGES TRIMMED DOWN.'; }
+    }
+
+    // Save newly placed node onto tower list array
+    let floorHeight = 16;
+    let newBottom = towerStack.length * floorHeight;
+    
+    towerStack.push({
+        left: finalLeft,
+        width: finalWidth,
+        bottom: newBottom,
+        color: PASTE_PALETTE[score % PASTE_PALETTE.length]
+    });
+
+    score++;
+    document.getElementById('score-val').innerText = score;
+    document.getElementById('combo-val').innerText = comboStreak;
+
+    // Adjust parameters for the next sliding slice loop row
+    activeSlice.width = finalWidth;
+    activeSlice.left = 10;
+    activeSlice.direction = 1;
+    activeSlice.speed = Math.min(8, 4.5 + (score * 0.25)); // Speeds up as the tower climbs!
+
+    // Shift viewport container downward if tower gets too high to prevent roof leaks
+    const towerFrame = document.getElementById('tower-anchor-stack');
+    if (newBottom > 160 && towerFrame) {
+        towerFrame.style.transform = `translateY(${newBottom - 160}px)`;
+    }
+
+    renderEntireAnchoredTower();
+    updateMilestoneJournalLog();
 }
 
-function evaluateCakeRecipe() {
-    const statusBanner = document.getElementById('blend-status-banner');
-    const matchFrost = activeCupContents.frostings === activeOrder.frostings;
-    const matchDecor = activeCupContents.decorations === activeOrder.decorations;
-    const matchBorder = activeCupContents.borders === activeOrder.borders;
+function renderEntireAnchoredTower() {
+    const container = document.getElementById('tower-anchor-stack');
+    container.innerHTML = '';
 
-    if (matchFrost && matchDecor && matchBorder) {
-        if (statusBanner) {
-            statusBanner.className = 'banner-correct'; statusBanner.innerText = "💗 EXCELLENT PIPING! TICKET ACCURATE!";
+    // Paint every floor block cleanly inside absolute coordinates view
+    towerStack.forEach((floor, idx) => {
+        if (idx === 0) return; // Skip invisible base foundation
+        const block = document.createElement('div');
+        block.className = 'placed-cake-slice';
+        block.style.left = `${floor.left}px`;
+        block.style.width = `${floor.width}px`;
+        block.style.bottom = `${floor.bottom}px`;
+        block.style.backgroundColor = floor.color;
+        
+        // Add frosting dollops on top layer block
+        if (idx === towerStack.length - 1) {
+            block.style.borderTop = "5px dotted #fff";
         }
-        setTimeout(() => { clearMachineChamber(); generateRandomCustomerOrder(); }, 3000);
-    } else {
-        if (statusBanner) {
-            statusBanner.className = 'banner-incorrect'; statusBanner.innerText = "💔 INCORRECT FROSTING! CAKE REJECTED!";
-        }
-    }
+        
+        container.appendChild(block);
+    });
+}
+
+function triggerGameOverState() {
+    isGameOver = true;
+    const banner = document.getElementById('blend-status-banner');
+    if (banner) { banner.className = 'banner-incorrect'; banner.innerText = `💔 TOWER COLLAPSED! CRASHED AT ${score} TIER FLATS! 💔`; }
+    
+    document.getElementById('master-drop-trigger-btn').innerText = "🕹️ PLAY AGAIN!";
+}
+
+function updateMilestoneJournalLog() {
+    const journal = document.getElementById('tracker-pills-list');
+    if (!journal) return;
+
+    journal.innerHTML = `
+        <div class="tracker-item-row">✨ Personal Best: ${Math.max(score, 12)} Floors</div>
+        <div class="tracker-item-row">${score >= 5 ? "🍓 Strawberry Frosting [UNLOCKED]" : "🍓 Strawberry Frosting: Reach 5 Floors"}</div>
+        <div class="tracker-item-row">${score >= 12 ? "🍵 Matcha Shogun [UNLOCKED]" : "🍵 Matcha Shogun: Reach 12 Floors"}</div>
+        <div class="tracker-item-row">${score >= 20 ? "🌌 Cosmic Velvet [UNLOCKED]" : "🌌 Cosmic Velvet: Reach 20 Floors"}</div>
+    `;
 }
