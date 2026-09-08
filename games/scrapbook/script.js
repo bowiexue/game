@@ -72,21 +72,28 @@ function addIngredientToPot(key, label, rawSVG) {
 }
 
 // MANAGE APPLIANCE TRAIL ANIMATIONS (Boiling surface bubbles vs glass door steam)
+// UPDATED: Spreads particles across the pot and oven space dynamically using random ranges
 function triggerApplianceParticles() {
     const layer = document.getElementById('soup-bubble-layer');
-    layer.innerHTML = ''; // Fresh clean surface slate tracking loop
+    layer.innerHTML = ''; // Clear previous particle state entries safely
     
     activePotContents.forEach((item, index) => {
         const particle = document.createElement('div');
         
+        // Generate a random surface percentage spread so items never line up perfectly
+        // Math.random() * 65 ensures particles stay safely inside the container bounds
+        const randomXSpread = Math.floor(Math.random() * 65) + 10;
+        
         if (currentMode === "main") {
             particle.className = 'pixel-bubble';
-            particle.style.left = `${20 + (index * 25)}%`;
+            particle.style.left = `${randomXSpread}%`;
             particle.style.background = "#e67e22";
+            // Randomize the animation timer slightly so they don't pop at the exact same fraction of a second
+            particle.style.animationDelay = `${Math.random() * 0.4}s`;
         } else {
             particle.className = 'pixel-steam-trail';
-            particle.style.left = `${15 + (index * 30)}%`;
-            particle.style.animationDelay = `${index * 0.3}s`;
+            particle.style.left = `${randomXSpread}%`;
+            particle.style.animationDelay = `${index * 0.25}s`;
         }
         layer.appendChild(particle);
     });
