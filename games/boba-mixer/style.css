@@ -1,19 +1,27 @@
-/* Import a gorgeous, authentic pixel game font */
+/* ========================================================
+   AUTHENTIC CHONKY ARCADE & BOBA LABORATORY ENGINE
+   ======================================================== */
 @import url('https://googleapis.com');
 
 :root {
-    --bg: #f9f1f0;             /* Soft strawberry milk pastel pink background */
-    --ui-frame: #3d342e;        /* Deep cocoa brown for sharp outlines */
-    --text: #4a3e3d;            /* Matching dark cocoa text tone */
+    /* Cozy Bubble-Tea Laboratory Palette */
+    --bg: #f5eae4;             /* Creamy taro-milk soft parchment wash */
+    --ui-frame: #3a2e2b;        /* Rich espresso charcoal-brown border shell */
+    --text: #4e3f3b;            /* Matching dark cocoa text tone */
     --ticket-bg: #fffbf4;       /* Creamy beige flavor card background */
-    --accent-orange: #f3a683;   /* Warm peach accents */
+    --accent-orange: #e07a5f;   /* Warm terracotta peach glaze */
+    --neon-green: #81b29a;      /* Sage green success button indicator */
+    --neon-red: #df7a7a;        /* Crimson failure/reset warning light */
+    
+    /* Dynamic Liquid Translucency Overlays */
+    --liquid-shine: linear-gradient(90deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 20%, rgba(0,0,0,0.08) 90%);
 }
 
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: 'VT323', monospace; /* Applies the beautiful arcade font everywhere */
+    font-family: 'VT323', monospace; /* Sharp arcade fonts scaled across viewports */
     letter-spacing: 0.5px;
 }
 
@@ -24,81 +32,111 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    image-rendering: pixelated; /* Enforces crisp vector pixel rendering */
 }
 
-/* Navigation Row Container */
+/* ========================================================
+   NAVIGATION HUB CONTROLS
+   ======================================================== */
 .nav-row {
     width: 100%;
     max-width: 480px;
-    margin-bottom: 15px;
+    margin-bottom: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .back-btn {
     background: var(--ui-frame);
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 6px;
-    font-size: 1.3rem;
+    color: #ffffff;
+    border: 3px solid var(--ui-frame);
+    padding: 6px 18px;
+    border-radius: 8px;
+    font-size: 1.4rem;
     cursor: pointer;
-    font-weight: bold;
-    box-shadow: 0 4px 0 #211b18;
-    transition: transform 0.1s;
+    box-shadow: 0 5px 0 #211917;
+    transition: transform 0.05s, box-shadow 0.05s;
 }
 .back-btn:active {
-    transform: translateY(3px);
-    box-shadow: none;
+    transform: translateY(4px);
+    box-shadow: 0 1px 0 #211917;
 }
 
-/* The Unified Game Console Box */
+/* ========================================================
+   MAIN CONSOLE CASING INTERFACE
+   ======================================================== */
 .game-box {
-    background: white;
-    border: 4px solid var(--ui-frame);
-    border-radius: 20px;
-    padding: 24px;
+    background: #ffffff;
+    border: 5px solid var(--ui-frame);
+    border-radius: 24px;
+    padding: 26px;
     width: 100%;
     max-width: 480px;
-    box-shadow: 0 10px 0 rgba(61, 52, 46, 0.15);
+    box-shadow: 0 12px 0 rgba(58, 46, 43, 0.18), inset -4px -4px 0 rgba(0,0,0,0.02);
     text-align: center;
+    position: relative;
 }
 
-/* Beautiful Rounded Recipe Ticket */
+/* ========================================================
+   RECIPE WORK ORDER TICKET PANEL
+   ======================================================== */
 .order-ticket {
     background: var(--ticket-bg);
     border: 3px dashed var(--accent-orange);
     border-radius: 12px;
-    padding: 14px;
+    padding: 16px;
     margin-bottom: 25px;
-    font-size: 1.5rem;
+    font-size: 1.6rem;
     text-align: left;
-    line-height: 1.3;
-    font-weight: bold;
+    line-height: 1.2;
+    color: var(--ui-frame);
+    box-shadow: inset 3px 3px 0 rgba(0,0,0,0.02);
+    position: relative;
 }
+/* Retro tear dots on paper receipt borders */
+.order-ticket::before, .order-ticket::after {
+    content: ''; position: absolute; bottom: -6px; width: 10px; height: 10px;
+    background: #ffffff; border-radius: 50%;
+}
+.order-ticket::before { left: 15px; }
+.order-ticket::after { right: 15px; }
 
-/* The Boba Tea Glass Container */
+/* ========================================================
+   THE VOLUMETRIC BOBA CUP (GLASS LAYER OVERHAUL)
+   ======================================================== */
 .cup-container {
-    width: 120px;
-    height: 170px;
+    width: 130px;
+    height: 185px;
     border: 5px solid var(--ui-frame);
     border-top: none;
-    border-bottom-left-radius: 24px;
-    border-bottom-right-radius: 24px;
-    margin: 0 auto 30px auto;
+    border-bottom-left-radius: 28px;
+    border-bottom-right-radius: 28px;
+    margin: 10px auto 35px auto;
     position: relative;
-    background: #fff;
+    background: #ffffff;
     overflow: hidden;
-    box-shadow: inset -10px 0 0 rgba(0,0,0,0.03);
+    /* Layered inner rim shadows and reflections to mimic curved glass material */
+    box-shadow: inset 12px 0 0 rgba(255,255,255,0.4), inset -12px 0 0 rgba(0,0,0,0.04), 0 8px 0 rgba(0,0,0,0.05);
 }
 
+/* Dynamic Moving Fluid Base Mesh Layer */
 .liquid {
     position: absolute;
     bottom: 0;
     left: 0;
     width: 100%;
     height: 0%;
-    transition: height 0.4s ease-out, background-color 0.4s;
-    opacity: 0.9;
+    transition: height 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), background-color 0.4s ease;
+    opacity: 0.95;
     z-index: 1;
+}
+/* Shading overlay applied to filled tea mixtures */
+.liquid::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: var(--liquid-shine);
 }
 
 .boba-canvas {
@@ -111,95 +149,132 @@ body {
     pointer-events: none;
 }
 
+/* Floating Fruit/Mint Garnishes physics vectors */
 .pixel-garnish {
     position: absolute;
-    width: 16px;
-    height: 16px;
+    width: 22px;
+    height: 22px;
     transform: translate(-50%, -50%);
+    animation: garnishFloatSway 3s infinite ease-in-out;
+    z-index: 6;
 }
-
 .pixel-garnish svg {
     width: 100%;
     height: 100%;
     image-rendering: pixelated;
 }
 
-/* Tab Management Grid */
+@keyframes garnishFloatSway {
+    0% { transform: translate(-50%, -50%) translateY(0px) rotate(0deg); }
+    50% { transform: translate(-50%, -50%) translateY(-6px) rotate(8deg); }
+    100% { transform: translate(-50%, -50%) translateY(0px) rotate(0deg); }
+}
+
+/* ========================================================
+   TAB SELECTION SYSTEM INTERFACE
+   ======================================================== */
 .tabs {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 5px;
-    margin-bottom: 15px;
-    background: #eedfd2;
+    gap: 6px;
+    margin-bottom: 18px;
+    background: #ebdcd0;
     padding: 6px;
-    border-radius: 10px;
-    border: 3px solid var(--ui-frame);
+    border-radius: 12px;
+    border: 4px solid var(--ui-frame);
 }
 
 .tab-btn {
-    padding: 6px 2px;
+    padding: 8px 2px;
     background: transparent;
     border: none;
     font-weight: bold;
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     cursor: pointer;
-    border-radius: 6px;
+    border-radius: 8px;
     color: var(--ui-frame);
+    text-transform: uppercase;
+    transition: all 0.1s ease;
 }
 .tab-btn.active {
     background: var(--ui-frame);
-    color: white;
+    color: #ffffff;
+    box-shadow: 0 3px 0 rgba(0,0,0,0.15);
 }
 
-/* Selection Buttons Grid Layout */
+/* ========================================================
+   INGREDIENTS INPUT INTERACTIVE SELECTION GRID
+   ======================================================== */
 .ingredients-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 10px;
+    gap: 12px;
     margin-top: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
 }
 
 .ing-btn {
-    background: #fbfbfb;
+    background: #fdfdfd;
     border: 3px solid var(--ui-frame);
-    padding: 10px;
-    border-radius: 10px;
-    font-size: 1.3rem;
+    padding: 12px;
+    border-radius: 12px;
+    font-size: 1.4rem;
     font-weight: bold;
     cursor: pointer;
     color: var(--ui-frame);
-    box-shadow: 0 4px 0 var(--ui-frame);
-    transition: transform 0.1s, box-shadow 0.1s;
+    box-shadow: 0 5px 0 var(--ui-frame);
+    transition: transform 0.05s, box-shadow 0.05s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
 }
 .ing-btn:hover {
-    background: #fff9f3;
+    background: #faeed6;
 }
 .ing-btn:active {
-    transform: translateY(3px);
+    transform: translateY(4px);
     box-shadow: 0 1px 0 var(--ui-frame);
 }
 
-/* Lower Controls Alignment Row */
+/* ========================================================
+   LOWER ACTION FOOTER BUTTONS BAR (RESET / SERVE)
+   ======================================================== */
 .action-bar {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-top: 15px;
+    gap: 16px;
+    margin-top: 18px;
 }
 
 .action-bar button {
     padding: 14px;
-    font-size: 1.5rem;
+    font-size: 1.6rem;
     font-weight: bold;
     text-transform: uppercase;
-    border-radius: 12px;
+    border-radius: 14px;
     border: 4px solid var(--ui-frame);
     cursor: pointer;
-    color: white;
-    transition: transform 0.1s;
+    color: #ffffff;
+    transition: transform 0.05s, box-shadow 0.05s;
 }
-.action-bar button:active {
-    transform: translateY(4px);
-    box-shadow: none;
+
+/* Red Flush Reset Input Button Override styles */
+.action-bar button:first-child {
+    background: var(--neon-red);
+    box-shadow: 0 6px 0 #b05757;
+}
+.action-bar button:first-child:active {
+    transform: translateY(5px);
+    box-shadow: 0 1px 0 #b05757;
+}
+
+/* Green Confirm Submission Serve Button Overrides */
+.action-bar button:last-child {
+    background: var(--neon-green);
+    box-shadow: 0 6px 0 #5b8c74;
+}
+.action-bar button:last-child:active {
+    transform: translateY(5px);
+    box-shadow: 0 1px 0 #5b8c74;
 }
