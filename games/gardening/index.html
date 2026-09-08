@@ -1,11 +1,166 @@
 <!DOCTYPE html>
 <html lang="en">
+    <!-- Reuses your existing cozy dashboard look -->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pixel Bonsai Laboratory</title>
-    <!-- Reuses your existing cozy dashboard look -->
-    <link rel="stylesheet" href="style.css">
+    
+    <!-- CLEAN STYLE OVERRIDE BLOCK (Ditches Courier completely) -->
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            /* Sharp, clean modern sans-serif arcade font cluster */
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-weight: 800; /* Extra bold text for crisp button layouts */
+            letter-spacing: -0.3px;
+        }
+
+        body {
+            background: #fdfaf6;
+            color: #3a2e2b;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .nav-row {
+            width: 100%;
+            max-width: 1200px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .back-btn { 
+            background: #3a2e2b; 
+            color: #ffffff;
+            border: 3px solid #3a2e2b;
+            padding: 10px 22px;
+            cursor: pointer;
+            border-radius: 8px;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            box-shadow: 0 4px 0 #211917;
+            transition: transform 0.1s;
+        }
+        .back-btn:active { transform: translateY(4px); box-shadow: none; }
+
+        .cooking-grid {
+            display: grid;
+            grid-template-columns: 360px 1fr;
+            gap: 25px;
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        .section-pantry {
+            background: #ffffff;
+            border: 4px solid #3a2e2b;
+            border-radius: 12px;
+            padding: 20px;
+            height: 520px;
+            overflow-y: auto;
+        }
+
+        .section-pantry h3 {
+            text-align: center;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            font-size: 1.1rem;
+            border-bottom: 3px solid #3a2e2b;
+            padding-bottom: 8px;
+        }
+
+        .shelf-title {
+            font-size: 0.8rem;
+            margin-top: 15px;
+            background: #faeed6;
+            padding: 8px 10px;
+            border-radius: 4px;
+            border-left: 6px solid #3a2e2b;
+            text-transform: uppercase;
+        }
+
+        .mode-toggle-btn {
+            width: 100%;
+            padding: 10px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            border: 3px solid #3a2e2b;
+            border-radius: 8px;
+            cursor: pointer;
+            background: #fdfdfd;
+            color: #3a2e2b;
+            box-shadow: 0 4px 0 #3a2e2b;
+            margin-bottom: 6px;
+            transition: all 0.05s ease-in-out;
+        }
+        .mode-toggle-btn:hover { background: #faeed6; }
+        .mode-toggle-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 #3a2e2b; }
+
+        .section-kitchen {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .stove-and-tracker-row {
+            display: grid;
+            grid-template-columns: 1fr 260px;
+            gap: 20px;
+            width: 100%;
+        }
+
+        .stove-station {
+            background: #f5edd7;
+            border: 4px solid #3a2e2b;
+            border-radius: 12px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cook-btn {
+            background: #38bdf8;
+            color: #ffffff;
+            border: 3px solid #3a2e2b;
+            padding: 12px 24px;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            cursor: pointer;
+            border-radius: 10px;
+            box-shadow: 0 5px 0 #0284c7;
+            transition: transform 0.1s;
+        }
+        .cook-btn:active { transform: translateY(5px); box-shadow: none; }
+
+        .added-ingredients-tracker {
+            background: #ffffff;
+            border: 4px solid #3a2e2b;
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            height: 520px;
+        }
+        .added-ingredients-tracker h4 {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            border-bottom: 3px solid #3a2e2b;
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+    </style>
+</head>
+
 </head>
 <body>
 
