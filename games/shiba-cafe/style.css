@@ -1,1 +1,121 @@
 
+/* ========================================================
+   MASTER PASTEL BUBBLE TEA & BAKERY CLIMBER STYLES
+   ======================================================== */
+@import url('https://googleapis.com');
+
+:root {
+    --cafe-bg: #fff0f5;         /* Sweet lavender-blush pastel canvas base */
+    --ui-casing: #5c4a45;        /* Soft milk-chocolate brown for outlines */
+    --panel-ivory: #fffdf9;      /* Creamy sweet-cream dashboard plates */
+    --text-cozy: #4a3b32;        /* Earthy dark cocoa readability tone */
+    --pastel-green: #bdf2d5;     /* Minty green active activation switches */
+    --cute-success: #9bf6ff;     /* Soft pastel cyan confirmation highlight */
+    --cute-failure: #ffadad;     /* Soft pastel rose warning banner */
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0; padding: 0;
+    font-family: 'VT323', monospace;
+    letter-spacing: 0.5px;
+}
+
+body {
+    color: var(--text-cozy);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    justify-content: center;
+    image-rendering: pixelated;
+
+    /* DYNAMIC BACKGROUND PATH: Strawberry café tile wall backsplash layout grid */
+    background: 
+        linear-gradient(180deg, #dfc7c1 0px, #dfc7c1 30px, transparent 35px),
+        linear-gradient(90deg, rgba(255,182,193,0.25) 2px, transparent 2px) 0 0 / 30px 30px,
+        linear-gradient(180deg, rgba(255,182,193,0.25) 2px, transparent 2px) 0 0 / 30px 30px,
+        linear-gradient(0deg, #d3b8b1 0px, #d3b8b1 160px, #e7cfc9 160px, #e7cfc9 175px, transparent 175px),
+        var(--cafe-bg);
+}
+
+/* Strawberry Stripe Overhang Canopy */
+body::before {
+    content: ''; position: absolute; top: 30px; left: 50%; transform: translateX(-50%);
+    width: 650px; height: 15px;
+    background: repeating-linear-gradient(90deg, #ffadad, #ffadad 30px, #caffbf 30px, #caffbf 60px);
+    border: 4px solid var(--ui-casing);
+    border-radius: 8px;
+}
+
+.nav-row { width: 100%; max-width: 920px; margin-bottom: 20px; display: flex; justify-content: flex-start; }
+
+.back-btn {
+    background: #ffb6c1; color: var(--text-cozy); border: 4px solid var(--ui-casing);
+    padding: 8px 24px; border-radius: 12px; font-size: 1.4rem; font-weight: 900;
+    cursor: pointer; box-shadow: 0 6px 0 var(--ui-casing); text-transform: uppercase;
+    transition: transform 0.05s, box-shadow 0.05s;
+}
+.back-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--ui-casing); }
+
+/* THE DUAL-PANEL CHASSIS CABINET HOUSING */
+.game-box {
+    background: #ffdef2; border: 6px solid var(--ui-casing); border-radius: 28px;
+    padding: 24px; width: 100%; max-width: 920px;
+    box-shadow: 0 16px 0 rgba(92, 74, 69, 0.25), inset 0 4px 0 rgba(255,255,255,0.5);
+    display: grid; grid-template-columns: 380px 1fr; gap: 25px;
+}
+
+.left-screen-bay { display: flex; flex-direction: column; gap: 15px; }
+
+.order-ticket {
+    background: var(--panel-ivory); border: 4px solid var(--ui-casing); border-radius: 16px;
+    padding: 14px; font-size: 1.6rem; box-shadow: inset -4px -4px 0 rgba(0,0,0,0.02), 0 4px 0 rgba(0,0,0,0.05);
+}
+
+/* THE PHYSICS VIEWPORT GRAPHICS DOME CANVAS */
+.cup-container {
+    width: 100%; height: 320px; /* Tall box height profile allows stacked items */
+    border: 5px solid var(--ui-casing); border-radius: 20px;
+    background: #ffffff; margin: 0 auto; position: relative;
+    box-shadow: inset 6px 6px 0 rgba(0,0,0,0.02), 0 6px 0 rgba(0,0,0,0.05);
+    overflow: hidden;
+}
+
+#blend-status-banner {
+    font-size: 1.4rem; text-align: center; padding: 10px;
+    border-radius: 10px; border: 4px solid var(--ui-casing);
+    background: var(--panel-ivory); color: var(--text-cozy);
+    min-height: 48px; display: flex; align-items: center; justify-content: center;
+}
+.banner-correct { background: var(--cute-success) !important; font-weight: 900; }
+.banner-incorrect { background: var(--cute-failure) !important; font-weight: 900; }
+
+/* RIGHT PANEL BUTTONS & METRIC MODULES */
+.right-control-bay { display: flex; flex-direction: column; gap: 15px; }
+
+.added-ingredients-tracker {
+    background: var(--ui-casing); border-radius: 16px; padding: 16px; color: #fff;
+}
+.tracker-item-row {
+    background: #735d57; border: 2px solid var(--ui-casing); border-radius: 8px;
+    padding: 6px 12px; font-size: 1.2rem; margin-bottom: 6px;
+}
+
+.action-btn {
+    width: 100%; padding: 16px; font-weight: bold;
+    border-radius: 18px; border: 4px solid var(--ui-casing); cursor: pointer; text-transform: uppercase;
+}
+.action-btn:active { transform: translateY(5px); box-shadow: none; }
+.action-btn.success { background: var(--pastel-green); color: var(--ui-casing); }
+
+/* Static falling vector mesh items styles */
+.placed-cake-slice {
+    position: absolute; height: 16px;
+    border: 2px solid var(--ui-casing); border-radius: 4px;
+    box-shadow: inset 0 3px 0 rgba(255,255,255,0.6);
+    transition: bottom 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+}
+
+h2 { display: none; }
