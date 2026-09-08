@@ -73,26 +73,27 @@ function addIngredientToPot(key, label, rawSVG) {
 
 // MANAGE APPLIANCE TRAIL ANIMATIONS (Boiling surface bubbles vs glass door steam)
 // UPDATED: Spreads particles across the pot and oven space dynamically using random ranges
+// UPDATED: Calculates strict, mathematically even horizontal positions for every item
 function triggerApplianceParticles() {
     const layer = document.getElementById('soup-bubble-layer');
-    layer.innerHTML = ''; // Clear previous particle state entries safely
+    layer.innerHTML = ''; 
     
     activePotContents.forEach((item, index) => {
         const particle = document.createElement('div');
         
-        // Generate a random surface percentage spread so items never line up perfectly
-        // Math.random() * 65 ensures particles stay safely inside the container bounds
-        const randomXSpread = Math.floor(Math.random() * 65) + 10;
+        // MATHEMATICALLY EVEN SPACING: Splits the total container width perfectly based on total item count
+        // 3 items will sit beautifully at 25%, 50%, and 75% across the pot frame grid
+        const exactEvenX = ((index + 1) / (activePotContents.length + 1)) * 100;
         
         if (currentMode === "main") {
             particle.className = 'pixel-bubble';
-            particle.style.left = `${randomXSpread}%`;
+            particle.style.left = `${exactEvenX}%`;
             particle.style.background = "#e67e22";
-            // Randomize the animation timer slightly so they don't pop at the exact same fraction of a second
-            particle.style.animationDelay = `${Math.random() * 0.4}s`;
+            // Staggers the animation starts slightly so they don't rise up like a rigid wall
+            particle.style.animationDelay = `${index * 0.25}s`;
         } else {
             particle.className = 'pixel-steam-trail';
-            particle.style.left = `${randomXSpread}%`;
+            particle.style.left = `${exactEvenX}%`;
             particle.style.animationDelay = `${index * 0.25}s`;
         }
         layer.appendChild(particle);
