@@ -138,16 +138,29 @@ function updateVisualCupLayers() {
     if (toppingsCanvas) {
         toppingsCanvas.innerHTML = '';
         if (activeCupContents.toppings && activeCupContents.toppings !== 'none') {
+            
+            // Build 12 individual pixel spheres tumbling into organic, overlapping piles
             for (let i = 0; i < 12; i++) {
                 const item = document.createElement('div');
                 item.className = 'pixel-boba-bubble';
                 
-                let rowOffset = i < 6 ? 0 : 10;
-                let columnX = i < 6 ? (14 + (i * 18)) : (22 + ((i-6) * 18));
+                // Base grid distribution path
+                let baseColumnX = 14 + ((i % 6) * 19);
+                let baseRowY = i < 6 ? 8 : 16;
                 
-                item.style.left = `${columnX}px`;
-                item.style.bottom = `${8 + rowOffset}px`;
+                // RANDOM SCATTER MATRIX: Injecting slight pixel variations so they don't line up straight
+                // Math.random() offsets them slightly left, right, up, and down
+                let randomXOffset = Math.floor(Math.random() * 8) - 4;
+                let randomYOffset = Math.floor(Math.random() * 6) - 3;
                 
+                // Keep the pearls safely away from the absolute left/right edges of the glass
+                let finalX = Math.max(12, Math.min(112, baseColumnX + randomXOffset));
+                let finalY = Math.max(6, baseRowY + randomYOffset);
+                
+                item.style.left = `${finalX}px`;
+                item.style.bottom = `${finalY}px`;
+                
+                // Keep the color themes matching beautifully
                 if (activeCupContents.toppings === 'pudding') item.style.background = '#ffd166';
                 else if (activeCupContents.toppings === 'jelly') item.style.background = '#f8f9fa';
                 else item.style.background = '#5c4a45';
@@ -243,7 +256,8 @@ function evaluateRecipeFormula() {
 
     if (matchTea && matchMilk && matchSyrup && matchTopping) {
         if (statusBanner) {
-            statusBanner.className = 'banner-correct'; statusBanner.innerText = "状况 PERFECT BLEND! KITCHEN SUCCESS!";
+            // FIXED: Chinese text completely scrubbed out!
+            statusBanner.className = 'banner-correct'; statusBanner.innerText = "💗 PERFECT BLEND! KITCHEN SUCCESS!";
         }
         setTimeout(() => { clearMachineChamber(); generateRandomCustomerOrder(); }, 3000);
     } else {
