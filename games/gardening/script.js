@@ -161,6 +161,12 @@ function decaySoilVitals() {
     }
 
     updateGardenDashboard();
+    // Inject economy collection tick right before refreshing layouts
+    processShopTick(config);
+    // Boost growth progression pacing if the roux upgrade is bought
+    let accelerationMultiplier = playerEconomy.hasGrowthRoux ? 7.0 : 4.5;
+    activePlant.growthPoints += accelerationMultiplier;
+
 }
 
 function waterPlant() {
@@ -206,5 +212,83 @@ function updateGardenDashboard() {
         }
         
         canvasSlot.innerHTML = svgAsset;
+        // GOLD POT OVERRIDE MECHANIC: Swaps brown potter lines to true golden hex paint values!
+if (playerEconomy.hasGoldPot) {
+    svgAsset = svgAsset.replaceAll('#A0785C', '#ffd166').replaceAll('#78543C', '#f5b041');
+}
+
     }
+    
+}
+// ========================================================
+// 4. ECONOMY & UPGRADES SHOP ENGINE SUBSYSTEM
+// ========================================================
+let playerEconomy = {
+    coins: JSON.parse(localStorage.getItem('bonsai_coins_v1')) || 20, // Free 20 starting gold coins
+    hasSprinkler: false,
+    hasGrowthRoux: false,
+    hasGoldPot: false
+};
+
+// Hook economy triggers smoothly into your existing boot sequences
+const baseDOMBoot = window.addEventListener('DOMContentLoaded', () => {
+    window.buyShopItem = buyShopItem;
+    refreshShopInterface();
+});
+
+// Run this every time decaySoilVitals fires to feed points and update balances
+function processShopTick(config) {
+    // 1. REWARD LOOP: If the plant is fully mature and healthy, drop a coin into the wallet!
+    if (activePlant.currentStage === "mature" && activePlant.hydration > 0 && activePlant.nutrients > 0) {
+        playerEconomy.coins += 1;
+        localStorage.setItem('bonsai_coins_v1', JSON.stringify(playerEconomy.coins));
+    }
+
+    // 2. AUTO-SPRINKLER MECHANIC: Automatically pumps moisture floor checks up if activated
+    if (playerEconomy.hasSprinkler && activePlant.hydration <= 15) {
+        activePlant.hydration = Math.min(100, activePlant.hydration + 20);
+    }
+
+    refreshShopInterface();
+}
+
+function buyShopItem(itemKey) {
+    if (itemKey === 'sprinkler' && !playerEconomy.hasSprinkler) {
+        if (playerEconomy.coins >= 50) {
+            playerEconomy.coins -= 50;
+            playerEconomy.hasSprinkler = true;
+            alert("⚙️ Auto-Sprinkler Installed! It will patch moisture pools if they drop low.");
+        } else alert("❌ Not enough Seed Coins!");
+    } 
+    else if (itemKey === 'roux' && !playerEconomy.hasGrowthRoux) {
+        if (playerEconomy.coins >= 75) {
+            playerEconomy.coins -= 75;
+            playerEconomy.hasGrowthRoux = true;
+            alert("🧪 Growth Roux Activated! Cell mutations scale up much faster.");
+        } else alert("❌ Not enough Seed Coins!");
+    }
+    else if (itemKey === 'goldPot' && !playerEconomy.hasGoldPot) {
+        if (playerEconomy.coins >= 120) {
+            playerEconomy.coins -= 120;
+            playerEconomy.hasGoldPot = true;
+            alert("👑 Golden Ceramic Pot Purchased! Visual frames updated.");
+        } else alert("❌ Not enough Seed Coins!");
+    }
+    
+    localStorage.setItem('bonsai_coins_v1', JSON.stringify(playerEconomy.coins));
+    updateGardenDashboard();
+}
+
+function refreshShopInterface() {
+    const coinLbl = document.getElementById('player-wallet-lbl');
+    if (coinLbl) coinLbl.innerText = playerEconomy.coins;
+
+    // Gray out bought upgrade buttons so they look locked/installed
+    const sprBtn = document.getElementById('shop-sprinkler-btn');
+    const rouxBtn = document.getElementById('shop-roux-btn');
+    const potBtn = document.getElementById('shop-pot-btn');
+
+    if (sprBtn && playerEconomy.hasSprinkler) { sprBtn.innerText = "⚙️ Sprinkler [INSTALLED]"; sprBtn.style.opacity = "0.5"; sprBtn.disabled = true; }
+    if (rouxBtn && playerEconomy.hasGrowthRoux) { rouxBtn.innerText = "🧪 Growth Roux [ACTIVE]"; rouxBtn.style.opacity = "0.5"; rouxBtn.disabled = true; }
+    if (potBtn && playerEconomy.hasGoldPot) { potBtn.innerText = "👑 Gold Pot [OWNED]"; potBtn.style.opacity = "0.5"; potBtn.disabled = true; }
 }
