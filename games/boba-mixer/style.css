@@ -1,19 +1,20 @@
 /* ========================================================
-   MASTER AUTOMATED BOBA MECHANICAL LAB STYLESHEET
+   MASTER PASTEL BUBBLE TEA CAFÉ STYLE SHEET
    ======================================================== */
 @import url('https://googleapis.com');
 
 :root {
-    /* Industrial Kitchen Casing Palette */
-    --steel-frame: #4e5d6c;      /* Galvanized steel chassis shell */
-    --iron-dark: #2b3640;        /* Deep shadow iron lining */
-    --terminal-screen: #11141a;  /* Core display backdrop */
-    --brass-glow: #e9c46a;       /* Glowing mechanical copper filaments */
+    /* Dreamy Pastel Aesthetic Color System */
+    --cafe-bg: #fff0f5;          /* Sweet lavender-blush pastel canvas base */
+    --ui-casing: #5c4a45;        /* Soft milk-chocolate brown for outlines */
+    --panel-ivory: #fffdf9;      /* Creamy sweet-cream dashboard plates */
+    --text-cozy: #4a3b32;        /* Earthy dark cocoa readability tone */
     
-    /* Neon State Indicators */
-    --valve-blue: #38bdf8;       /* Intake pipe active light */
-    --success-green: #2ed573;    /* Valid blend recipe match green */
-    --failure-red: #ff4757;      /* Error/sludge fluid code amber */
+    /* Neon State Indicators Reskinned Cozy */
+    --pastel-blue: #a0c4ff;      /* Sky blue dynamic flush button */
+    --pastel-green: #bdb2ff;     /* Minty lavender brewing activation key */
+    --cute-success: #9bf6ff;     /* Soft pastel cyan confirmation highlight */
+    --cute-failure: #ffadad;     /* Soft pastel rose warning banner */
 }
 
 * {
@@ -21,293 +22,175 @@
     margin: 0; padding: 0;
     font-family: 'VT323', monospace;
     letter-spacing: 0.5px;
-    image-rendering: pixelated; /* Keeps standard geometric assets pin-sharp */
 }
 
 /* ========================================================
-   MASTER PIXEL-ART TEA KITCHEN BACKGROUND ENVIRONMENT
+   PASTEL BAKERY KITCHEN BACKGROUND
    ======================================================== */
 body {
-    color: #f5f6fa;
+    color: var(--text-cozy);
     padding: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
     min-height: 100vh;
     justify-content: center;
-    image-rendering: pixelated;
 
-    /* HIGH-TIER BACKGROUND CHASSIS: Builds a complete detailed pixel shop kitchen */
+    /* DYNAMIC PROCEDURAL ART: Builds a gorgeous strawberry café backsplash grid */
     background: 
-        /* 1. TOP UTILITY COOKING GLASS SHELF LAYER */
-        linear-gradient(180deg, #4e3629 0px, #4e3629 35px, transparent 35px),
-        linear-gradient(90deg, #32211b 0px, #32211b 8px, transparent 8px),
-        
-        /* 2. INDUSTRIAL STEEL BRICK BACKSPLASH TILE SHEETS */
-        linear-gradient(90deg, #2b3640 2px, transparent 2px) 0 0 / 40px 20px,
-        linear-gradient(180deg, #2b3640 2px, transparent 2px) 0 0 / 40px 20px,
-        
-        /* 3. SOLID WOODEN OAK COUNTERTOP WORKSPACE PROFILE RUNERS */
-        linear-gradient(0deg, #3d2a25 0px, #3d2a25 180px, #5c4033 180px, #5c4033 195px, transparent 195px),
-        
-        /* 4. BASE GROUND FLOOR WOOD BOARD TILES MATRIX GRID */
-        linear-gradient(135deg, #1e252f 25%, transparent 25%) -50px 0,
-        linear-gradient(225deg, #1e252f 25%, transparent 25%) -50px 0,
-        
-        /* WALL FILL PAPERS BASE TINT COLOR MESH */
-        #34444f;
-        
-    position: relative;
+        /* Horizontal Oak Wood Display Shelf */
+        linear-gradient(180deg, #dfc7c1 0px, #dfc7c1 30px, transparent 35px),
+        /* Pastel Salmon & White Checkerboard Kitchen Tiles */
+        linear-gradient(90deg, rgba(255,194,205,0.25) 2px, transparent 2px) 0 0 / 30px 30px,
+        linear-gradient(180deg, rgba(255,194,205,0.25) 2px, transparent 2px) 0 0 / 30px 30px,
+        /* Beautiful Ground Oak Wood Countertop Base Planks */
+        linear-gradient(0deg, #d3b8b1 0px, #d3b8b1 160px, #e7cfc9 160px, #e7cfc9 175px, transparent 175px),
+        var(--cafe-bg);
 }
 
-/* DECORATIVE INTERACTIVE PROP: Layered Copper Filament Range Hood Overhang Canopy */
+/* Cute Strawberry-Matcha Accent Border Strip Canopy Overhang */
 body::before {
-    content: '';
-    position: absolute;
-    top: 35px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 620px;
-    height: 45px;
-    background: linear-gradient(180deg, #d35400 0%, #e67e22 70%, #ba4a00 100%);
-    border: 4px solid #11141a;
-    border-top: none;
-    border-bottom-left-radius: 12px;
-    border-bottom-right-radius: 12px;
-    box-shadow: 0 10px 0 rgba(0,0,0,0.2), 0 30px 45px rgba(230,126,34,0.15);
-    z-index: 1;
-}
-
-/* DECORATIVE PROP 2: Neon Under-Shelf Task Bulbs giving the workspace a clean glow */
-body::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    width: 100%;
-    height: 12px;
-    background: #e9c46a;
-    box-shadow: 0 0 30px #e9c46a;
-    opacity: 0.35;
-    z-index: 0;
+    content: ''; position: absolute; top: 30px; left: 50%; transform: translateX(-50%);
+    width: 650px; height: 15px;
+    background: repeating-linear-gradient(90deg, #ffadad, #ffadad 30px, #caffbf 30px, #caffbf 60px);
+    border: 4px solid var(--ui-casing);
+    border-radius: 8px;
+    box-shadow: 0 8px 0 rgba(0,0,0,0.04);
 }
 
 /* ========================================================
-   HEADER CONTROL INTERFACE ROW
-   ======================================================== */
-.nav-row {
-    width: 100%;
-    max-width: 920px;
-    margin-bottom: 12px;
-    display: flex;
-    justify-content: space-between;
-}
-.back-btn {
-    background: var(--iron-dark);
-    color: #fff;
-    border: 3px solid var(--steel-frame);
-    padding: 4px 16px;
-    font-size: 1.4rem;
-    cursor: pointer;
-    border-radius: 6px;
-}
-
-/* ========================================================
-   THE DUAL-PANEL BREWING CONSOLE CHASSIS
+   ARCADE PANEL CONSOLE BODY OVERHAULS
    ======================================================== */
 .game-box {
-    background: var(--steel-frame);
-    border: 6px solid var(--iron-dark);
+    background: #ffdef2; /* Kawaii pastel strawberry milk base casing frame */
+    border: 6px solid var(--ui-casing);
     border-radius: 28px;
     padding: 24px;
-    width: 100%;
-    max-width: 920px;
-    box-shadow: 0 16px 0 rgba(0,0,0,0.25), inset 0 4px 0 rgba(255,255,255,0.15);
+    width: 100%; max-width: 920px;
+    box-shadow: 0 16px 0 rgba(92, 74, 69, 0.25), inset 0 4px 0 rgba(255,255,255,0.5);
     display: grid;
-    grid-template-columns: 360px 1fr; /* Split Viewscreen Machine / Interactive Controls */
+    grid-template-columns: 360px 1fr;
     gap: 25px;
-    position: relative;
 }
 
-/* Decorative Industrial Rivet Dots around the Machine Chassis Hull */
-.game-box::before {
-    content: '•   •   •   •   •   •   •   •   •   •   •   •';
-    position: absolute; top: 6px; left: 24px;
-    font-size: 0.8rem; color: var(--iron-dark); opacity: 0.5;
+.order-ticket {
+    background: var(--panel-ivory);
+    border: 4px solid var(--ui-casing);
+    border-radius: 16px;
+    padding: 14px;
+    font-size: 1.5rem;
+    box-shadow: inset -4px -4px 0 rgba(0,0,0,0.02), 0 4px 0 rgba(0,0,0,0.05);
 }
 
 /* ========================================================
-   LEFT COLUMN: MONITOR SCREEN & COAL DISTILLER CHAMBER
+   ROUNDED CUP CONTAINER MECHANICS (FIXES BOX SQUARE BUG)
    ======================================================== */
-.order-ticket {
-    background: #fbf6ec;
-    border: 4px solid var(--iron-dark);
-    border-radius: 12px;
-    padding: 12px;
-    font-size: 1.5rem;
-    color: #2b3640;
-    box-shadow: 0 4px 0 rgba(0,0,0,0.15);
-    margin-bottom: 15px;
-}
-
-/* THE BREWING DISTILLER MACHINE DOME CORE */
 .cup-container {
     width: 150px;
     height: 200px;
-    border: 6px solid var(--iron-dark);
+    border: 6px solid var(--ui-casing);
     border-top: none;
-    border-bottom-left-radius: 24px;
-    border-bottom-right-radius: 24px;
-    margin: 10px auto;
+    border-bottom-left-radius: 36px;  /* Smooth organic rounded cup hips */
+    border-bottom-right-radius: 36px; /* Smooth organic rounded cup hips */
+    margin: 15px auto;
     position: relative;
-    background: var(--terminal-screen);
-    box-shadow: inset 10px 0 0 rgba(255,255,255,0.05);
+    background: #ffffff;
+    box-shadow: inset 12px 0 0 rgba(255,255,255,0.4), 0 6px 0 rgba(0,0,0,0.05);
 }
 
-/* Glass Viewport Overlay Filaments reflection sheen */
-.cup-container::before {
-    content: ''; position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 40%, rgba(0,0,0,0.2) 100%);
-    z-index: 10; pointer-events: none;
-}
-
-/* ANIMATED MACHINE PHASE OVERRIDE: Active shaking execution script layer */
-.cup-container.machine-spinning-active {
-    animation: mechanicalCentrifugeShake 0.12s infinite linear;
-    border-top: 6px solid var(--iron-dark); /* Closures seal caps while shaking */
-    background: #1e252f;
-}
-
-@keyframes mechanicalCentrifugeShake {
-    0% { transform: translate(2px, 1px) rotate(0deg); }
-    50% { transform: translate(-1px, -2px) rotate(-1deg); filter: hue-rotate(15deg); }
-    100% { transform: translate(1px, 2px) rotate(1deg); }
-}
-
-/* Fluid fill container mesh layer handles */
+/* FIXED FLUID CONTAINER MESH: Automatically clips contents neatly inside cup walls */
 .liquid {
     position: absolute;
     bottom: 0; left: 0; width: 100%; height: 0%;
-    transition: height 0.8s ease-in-out, background-color 0.3s;
-    z-index: 2;
+    border-bottom-left-radius: 28px;  /* MATCHES CUP HIPS BOUNDS */
+    border-bottom-right-radius: 28px; /* MATCHES CUP HIPS BOUNDS */
+    overflow: hidden;
+    display: flex;
+    flex-direction: column-reverse;
+    transition: all 0.5s ease-in-out;
+}
+
+/* Centrifuge blend shaking animations overlay styles */
+.cup-container.machine-spinning-active {
+    animation: cuteBlenderShake 0.15s infinite ease-in-out;
+}
+@keyframes cuteBlenderShake {
+    0% { transform: translate(1px, 1px) rotate(0deg); }
+    50% { transform: translate(-2px, -1px) rotate(-1deg); }
+    100% { transform: translate(1px, 2px) rotate(1deg); }
 }
 
 .boba-canvas {
     position: absolute;
     bottom: 0; left: 0; width: 100%; height: 100%;
-    z-index: 4;
+    z-index: 5;
+    pointer-events: none;
 }
 
-/* Result readout message ribbon box banner overrides */
-#blend-status-banner {
-    font-size: 1.6rem;
-    font-weight: bold;
-    text-transform: uppercase;
-    text-align: center;
-    margin-top: 10px;
-    padding: 4px;
-    border-radius: 6px;
+/* RETRO PIXEL BOBA BUBBLES GRAPHICS */
+.pixel-boba-bubble {
+    position: absolute;
+    width: 14px; height: 14px;
+    border: 2px solid var(--ui-casing);
+    border-radius: 50%;
+    background: #4a3b32; /* Rich dark tapioca brown */
+    box-shadow: inset 2px 2px 0 #fff; /* Glossy pixel specular glare dot */
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.2);
 }
-.banner-correct { background: var(--success-green); color: #fff; border: 3px solid var(--iron-dark); }
-.banner-incorrect { background: var(--failure-red); color: #fff; border: 3px solid var(--iron-dark); }
 
 /* ========================================================
-   RIGHT COLUMN: LABORATORY PIPE ROUTERS & VALVES PANEL
+   UI CONTROL ARRAYS (TABS & BUTTONS)
    ======================================================== */
 .tabs {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 6px;
-    background: var(--iron-dark);
-    padding: 6px;
-    border-radius: 12px;
-    margin-bottom: 15px;
+    background: var(--ui-casing);
+    padding: 6px; border-radius: 14px;
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px;
 }
 .tab-btn {
-    padding: 8px 2px;
-    background: #3a444e;
-    border: 2px solid var(--steel-frame);
-    color: #f5f6fa;
-    font-size: 1.3rem;
-    cursor: pointer;
-    border-radius: 6px;
-    text-transform: uppercase;
+    padding: 8px 2px; background: #735d57;
+    border: 2px solid var(--ui-casing); color: #fff;
+    font-size: 1.3rem; cursor: pointer; border-radius: 8px;
 }
 .tab-btn.active {
-    background: var(--brass-glow);
-    color: var(--iron-dark);
-    border-color: #ffffff;
+    background: #ffb7b2; color: var(--ui-casing); border-color: #fff;
 }
 
-/* Ingredient node intake matrix shelf */
 .ingredients-grid {
-    background: var(--iron-dark);
-    border: 4px solid #11141a;
-    border-radius: 16px;
-    padding: 16px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    height: 250px;
-    overflow-y: auto;
+    background: var(--panel-ivory);
+    border: 4px solid var(--ui-casing);
+    border-radius: 20px; padding: 16px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+    height: 250px; overflow-y: auto;
 }
 
 .ing-btn {
-    background: #3a444e;
-    border: 3px solid var(--steel-frame);
-    border-radius: 10px;
-    color: #ffffff;
-    font-size: 1.4rem;
-    padding: 12px;
-    cursor: pointer;
-    box-shadow: 0 4px 0 #1b2229;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
+    background: #ffffff; border: 3px solid var(--ui-casing);
+    border-radius: 12px; color: var(--text-cozy); font-size: 1.4rem;
+    padding: 12px; cursor: pointer; box-shadow: 0 5px 0 var(--ui-casing);
 }
-.ing-btn:hover { background: #46525e; }
-.ing-btn:active {
-    transform: translateY(3px);
-    box-shadow: 0 1px 0 #1b2229;
-}
+.ing-btn:hover { background: #fff5f6; }
+.ing-btn:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--ui-casing); }
 
-/* ========================================================
-   HEAVY INDUSTRIAL VALVE SWITCH MECHANICS (GO BUTTON)
-   ======================================================== */
-.action-bar {
-    display: grid;
-    grid-template-columns: 1fr 150px; /* Expands Brew Launch target block dimensions */
-    gap: 15px;
+.added-ingredients-tracker {
+    background: var(--ui-casing); border-radius: 16px;
+    padding: 12px; color: #fff; border: none;
 }
 
 .action-bar button {
-    padding: 16px;
-    font-size: 1.7rem;
-    font-weight: bold;
-    text-transform: uppercase;
-    border-radius: 14px;
-    border: 4px solid var(--iron-dark);
-    cursor: pointer;
-    color: #ffffff;
+    padding: 16px; font-size: 1.7rem; font-weight: bold;
+    border-radius: 16px; border: 4px solid var(--ui-casing); cursor: pointer;
 }
+/* Flush button styles */
+.action-bar button:first-child { background: var(--pastel-blue); box-shadow: 0 6px 0 #6e9ecf; color: #fff; }
+/* Brew button styles */
+.action-bar button:last-child { background: var(--pastel-green); box-shadow: 0 6px 0 #9283e0; color: #fff; }
 
-/* Operational Reset Input button handle styling */
-.action-bar button:first-child {
-    background: var(--valve-blue);
-    box-shadow: 0 6px 0 #0284c7, inset 0 2px 0 rgba(255,255,255,0.3);
+#blend-status-banner {
+    font-size: 1.5rem; text-align: center; margin-top: 10px;
+    padding: 6px; border-radius: 8px; border: 3px solid var(--ui-casing);
+    background: var(--panel-ivory); color: var(--text-cozy);
 }
-.action-bar button:first-child:active { transform: translateY(4px); box-shadow: none; }
+.banner-correct { background: var(--cute-success) !important; color: var(--ui-casing) !important; }
+.banner-incorrect { background: var(--cute-failure) !important; color: var(--ui-casing) !important; }
 
-/* THE ENGINE LAUNCH LEVER: Master Shaker Activate Switch */
-.action-bar button:last-child {
-    background: var(--success-green);
-    box-shadow: 0 8px 0 #1e9b4f, inset 0 3px 0 rgba(255,255,255,0.4);
-}
-.action-bar button:last-child:active {
-    transform: translateY(6px);
-    box-shadow: 0 2px 0 #1e9b4f;
-}
-
-/* Suppress redundant headings */
 h2 { display: none; }
