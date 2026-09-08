@@ -1,8 +1,8 @@
 // ========================================================
 // 1. GAME CONSOLE STATE MANAGEMENT
 // ========================================================
-let activeOrder = { tea: "", milk: "", syrup: "", topping: "" };
-let activeCupContents = { tea: null, milk: null, syrup: null, topping: null };
+let activeOrder = { teas: "", milks: "", syrups: "", toppings: "" };
+let activeCupContents = { teas: null, milks: null, syrups: null, toppings: null };
 let currentTabMode = "teas";
 
 // Comprehensive Ingredient Database (Colors map directly to individual fluid stacks)
@@ -53,22 +53,21 @@ function generateRandomCustomerOrder() {
     const syrupKeys = Object.keys(RECIPE_DB.syrups);
     const toppingKeys = Object.keys(RECIPE_DB.toppings);
 
-    activeOrder.tea = teaKeys[Math.floor(Math.random() * teaKeys.length)];
-    activeOrder.milk = milkKeys[Math.floor(Math.random() * milkKeys.length)];
-    activeOrder.syrup = syrupKeys[Math.floor(Math.random() * syrupKeys.length)];
-    activeOrder.topping = toppingKeys[Math.floor(Math.random() * toppingKeys.length)];
+    activeOrder.teas = teaKeys[Math.floor(Math.random() * teaKeys.length)];
+    activeOrder.milks = milkKeys[Math.floor(Math.random() * milkKeys.length)];
+    activeOrder.syrups = syrupKeys[Math.floor(Math.random() * syrupKeys.length)];
+    activeOrder.toppings = toppingKeys[Math.floor(Math.random() * toppingKeys.length)];
 
     const ticket = document.querySelector('.order-ticket');
     if (ticket) {
         ticket.innerHTML = `
-            🔹 Base: ${RECIPE_DB.teas[activeOrder.tea].name}<br>
-            🔹 Milk: ${RECIPE_DB.milks[activeOrder.milk].name}<br>
-            🔹 Sweet: ${RECIPE_DB.syrups[activeOrder.syrup].name}<br>
-            🔹 Add-on: ${RECIPE_DB.toppings[activeOrder.topping].name}
+            🔹 Base: ${RECIPE_DB.teas[activeOrder.teas].name}<br>
+            🔹 Milk: ${RECIPE_DB.milks[activeOrder.milks].name}<br>
+            🔹 Sweet: ${RECIPE_DB.syrups[activeOrder.syrups].name}<br>
+            🔹 Add-on: ${RECIPE_DB.toppings[activeOrder.toppings].name}
         `;
     }
 }
-
 // ========================================================
 // 3. TAB NAVIGATION & SHELF DRAWER
 // ========================================================
@@ -112,11 +111,7 @@ function loadActiveIngredientShelf() {
 // ========================================================
 function addIngredientToPot(key) {
     activeCupContents[currentTabMode] = key;
-
-    // Refresh the right-hand routed menu text dashboard
     renderPillsMatrixDashboard();
-
-    // FIXED: Instantly injects and animates the fluid stack inside your cup container!
     updateVisualCupLayers();
 }
 
@@ -124,51 +119,41 @@ function updateVisualCupLayers() {
     const liquidContainer = document.querySelector('.liquid');
     if (!liquidContainer) return;
 
-    // Clear old nested layers so we can rebuild the stacks perfectly
     liquidContainer.innerHTML = '';
     
     let activeLayersCount = 0;
-    if (activeCupContents.tea) activeLayersCount++;
-    if (activeCupContents.milk && activeCupContents.milk !== 'none') activeLayersCount++;
-    if (activeCupContents.syrup && activeCupContents.syrup !== 'none') activeLayersCount++;
+    if (activeCupContents.teas) activeLayersCount++;
+    if (activeCupContents.milks && activeCupContents.milks !== 'none') activeLayersCount++;
+    if (activeCupContents.syrups && activeCupContents.syrups !== 'none') activeLayersCount++;
 
-    // Calculate height of each individual layer (Max target drink space is 80% cup volume)
-    const layerHeight = activeLayersCount > 0 ? (80 / activeLayersCount) : 0;
+    const layerHeight = activeLayersCount > 0 ? (100 / activeLayersCount) : 0;
     
-    // Set parent container to hold everything flatly at the base
-    liquidContainer.style.height = "100%";
+    liquidContainer.style.height = "80%"; 
     liquidContainer.style.background = "transparent";
     liquidContainer.style.display = "flex";
-    liquidContainer.style.flexDirection = "column-reverse"; // Stack from bottom up
+    liquidContainer.style.flexDirection = "column-reverse"; 
 
-    // 1. Append Base Tea Layer
-    if (activeCupContents.tea) {
-        appendFluidLayerMesh(liquidContainer, RECIPE_DB.teas[activeCupContents.tea].color, layerHeight);
+    if (activeCupContents.teas) {
+        appendFluidLayerMesh(liquidContainer, RECIPE_DB.teas[activeCupContents.teas].color, layerHeight);
+    }
+    if (activeCupContents.milks && activeCupContents.milks !== 'none') {
+        appendFluidLayerMesh(liquidContainer, RECIPE_DB.milks[activeCupContents.milks].color, layerHeight);
+    }
+    if (activeCupContents.syrups && activeCupContents.syrups !== 'none') {
+        appendFluidLayerMesh(liquidContainer, RECIPE_DB.syrups[activeCupContents.syrups].color, layerHeight);
     }
 
-    // 2. Append Milk Layer
-    if (activeCupContents.milk && activeCupContents.milk !== 'none') {
-        appendFluidLayerMesh(liquidContainer, RECIPE_DB.milks[activeCupContents.milk].color, layerHeight);
-    }
-
-    // 3. Append Syrup Layer
-    if (activeCupContents.syrup && activeCupContents.syrup !== 'none') {
-        appendFluidLayerMesh(liquidContainer, RECIPE_DB.syrups[activeCupContents.syrup].color, layerHeight);
-    }
-
-    // 4. Draw Topping Symbols
     const toppingsCanvas = document.getElementById('soup-bubble-layer');
     if (toppingsCanvas) {
         toppingsCanvas.innerHTML = '';
         if (activeCupContents.toppings && activeCupContents.toppings !== 'none') {
             const symbol = RECIPE_DB.toppings[activeCupContents.toppings].symbol;
-            // Spawn 5 pieces of toppings sitting neatly on the bottom floor grid
             for (let i = 0; i < 5; i++) {
                 const item = document.createElement('div');
                 item.style.position = 'absolute';
                 item.style.bottom = '8px';
-                item.style.left = `${15 + (i * 18)}px`;
-                item.style.fontSize = '1.2rem';
+                item.style.left = `${15 + (i * 22)}px`;
+                item.style.fontSize = '1.4rem';
                 item.style.zIndex = '6';
                 item.innerText = symbol;
                 toppingsCanvas.appendChild(item);
@@ -183,23 +168,16 @@ function appendFluidLayerMesh(parent, color, height) {
     mesh.style.backgroundColor = color;
     mesh.style.opacity = "0.95";
     mesh.style.borderTop = "1px solid rgba(255,255,255,0.15)";
-    
-    // Run fluid rise volumetric growth animation effect
     mesh.style.height = "0%";
     mesh.style.transition = "height 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1)";
     
     parent.appendChild(mesh);
-    
-    // Trigger transition clip on next display pass cycle
-    setTimeout(() => {
-        mesh.style.height = `${height}%`;
-    }, 10);
+    setTimeout(() => { mesh.style.height = `${height}%`; }, 10);
 }
 
 function renderPillsMatrixDashboard() {
     const trackerList = document.getElementById('tracker-pills-list');
     if (!trackerList) return;
-    
     trackerList.innerHTML = '';
     let empty = true;
     
@@ -213,31 +191,21 @@ function renderPillsMatrixDashboard() {
             trackerList.appendChild(row);
         }
     });
-    
-    if (empty) {
-        trackerList.innerHTML = '<div style="font-size:1.1rem; color:#a0a5ab; font-style:italic; padding:10px;">Chamber empty...</div>';
-    }
+    if (empty) trackerList.innerHTML = '<div style="font-size:1.1rem; color:#a0a5ab; font-style:italic; padding:10px;">Chamber empty...</div>';
 }
 
 function clearMachineChamber() {
     activeCupContents = { teas: null, milks: null, syrups: null, toppings: null };
-    
     const liquidMesh = document.querySelector('.liquid');
-    if (liquidMesh) {
-        liquidMesh.innerHTML = '';
-        liquidMesh.style.height = "0%";
-    }
-    
+    if (liquidMesh) { liquidMesh.innerHTML = ''; liquidMesh.style.height = "0%"; }
     const toppingsCanvas = document.getElementById('soup-bubble-layer');
     if (toppingsCanvas) toppingsCanvas.innerHTML = '';
-
     renderPillsMatrixDashboard();
 
     const statusBanner = document.getElementById('blend-status-banner');
     if (statusBanner) {
-        statusBanner.className = '';
-        statusBanner.innerText = 'Awaiting brew sequence...';
-        statusBanner.style.background = '#11141a';
+        statusBanner.className = ''; statusBanner.innerText = 'Awaiting brew sequence...';
+        statusBanner.style.background = '#11141a'; statusBanner.style.color = '#fff';
     }
 }
 
@@ -249,10 +217,36 @@ function startMachineBrewCycle() {
         alert("🚨 ERROR: Machine engine cannot engage without a Liquid Base element loaded into the tubes!");
         return;
     }
-
     const cup = document.querySelector('.cup-container');
     const statusBanner = document.getElementById('blend-status-banner');
-    
     if (cup) cup.classList.add('machine-spinning-active');
     if (statusBanner) {
-statusBanner.innerText = "⚡ CENTRIFUGAL HOMOGENIZATION ACTIVE... ⚡";statusBanner.style.background = '#fbbf24';statusBanner.style.color = '#000';}setTimeout(() => {if (cup) cup.classList.remove('machine-spinning-active');evaluateRecipeFormula();}, 1500);}function evaluateRecipeFormula() {const statusBanner = document.getElementById('blend-status-banner');const matchTea = activeCupContents.teas === activeOrder.tea;const matchMilk = activeCupContents.milks === activeOrder.milk;const matchSyrup = activeCupContents.syrups === activeOrder.syrup;const matchTopping = activeCupContents.toppings === activeOrder.topping;if (matchTea && matchMilk && matchSyrup && matchTopping) {if (statusBanner) {statusBanner.className = 'banner-correct';statusBanner.innerText = "✔ PERFECT BLEND! CUSTOMER HAPPY!";statusBanner.style.background = '#2ed573';statusBanner.style.color = '#fff';}setTimeout(() => {clearMachineChamber();generateRandomCustomerOrder();}, 3000);} else {if (statusBanner) {statusBanner.className = 'banner-incorrect';statusBanner.innerText = "❌ WRONG BLEND! INGREDIENTS RUINED!";statusBanner.style.background = '#ff4757';statusBanner.style.color = '#fff';}}}
+        statusBanner.innerText = "⚡ CENTRIFUGAL HOMOGENIZATION ACTIVE... ⚡";
+        statusBanner.style.background = '#fbbf24'; statusBanner.style.color = '#000';
+    }
+    setTimeout(() => {
+        if (cup) cup.classList.remove('machine-spinning-active');
+        evaluateRecipeFormula();
+    }, 1500);
+}
+
+function evaluateRecipeFormula() {
+    const statusBanner = document.getElementById('blend-status-banner');
+    const matchTea = activeCupContents.teas === activeOrder.teas;
+    const matchMilk = activeCupContents.milks === activeOrder.milks;
+    const matchSyrup = activeCupContents.syrups === activeOrder.syrups;
+    const matchTopping = activeCupContents.toppings === activeOrder.toppings;
+
+    if (matchTea && matchMilk && matchSyrup && matchTopping) {
+        if (statusBanner) {
+            statusBanner.className = 'banner-correct'; statusBanner.innerText = "✔ PERFECT BLEND! CUSTOMER HAPPY!";
+            statusBanner.style.background = '#2ed573'; statusBanner.style.color = '#fff';
+        }
+        setTimeout(() => { clearMachineChamber(); generateRandomCustomerOrder(); }, 3000);
+    } else {
+        if (statusBanner) {
+            statusBanner.className = 'banner-incorrect'; statusBanner.innerText = "❌ WRONG BLEND! INGREDIENTS RUINED!";
+            statusBanner.style.background = '#ff4757'; statusBanner.style.color = '#fff';
+        }
+    }
+}
